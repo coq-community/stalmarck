@@ -1,0 +1,10 @@
+Name: Stalmarck
+Title: Proof of Stalmarck's algorithm
+Author: Pierre Letouzey
+Author: Laurent Thery
+Institution: Inria Sophia-Antipolis
+Institution: Inria Sophia-Antipolis
+Date: 2000
+Description: A two-level approach to prove tautology
+             using Stalmarck's algorithm.
+Keywords: boolean formula, tautology checker

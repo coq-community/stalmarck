@@ -1,0 +1,49 @@
+This directory builds a standalone Tautology Checker using 
+the code extracted in the upper directory.
+
+Syntax: 
+
+./stalmarck <level> <file> 
+
+where: 
+
+<level> is an integer controling depth of dilemma. Usual values: 
+0: does only propagation 
+1: dilemma upon one variable at the same time
+2: dilamma can be done upon two variables at the same time. 
+More than 2 may be *very* long. 
+
+<file> is the file containing the boolean formula. 
+Syntax of such a file: 
+
+Comments	//  (reading is suspended until the end of the line)
+Variable	any alphanumeric chain plus the character _
+Not		~
+And		&
+Or		#
+Implication	->
+Equivalence	<->
+Parenthesis	( ) 
+True value	<T>
+False value	<F>
+
+Priority of connectives , from lower to higher
+<-> ->  (associate to the right)
+# 	(associate to the left)
+&       (associate to the left)
+~
+
+The only interesting output is "Tautology" (and exit code 0). 
+The other output is "Don't know" (exit code 1): either the formula is not 
+a tautology, either it is one but the program cannot conclude 
+(insufficient level).
+
+
+One example of test (ztwaalf1_be) is included.
+====================================================================
+./stalmarck 1 ztwaalf1_be
+Tautology
+====================================================================
+
+
+Pierre Letouzey, nov 2001
