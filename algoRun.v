@@ -575,7 +575,7 @@ Theorem F4:
                     (Node ANd (V (anti_convert (2))) (V (anti_convert (12)))))
                  (Node ANd (V (anti_convert (3))) (V (anti_convert (2))))))))).
 Check (S O).
-Apply runC; Exact (refl_equal bool true).
+apply (runC 0); exact (refl_equal bool true).
 Check nat.
 Qed.
 *)
