@@ -1,9 +1,9 @@
 Name: Stalmarck
 Title: Proof of Stalmarck's algorithm
 Author: Pierre Letouzey
-Author: Laurent Thery
-Institution: Inria Sophia-Antipolis
-Institution: Inria Sophia-Antipolis
+Author: Laurent Théry
+Institution: INRIA Sophia-Antipolis
+Institution: INRIA Sophia-Antipolis
 Date: 2000
 Description: A two-level approach to prove tautology
              using Stalmarck's algorithm.
