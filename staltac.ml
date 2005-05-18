@@ -184,9 +184,12 @@ let rec norm = function
 let letP h u =
   u h
 
+(* Clash with ocaml primitive option type that is used in TACTIC EXTEND and has
+   no way to be accessed qualified with a module, precisely because primitive
 type 'A option =
     Some of 'A
   | None
+*)
 
 type 'A rTree =
     REmpty
