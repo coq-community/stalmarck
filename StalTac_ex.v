@@ -12,11 +12,11 @@ Require Import Classical.
 
 Theorem Praeclarum :
  forall x y z t : Prop, (x -> z) /\ (y -> t) -> x /\ y -> z /\ t.
-StalTac.
+staltac.
 Qed.
 
 Theorem c2 : forall x y : Prop, x /\ y \/ x /\ ~ y \/ ~ x /\ y \/ ~ x /\ ~ y.
-StalTac.
+staltac.
 Qed.
 
 Theorem puz002_1 :
@@ -30,7 +30,7 @@ Theorem puz002_1 :
   (~ v5 \/ v1) /\
   (~ v10 \/ ~ v2) /\
   (~ v3 \/ v4) /\ (v5 \/ v6) /\ (~ v7 \/ v8) /\ ~ v9 /\ v10).
-StalTac.
+staltac.
 Qed.
 
 Theorem puz003_1 :
@@ -88,12 +88,11 @@ Theorem puz003_1 :
   (~ v18 \/ ~ v26 \/ v19) /\
   (~ v20 \/ ~ v26 \/ v21) /\
   (~ v22 \/ ~ v26 \/ v23) /\ ~ v24 /\ v25 /\ v26 /\ v27 /\ v28 /\ v29).
-StalTac.
+staltac.
 Qed.
 
-(*
 Theorem dubois20:
-  (v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49, v50, v51, v52, v53, v54, v55, v56, v57, v58, v59, v60:Prop)
+  forall v0 v1 v2 v3 v4 v5 v6 v7 v8 v9 v10 v11 v12 v13 v14 v15 v16 v17 v18 v19 v20 v21 v22 v23 v24 v25 v26 v27 v28 v29 v30 v31 v32 v33 v34 v35 v36 v37 v38 v39 v40 v41 v42 v43 v44 v45 v46 v47 v48 v49 v50 v51 v52 v53 v54 v55 v56 v57 v58 v59 v60:Prop,
   ~ (
       (v39 \/ v40 \/ v1) /\
       (~ v39 \/ ~ v40 \/ v1) /\
@@ -255,6 +254,5 @@ Theorem dubois20:
       (~ v39 \/ ~ v40 \/ ~ v38) /\
       (v39 \/ ~ v40 \/ v38) /\
        (~ v39 \/ v40 \/ v38)).
-StalTac.
+staltac.
 Qed.
-*)
