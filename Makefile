@@ -43,7 +43,7 @@ COQSRC=-I $(COQTOP)/kernel -I $(COQTOP)/lib \
   -I $(CAMLP4LIB)
 ZFLAGS=$(OCAMLLIBS) $(COQSRC)
 OPT=
-COQFLAGS=-q $(OPT) $(COQLIBS) $(COQ_XML)
+COQFLAGS=-q $(OPT) $(COQLIBS) $(OTHERFLAGS) $(COQ_XML)
 COQC=$(COQBIN)coqc
 GALLINA=gallina
 COQDOC=coqdoc
@@ -52,7 +52,6 @@ CAMLOPTC=ocamlopt -c
 CAMLLINK=ocamlc
 CAMLOPTLINK=ocamlopt
 COQDEP=$(COQBIN)coqdep -c
-COQVO2XML=coq_vo2xml
 GRAMMARS=grammar.cma
 CAMLP4EXTEND=pa_extend.cmo pa_ifdef.cmo q_MLast.cmo
 PP=-pp "camlp4o -I . -I $(COQTOP)/parsing $(CAMLP4EXTEND) $(GRAMMARS) -impl"
@@ -174,47 +173,7 @@ all.ps: $(VFILES)
 all-gal.ps: $(VFILES)
 	$(COQDOC) -ps -g -o $@ `$(COQDEP) -sort -suffix .v $(VFILES)`
 
-xml:: .xml_time_stamp
-.xml_time_stamp: BoolAux.vo\
-  Extract.vo\
-  LetP.vo\
-  Option.vo\
-  OrderedListEq.vo\
-  OrderedListEq_ex.vo\
-  PolyListAux.vo\
-  addArray.vo\
-  algoDilemma1.vo\
-  algoDotriplet.vo\
-  algoDotriplets.vo\
-  algoRun.vo\
-  algoStalmarck.vo\
-  algoTrace.vo\
-  complete.vo\
-  doTriplet.vo\
-  doTriplets.vo\
-  equalBefore.vo\
-  interImplement.vo\
-  interImplement2.vo\
-  interImplement2_ex.vo\
-  interState.vo\
-  ltState.vo\
-  makeTriplet.vo\
-  memoryImplement.vo\
-  normalize.vo\
-  rZ.vo\
-  refl.vo\
-  restrictState.vo\
-  sTactic.vo\
-  stalmarck.vo\
-  state.vo\
-  stateDec.vo\
-  stateExtra.vo\
-  trace.vo\
-  triplet.vo\
-  unionState.vo\
-  wfArray.vo
-	$(COQVO2XML) $(COQFLAGS) $(?:%.o=%)
-	touch .xml_time_stamp
+
 
 ###################
 #                 #
@@ -223,10 +182,10 @@ xml:: .xml_time_stamp
 ###################
 
 StalTac.vo: 
-	$(COQC) $(COQFLAGS) -byte StalTac.v
+	$(COQC) -q -byte StalTac.v
 
 StalTac_ex.vo: 
-	$(COQC) $(COQFLAGS) -byte StalTac_ex.v
+	$(COQC) -vm -q -byte StalTac_ex.v
 
 test: 
 	@echo '***** test: checking the tautology ztwaalf1_be *****'
@@ -248,7 +207,7 @@ extraction:
 #                  #
 ####################
 
-.PHONY: all opt byte archclean clean install depend xml extraction
+.PHONY: all opt byte archclean clean install depend html extraction
 
 .SUFFIXES: .mli .ml .cmo .cmi .cmx .v .vo .vi .g .html .tex .g.tex .g.html
 
@@ -290,18 +249,15 @@ opt:
 
 include .depend
 
-depend:
-	rm .depend
-	$(COQDEP) -i $(COQLIBS) *.v *.ml *.mli >.depend
-	$(COQDEP) $(COQLIBS) -suffix .html *.v >>.depend
+.depend depend:
+	rm -f .depend
+	$(COQDEP) -i $(COQLIBS) $(VFILES) *.ml *.mli >.depend
+	$(COQDEP) $(COQLIBS) -suffix .html $(VFILES) >>.depend
 	(cd extraction ; $(MAKE) depend)
-
-xml::
-	(cd extraction ; $(MAKE) xml)
 
 install:
 	mkdir -p `$(COQC) -where`/user-contrib
-	cp -f *.vo `$(COQC) -where`/user-contrib
+	cp -f $(VOFILES) `$(COQC) -where`/user-contrib
 	cp -f *.cmo `$(COQC) -where`/user-contrib
 	(cd extraction ; $(MAKE) install)
 
@@ -309,14 +265,19 @@ Makefile: Make
 	mv -f Makefile Makefile.bak
 	$(COQBIN)coq_makefile -f Make -o Makefile
 
+	(cd extraction ; $(MAKE) Makefile)
+
 clean:
-	rm -f *.cmo *.cmi *.cmx *.o *.vo *.vi *.g *~
+	rm -f *.cmo *.cmi *.cmx *.o $(VOFILES) $(VIFILES) $(GFILES) *~
 	rm -f all.ps all-gal.ps $(HTMLFILES) $(GHTMLFILES)
 	(cd extraction ; $(MAKE) clean)
 
 archclean:
 	rm -f *.cmx *.o
 	(cd extraction ; $(MAKE) archclean)
+
+html:
+	(cd extraction ; $(MAKE) html)
 
 # WARNING
 #
