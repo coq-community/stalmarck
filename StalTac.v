@@ -14,10 +14,4 @@ Require Export refl.
 
 Declare ML Module "staltac".
 
-Ltac StalTac := intros; repeat popprop; stalt.
-
-
-
-
-
-
+Ltac staltac := intros; repeat pop_prop; stalt.

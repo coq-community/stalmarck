@@ -1247,11 +1247,11 @@ let stalt_run gl =
                |])) gl
    | False -> error "StalT can't conclude"
 
-TACTIC EXTEND StalT
- [ "StalT" ] -> [ stalt_run ]
+TACTIC EXTEND stalt
+ [ "stalt" ] -> [ stalt_run ]
 END
 
-TACTIC EXTEND PopProp
- [ "PopProp" ] -> [ pop_prop_run ]
+TACTIC EXTEND pop_prop
+ [ "pop_prop" ] -> [ pop_prop_run ]
 END
 
