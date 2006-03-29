@@ -251,13 +251,13 @@ include .depend
 
 .depend depend:
 	rm -f .depend
-	$(COQDEP) -i $(COQLIBS) $(VFILES) *.ml *.mli >.depend
-	$(COQDEP) $(COQLIBS) -suffix .html $(VFILES) >>.depend
+	$(COQDEP) -i $(COQLIBS) *.v *.ml *.mli >.depend
+	$(COQDEP) $(COQLIBS) -suffix .html *.v >>.depend
 	(cd extraction ; $(MAKE) depend)
 
 install:
 	mkdir -p `$(COQC) -where`/user-contrib
-	cp -f $(VOFILES) `$(COQC) -where`/user-contrib
+	cp -f *.vo `$(COQC) -where`/user-contrib
 	cp -f *.cmo `$(COQC) -where`/user-contrib
 	(cd extraction ; $(MAKE) install)
 
@@ -268,7 +268,7 @@ Makefile: Make
 	(cd extraction ; $(MAKE) Makefile)
 
 clean:
-	rm -f *.cmo *.cmi *.cmx *.o $(VOFILES) $(VIFILES) $(GFILES) *~
+	rm -f *.cmo *.cmi *.cmx *.o *.vo *.vi *.g *~
 	rm -f all.ps all-gal.ps $(HTMLFILES) $(GHTMLFILES)
 	(cd extraction ; $(MAKE) clean)
 
