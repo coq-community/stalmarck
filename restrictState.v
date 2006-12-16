@@ -638,7 +638,7 @@ intros S1 S2 S3 L t H' H'0 H'1 H'2 S0 H'3.
 elim (doTripletEqCompEx S1 S2 (restrictState S0 (ResTriplets L)) t);
  [ intros S4 E; Elimc E; intros H'10 H'11 | idtac | idtac ]; 
  auto.
-apply H'2 with (S0 := S2); auto.
+apply H'2 with (S4 := S2); auto.
 apply eqStateTrans with (S2 := S4); auto.
 apply eqStateTrans with (S2 := restrictState S4 (ResTriplets L)); auto.
 apply restrictDoTripletComp with (S1 := S0) (t := t); auto.
