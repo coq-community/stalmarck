@@ -65,7 +65,7 @@ apply eqStateTrans with (S2 := S6); auto.
 apply doTripletEqComp with (t := t) (S1 := S1) (S2 := S4); auto.
 intros t1 t2 S1 S2 S3 H' H'0 H'1 H'2 S0 S4 H'3; inversion H'3; auto.
 intros H'4.
-apply H'2 with (S0 := S6); auto.
+apply H'2 with (S4 := S6); auto.
 apply H'0 with (S3 := S0); auto.
 intros t1 t2 a b S1 S2 S3 S4 H' H'0 H'1 H'2 H'3 S0 S5 H'4; inversion H'4;
  auto.
@@ -74,7 +74,7 @@ apply eqStateTrans with (S2 := interState S7 S8); auto.
 apply eqStateTrans with (S2 := interState S2 S3); auto.
 apply interStateEq; auto.
 apply H'0 with (S3 := addEq (a, b) S0); auto.
-apply H'2 with (S0 := addEq (a, rZComp b) S0); auto.
+apply H'2 with (S4 := addEq (a, rZComp b) S0); auto.
 Qed.
 
 Theorem evalTraceComp :
