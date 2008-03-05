@@ -178,8 +178,7 @@ Theorem InRestrictState :
  a <> b -> ~ contradictory S -> In (valRz a) L /\ In (valRz b) L.
 intros S L a b H' H'0 H'1.
 apply InState with (S := restrictState S L); auto.
-2: specialize  2restrictContradiction with (S := S) (L := L); intros H'3;
-    red in H'3; auto.
+2: assert (H'3:=restrictContradiction S L); red in H'3; auto.
 2: red in |- *; intros H'2; apply H'1; auto.
 2: Elimc H'3; intros H'3 H'4; lapply H'4; clear H'4;
     [ intros H'4; apply H'4 | idtac ]; auto.

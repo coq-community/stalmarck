@@ -270,7 +270,7 @@ Theorem interMemMin :
  forall S1 S2 S3 : State,
  inclState S3 S1 -> inclState S3 S2 -> inclState S3 (interState S1 S2).
 intros S1 S2 S3 H' H'0.
-specialize  2interMemProp with (S1 := S1) (S2 := S2); intros H'2.
+assert (H'2 := interMemProp S1 S2).
 apply (interStatePIncl S1 S2); auto.
 Qed.
 Hint Resolve interMemMin.

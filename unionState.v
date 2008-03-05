@@ -174,16 +174,14 @@ Qed.
 Theorem unionStateInclL :
  forall S1 S2 : State, inclState S1 (unionState S1 S2).
 intros S1 S2.
-specialize  2unionStatePunionState with (S1 := S1) (S2 := S2); intros H'0;
- inversion H'0; auto.
+destruct (unionStatePunionState S1 S2); auto.
 Qed.
 Hint Resolve unionStateInclL.
 
 Theorem unionStateInclR :
  forall S1 S2 : State, inclState S2 (unionState S1 S2).
 intros S1 S2.
-specialize  2unionStatePunionState with (S1 := S1) (S2 := S2); intros H'0;
- inversion H'0; auto.
+destruct (unionStatePunionState S1 S2); auto.
 Qed.
 Hint Resolve unionStateInclR.
 
@@ -191,8 +189,7 @@ Theorem unionStateMin :
  forall S1 S2 S3 : State,
  inclState S1 S3 -> inclState S2 S3 -> inclState (unionState S1 S2) S3.
 intros S1 S2 S3 H' H'0.
-specialize  2unionStatePunionState with (S1 := S1) (S2 := S2); intros H'1;
- inversion H'1; auto.
+destruct (unionStatePunionState S1 S2); auto.
 Qed.
 Hint Resolve unionStateMin.
 

@@ -195,11 +195,9 @@ Theorem stalmarckCorrect :
 intros e S; generalize (refl_equal (makeTriplets (norm e)));
  pattern (makeTriplets (norm e)) at -2 in |- *; case (makeTriplets (norm e)).
 intros l r r0 H' H'0 H'1.
-specialize  1TautoRTauto with (e := e); intros H'2; inversion H'2.
-apply H0; auto.
-specialize  1rTautotTauto with (e := norm e); intros H'3; inversion H'3.
-apply H2; auto.
-red in |- *; auto.
+apply <- (TautoRTauto e).
+apply <- (rTautotTauto (norm e)).
+red.
 rewrite <- H'; auto.
 apply stalmarckGivesValidEquation with (S := S); auto.
 Qed.
