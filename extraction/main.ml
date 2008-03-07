@@ -2,8 +2,8 @@ open Unix
 open Stal
 
 let string_of_bool b = match b with
-  |True -> "Tautology"
-  |False -> "Don't know"
+  | true -> "Tautology"
+  | false -> "Don't know"
 
 let rec i2n = function 0 -> O | n -> (S (i2n (pred n)))
  
@@ -25,6 +25,6 @@ let _ =
   let res = match (run level e) with Quatuor (_,b,_,_) -> b in 
   print_string (string_of_bool res);
   print_newline();
-  if res=True then exit 0 else exit 1
+  if res=true then exit 0 else exit 1
 
 
