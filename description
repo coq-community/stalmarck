@@ -8,3 +8,5 @@ Date: 2000
 Description: A two-level approach to prove tautology
              using Stalmarck's algorithm.
 Keywords: boolean formula, tautology checker
+Category: Computer Science/Decision Procedures and Certified Algorithms/Decision procedures
+Category: Miscellaneous/Extracted Programs/Decision procedures
