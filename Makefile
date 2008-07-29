@@ -23,7 +23,8 @@
 #                       #
 #########################
 
-OCAMLLIBS:=
+CAMLP4LIB:=$(shell $(CAMLBIN)camlp5 -where 2> /dev/null || $(CAMLBIN)camlp4 -where)
+OCAMLLIBS:=-I $(CAMLP4LIB) 
 COQLIBS:= -R . Stalmarck
 COQDOCLIBS:=-R . Stalmarck
 
@@ -33,20 +34,10 @@ COQDOCLIBS:=-R . Stalmarck
 #                        #
 ##########################
 
-CAMLP4LIB:=$(shell $(CAMLBIN)camlp5 -where 2> /dev/null || $(CAMLBIN)camlp4 -where)
 CAMLP4:=$(notdir $(CAMLP4LIB))
-COQSRC:=-I $(COQTOP)/kernel -I $(COQTOP)/lib \
-  -I $(COQTOP)/library -I $(COQTOP)/parsing \
-  -I $(COQTOP)/pretyping -I $(COQTOP)/interp \
-  -I $(COQTOP)/proofs -I $(COQTOP)/syntax -I $(COQTOP)/tactics \
-  -I $(COQTOP)/toplevel -I $(COQTOP)/contrib/correctness \
-  -I $(COQTOP)/contrib/extraction -I $(COQTOP)/contrib/field \
-  -I $(COQTOP)/contrib/fourier -I $(COQTOP)/contrib/graphs \
-  -I $(COQTOP)/contrib/interface -I $(COQTOP)/contrib/jprover \
-  -I $(COQTOP)/contrib/omega -I $(COQTOP)/contrib/romega \
-  -I $(COQTOP)/contrib/ring -I $(COQTOP)/contrib/xml \
-  -I $(CAMLP4LIB)
-ZFLAGS:=$(OCAMLLIBS) $(COQSRC)
+COQSRC:=$(shell $(COQBIN)coqc -where)
+COQSRCLIBS:=-I $(COQSRC)
+ZFLAGS:=$(OCAMLLIBS) $(COQSRCLIBS)
 OPT:=
 COQFLAGS:=-q $(OPT) $(COQLIBS) $(OTHERFLAGS) $(COQ_XML)
 COQC:=$(COQBIN)coqc
@@ -54,12 +45,12 @@ COQDEP:=$(COQBIN)coqdep -c
 GALLINA:=$(COQBIN)gallina
 COQDOC:=$(COQBIN)coqdoc
 CAMLC:=$(CAMLBIN)ocamlc -rectypes -c
-CAMLOPTC:=$(CAMLBIN)ocamlopt -c
-CAMLLINK:=$(CAMLBIN)ocamlc
-CAMLOPTLINK:=$(CAMLBIN)ocamlopt
+CAMLOPTC:=$(CAMLBIN)ocamlopt -rectypes -c
+CAMLLINK:=$(CAMLBIN)ocamlc -rectypes
+CAMLOPTLINK:=$(CAMLBIN)ocamlopt -rectypes
 GRAMMARS:=grammar.cma
 CAMLP4EXTEND:=pa_extend.cmo pa_macro.cmo q_MLast.cmo
-PP:=-pp "$(CAMLBIN)$(CAMLP4)o -I . -I $(COQTOP)/parsing $(CAMLP4EXTEND) $(GRAMMARS) -impl"
+PP:=-pp "$(CAMLBIN)$(CAMLP4)o -I . -I $(COQSRC) $(CAMLP4EXTEND) $(GRAMMARS) -impl"
 
 ###################################
 #                                 #
@@ -111,51 +102,13 @@ VIFILES:=$(VFILES:.v=.vi)
 GFILES:=$(VFILES:.v=.g)
 HTMLFILES:=$(VFILES:.v=.html)
 GHTMLFILES:=$(VFILES:.v=.g.html)
+MLFILES:=staltac.ml
+CMOFILES:=$(MLFILES:.ml=.cmo)
 
-all: BoolAux.vo\
-  Extract.vo\
-  LetP.vo\
-  Option.vo\
-  OrderedListEq.vo\
-  OrderedListEq_ex.vo\
-  PolyListAux.vo\
-  addArray.vo\
-  algoDilemma1.vo\
-  algoDotriplet.vo\
-  algoDotriplets.vo\
-  algoRun.vo\
-  algoStalmarck.vo\
-  algoTrace.vo\
-  complete.vo\
-  doTriplet.vo\
-  doTriplets.vo\
-  equalBefore.vo\
-  interImplement.vo\
-  interImplement2.vo\
-  interImplement2_ex.vo\
-  interState.vo\
-  ltState.vo\
-  makeTriplet.vo\
-  memoryImplement.vo\
-  normalize.vo\
-  rZ.vo\
-  refl.vo\
-  restrictState.vo\
-  sTactic.vo\
-  stalmarck.vo\
-  state.vo\
-  stateDec.vo\
-  stateExtra.vo\
-  trace.vo\
-  triplet.vo\
-  unionState.vo\
-  wfArray.vo\
-  staltac.cmo\
-  StalTac.vo\
+all: $(VOFILES) $(CMOFILES) StalTac.vo\
   StalTac_ex.vo\
   extraction\
   test
-
 spec: $(VIFILES)
 
 gallina: $(GFILES)
@@ -210,8 +163,6 @@ extraction:
 
 .PHONY: all opt byte archclean clean install depend html extraction
 
-.SUFFIXES: .mli .ml .cmo .cmi .cmx .v .vo .vi .g .html .tex .g.tex .g.html
-
 %.cmi: %.mli
 	$(CAMLC) $(ZDEBUG) $(ZFLAGS) $<
 
@@ -220,6 +171,9 @@ extraction:
 
 %.cmx: %.ml
 	$(CAMLOPTC) $(ZDEBUG) $(ZFLAGS) $(PP) $<
+
+%.ml.d: %.ml
+	$(CAMLBIN)ocamldep -slash $(ZFLAGS) $(PP) "$<" > "$@"
 
 %.vo %.glob: %.v
 	$(COQC) -dump-glob $*.glob $(COQDEBUG) $(COQFLAGS) $*
@@ -242,13 +196,8 @@ extraction:
 %.g.html: %.v %.glob
 	$(COQDOC) -glob-from $*.glob -html -g $< -o $@
 
-%.v.d.raw: %.v
-	$(COQDEP) -slash $(COQLIBS) "$<" > "$@"\
-	  || ( RV=$$?; rm -f "$@"; exit $${RV} )
-
-%.v.d: %.v.d.raw
-	$(HIDE)sed 's/\(.*\)\.vo[[:space:]]*:/\1.vo \1.glob:/' < "$<" > "$@" \
-	  || ( RV=$$?; rm -f "$@"; exit $${RV} )
+%.v.d: %.v
+	$(COQDEP) -glob -slash $(COQLIBS) "$<" > "$@" || ( RV=$$?; rm -f "$@"; exit $${RV} )
 
 byte:
 	$(MAKE) all "OPT:=-byte"
@@ -271,6 +220,7 @@ Makefile: Make
 clean:
 	rm -f *.cmo *.cmi *.cmx *.o $(VOFILES) $(VIFILES) $(GFILES) *~
 	rm -f all.ps all-gal.ps all.glob $(VFILES:.v=.glob) $(HTMLFILES) $(GHTMLFILES) $(VFILES:.v=.tex) $(VFILES:.v=.g.tex) $(VFILES:.v=.v.d)
+	rm -f $(CMOFILES) $(MLFILES:.ml=.cmi) $(MLFILES:.ml=.ml.d)
 	- rm -rf html
 	- rm -f StalTac.vo
 	- rm -f StalTac_ex.vo
@@ -284,6 +234,9 @@ archclean:
 
 -include $(VFILES:.v=.v.d)
 .SECONDARY: $(VFILES:.v=.v.d)
+
+-include $(MLFILES:.ml=.ml.d)
+.SECONDARY: $(MLFILES:.ml=.ml.d)
 
 # WARNING
 #
