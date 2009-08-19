@@ -17,37 +17,14 @@
 # coq_makefile -f Make -o Makefile 
 #
 
-# 
-# This Makefile may take 3 arguments passed as environment variables:
-#   - COQBIN to specify the directory where Coq binaries resides;
-#   - CAMLBIN and CAMLP4BIN to give the path for the OCaml and Camlp4/5 binaries.
-COQLIB:=$(shell $(COQBIN)coqtop -where | sed -e 's/\\/\\\\/g')
-CAMLP4:="$(shell $(COQBIN)coqtop -config | awk -F = '/CAMLP4=/{print $$2}')"
-ifndef CAMLP4BIN
-  CAMLP4BIN:=$(CAMLBIN)
-endif
+#########################
+#                       #
+# Libraries definition. #
+#                       #
+#########################
 
-CAMLP4LIB:=$(shell $(CAMLP4BIN)$(CAMLP4) -where)
-
-##########################
-#                        #
-# Libraries definitions. #
-#                        #
-##########################
-
+CAMLP4LIB:=$(shell $(CAMLBIN)camlp5 -where 2> /dev/null || $(CAMLBIN)camlp4 -where)
 OCAMLLIBS:=-I $(CAMLP4LIB) 
-COQSRCLIBS:=-I $(COQLIB)/kernel -I $(COQLIB)/lib \
-  -I $(COQLIB)/library -I $(COQLIB)/parsing \
-  -I $(COQLIB)/pretyping -I $(COQLIB)/interp \
-  -I $(COQLIB)/proofs -I $(COQLIB)/tactics \
-  -I $(COQLIB)/toplevel -I $(COQLIB)/contrib/cc -I $(COQLIB)/contrib/dp \
-  -I $(COQLIB)/contrib/extraction -I $(COQLIB)/contrib/field \
-  -I $(COQLIB)/contrib/firstorder -I $(COQLIB)/contrib/fourier \
-  -I $(COQLIB)/contrib/funind -I $(COQLIB)/contrib/interface \
-  -I $(COQLIB)/contrib/micromega -I $(COQLIB)/contrib/omega \
-  -I $(COQLIB)/contrib/ring -I $(COQLIB)/contrib/romega \
-  -I $(COQLIB)/contrib/rtauto -I $(COQLIB)/contrib/setoid_ring \
-  -I $(COQLIB)/contrib/subtac -I $(COQLIB)/contrib/xml
 COQLIBS:= -R . Stalmarck
 COQDOCLIBS:=-R . Stalmarck
 
@@ -57,25 +34,36 @@ COQDOCLIBS:=-R . Stalmarck
 #                        #
 ##########################
 
-ZFLAGS=$(OCAMLLIBS) $(COQSRCLIBS) -I $(CAMLP4LIB)
+CAMLP4:=$(notdir $(CAMLP4LIB))
+COQSRC:=$(COQTOP)
+COQSRCLIBS:=-I $(COQTOP)/kernel -I $(COQTOP)/lib \
+  -I $(COQTOP)/library -I $(COQTOP)/parsing \
+  -I $(COQTOP)/pretyping -I $(COQTOP)/interp \
+  -I $(COQTOP)/proofs -I $(COQTOP)/tactics \
+  -I $(COQTOP)/toplevel -I $(COQTOP)/contrib/cc \
+  -I $(COQTOP)/contrib/dp -I $(COQTOP)/contrib/extraction \
+  -I $(COQTOP)/contrib/field -I $(COQTOP)/contrib/firstorder \
+  -I $(COQTOP)/contrib/fourier -I $(COQTOP)/contrib/funind \
+  -I $(COQTOP)/contrib/interface -I $(COQTOP)/contrib/jprover \
+  -I $(COQTOP)/contrib/micromega -I $(COQTOP)/contrib/omega \
+  -I $(COQTOP)/contrib/ring -I $(COQTOP)/contrib/romega \
+  -I $(COQTOP)/contrib/rtauto -I $(COQTOP)/contrib/setoid_ring \
+  -I $(COQTOP)/contrib/subtac -I $(COQTOP)/contrib/xml \
+  -I $(CAMLP4LIB)
+ZFLAGS:=$(OCAMLLIBS) $(COQSRCLIBS)
 OPT:=
 COQFLAGS:=-q $(OPT) $(COQLIBS) $(OTHERFLAGS) $(COQ_XML)
-ifdef CAMLBIN
-  COQMKTOPFLAGS:=-camlbin $(CAMLBIN) -camlp4bin $(CAMLP4BIN)
-endif
 COQC:=$(COQBIN)coqc
 COQDEP:=$(COQBIN)coqdep -c
 GALLINA:=$(COQBIN)gallina
 COQDOC:=$(COQBIN)coqdoc
-COQMKTOP:=$(COQBIN)coqmktop
-CAMLC:=$(CAMLBIN)ocamlc.opt -rectypes
-CAMLOPTC:=$(CAMLBIN)ocamlopt.opt -rectypes
-CAMLLINK:=$(CAMLBIN)ocamlc.opt -rectypes
-CAMLOPTLINK:=$(CAMLBIN)ocamlopt.opt -rectypes
+CAMLC:=$(CAMLBIN)ocamlc -rectypes -c
+CAMLOPTC:=$(CAMLBIN)ocamlopt -rectypes -c
+CAMLLINK:=$(CAMLBIN)ocamlc -rectypes
+CAMLOPTLINK:=$(CAMLBIN)ocamlopt -rectypes
 GRAMMARS:=grammar.cma
 CAMLP4EXTEND:=pa_extend.cmo pa_macro.cmo q_MLast.cmo
-CAMLP4OPTIONS:=
-PP:=-pp "$(CAMLP4BIN)$(CAMLP4)o -I . $(COQSRCLIBS) $(CAMLP4EXTEND) $(GRAMMARS) $(CAMLP4OPTIONS) -impl"
+PP:=-pp "$(CAMLBIN)$(CAMLP4)o -I . -I $(COQTOP)/parsing $(CAMLP4EXTEND) $(GRAMMARS) -impl"
 
 ###################################
 #                                 #
@@ -129,15 +117,11 @@ HTMLFILES:=$(VFILES:.v=.html)
 GHTMLFILES:=$(VFILES:.v=.g.html)
 MLFILES:=staltac.ml
 CMOFILES:=$(MLFILES:.ml=.cmo)
-CMIFILES:=$(MLFILES:.ml=.cmi)
-CMXFILES:=$(MLFILES:.ml=.cmx)
-CMXSFILES:=$(MLFILES:.ml=.cmxs)
-OFILES:=$(MLFILES:.ml=.o)
 
 all: $(VOFILES) $(CMOFILES) StalTac.vo\
   StalTac_ex.vo\
-  test\
-  extraction
+  extraction\
+  test
 spec: $(VIFILES)
 
 gallina: $(GFILES)
@@ -155,12 +139,6 @@ all.ps: $(VFILES)
 
 all-gal.ps: $(VFILES)
 	$(COQDOC) -toc -ps -g $(COQDOCLIBS) -o $@ `$(COQDEP) -sort -suffix .v $(VFILES)`
-
-all.pdf: $(VFILES)
-	$(COQDOC) -toc -pdf $(COQDOCLIBS) -o $@ `$(COQDEP) -sort -suffix .v $(VFILES)`
-
-all-gal.pdf: $(VFILES)
-	$(COQDOC) -toc -pdf -g $(COQDOCLIBS) -o $@ `$(COQDEP) -sort -suffix .v $(VFILES)`
 
 
 
@@ -202,25 +180,13 @@ extraction:
 	$(CAMLC) $(ZDEBUG) $(ZFLAGS) $<
 
 %.cmo: %.ml
-	$(CAMLC) $(ZDEBUG) $(ZFLAGS) -c $(PP) $<
+	$(CAMLC) $(ZDEBUG) $(ZFLAGS) $(PP) $<
 
 %.cmx: %.ml
-	$(CAMLOPTC) $(ZDEBUG) $(ZFLAGS) -c $(PP) $<
-
-%.cmxs: %.ml
-	$(CAMLOPTC) $(ZDEBUG) $(ZFLAGS) -shared -o $@ $(PP) $<
-
-%.cmo: %.ml4
-	$(CAMLC) $(ZDEBUG) $(ZFLAGS) $(PP) -impl $<
-
-%.cmx: %.ml4
-	$(CAMLOPTC) $(ZDEBUG) $(ZFLAGS) $(PP) -impl $<
-
-%.cmxs: %.ml4
-	$(CAMLOPTC) $(ZDEBUG) $(ZFLAGS) -shared -o $@ $(PP) -impl $<
+	$(CAMLOPTC) $(ZDEBUG) $(ZFLAGS) $(PP) $<
 
 %.ml.d: %.ml
-	$(CAMLBIN)ocamldep -slash $(COQSRCLIBS) $(PP) "$<" > "$@"
+	$(CAMLBIN)ocamldep -slash $(ZFLAGS) $(PP) "$<" > "$@"
 
 %.vo %.glob: %.v
 	$(COQC) -dump-glob $*.glob $(COQDEBUG) $(COQFLAGS) $*
@@ -253,21 +219,20 @@ opt:
 	$(MAKE) all "OPT:=-opt"
 
 install:
-	mkdir -p $(COQLIB)/user-contrib
-	(for i in $(VOFILES); do \
-	 install -D $$i $(COQLIB)/user-contrib/Stalmarck/$$i; \
-	 done)
-	(for i in $(CMOFILES); do \
-	 install -D $$i $(COQLIB)/user-contrib/Stalmarck/$$i; \
-	 done)
-	(for i in $(CMIFILES); do \
-	 install -D $$i $(COQLIB)/user-contrib/Stalmarck/$$i; \
-	 done)
-	(cd extraction; $(MAKE) INSTALLDEFAULTROOT=$(INSTALLDEFAULTROOT)/extraction install)
+	mkdir -p `$(COQC) -where`/user-contrib
+	cp -f $(VOFILES) `$(COQC) -where`/user-contrib
+	cp -f *.cmo `$(COQC) -where`/user-contrib
+	(cd extraction ; $(MAKE) install)
+
+Makefile: Make
+	mv -f Makefile Makefile.bak
+	$(COQBIN)coq_makefile -f Make -o Makefile
+
+	(cd extraction ; $(MAKE) Makefile)
 
 clean:
-	rm -f $(VOFILES) $(VIFILES) $(GFILES) *~
-	rm -f all.ps all-gal.ps all.pdf all-gal.pdf all.glob $(VFILES:.v=.glob) $(HTMLFILES) $(GHTMLFILES) $(VFILES:.v=.tex) $(VFILES:.v=.g.tex) $(VFILES:.v=.v.d)
+	rm -f *.cmo *.cmi *.cmx *.o $(VOFILES) $(VIFILES) $(GFILES) *~
+	rm -f all.ps all-gal.ps all.glob $(VFILES:.v=.glob) $(HTMLFILES) $(GHTMLFILES) $(VFILES:.v=.tex) $(VFILES:.v=.g.tex) $(VFILES:.v=.v.d)
 	rm -f $(CMOFILES) $(MLFILES:.ml=.cmi) $(MLFILES:.ml=.ml.d)
 	- rm -rf html
 	- rm -f StalTac.vo
@@ -279,17 +244,6 @@ archclean:
 	rm -f *.cmx *.o
 	(cd extraction ; $(MAKE) archclean)
 
-
-printenv: 
-	@echo CAMLC =	$(CAMLC)
-	@echo CAMLOPTC =	$(CAMLOPTC)
-	@echo CAMLP4LIB =	$(CAMLP4LIB)
-
-Makefile: Make
-	mv -f Makefile Makefile.bak
-	$(COQBIN)coq_makefile -f Make -o Makefile
-
-	(cd extraction ; $(MAKE) Makefile)
 
 -include $(VFILES:.v=.v.d)
 .SECONDARY: $(VFILES:.v=.v.d)
