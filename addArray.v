@@ -383,7 +383,7 @@ rewrite updateArrayInb; auto.
 case pol; case s; simpl in |- *; auto.
 case pol; case s; simpl in |- *; auto.
 rewrite <-
- (map_id rZ (samePolRz pol) (samePolRzsamePolRz pol)
+ (PolyListAux.map_id rZ (samePolRz pol) (samePolRzsamePolRz pol)
     (appendf rZ rZlt eqRz rZltEDec (rZPlus b :: nil) Lb))
  ; auto.
 apply in_map; auto.
