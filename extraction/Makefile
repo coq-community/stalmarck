@@ -1,9 +1,9 @@
-CC= ocamlopt
+CC= $(CAMLBIN)ocamlopt
 FLAGS = -cclib -lunix
 LIB= unix.cmxa
 
-LEX= ocamllex
-YACC= ocamlyacc
+LEX= $(CAMLBIN)ocamllex
+YACC= $(CAMLBIN)ocamlyacc
 
 OBJ_I = stal.cmx \
 	parser.cmi
