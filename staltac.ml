@@ -973,7 +973,6 @@ open Reduction
 open Tacmach
 open Tacticals
 open Proof_type
-open Proof_trees
 open Printer
 open Equality
 open Vernacinterp
