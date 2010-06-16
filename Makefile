@@ -189,7 +189,7 @@ StalTac.vo:
 StalTac_ex.vo: 
 	$(COQC) $(COQLIBS) -vm -q -byte StalTac_ex.v
 
-test: 
+test: extraction
 	@echo '***** test: checking the tautology ztwaalf1_be *****'
 	extraction/stalmarck 1 extraction/ztwaalf1_be
 	@echo '******************** End of test ***********************'
