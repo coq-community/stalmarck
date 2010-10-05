@@ -114,7 +114,6 @@ intros a b H'0; Elimc H'0; intros H'0; auto.
 inversion H'0; clear H'0.
 rewrite <- H0; rewrite <- H1.
 apply eqStateRzTrans with (b := q); auto.
-apply eqStateRzTrans with (b := r); auto.
 Qed.
 
 Theorem eqStateEqEvalZ :
@@ -152,12 +151,10 @@ intros a b H'0; Elimc H'0; intros H'0; auto.
 inversion H'0; clear H'0; auto.
 rewrite <- H0; rewrite <- H1.
 apply eqStateRzTrans with (b := q); auto.
-apply eqStateRzTrans with (b := r); auto.
 Elimc H'0; intros H'0; auto.
 inversion H'0; clear H'0; auto.
 rewrite <- H0; rewrite <- H1.
 apply eqStateRzTrans with (b := u); auto.
-apply eqStateRzTrans with (b := v); auto.
 Qed.
 
 Theorem eqStateEq2EvalZ :

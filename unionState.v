@@ -145,9 +145,6 @@ intros S p q.
 apply unionStatePDef; auto.
 apply inclStateIn; simpl in |- *; auto.
 intros a b H'; elim H'; intros H'0; inversion H'0; auto.
-intros S4 H' H'0.
-apply inclStateAddEqInv; auto.
-apply eqStateIncl with (S1 := (p, q) :: nil); auto with datatypes.
 Qed.
 
 (* To compute of two states, one simply needs to append the two list of equations *)

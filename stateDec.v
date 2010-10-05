@@ -269,7 +269,6 @@ intros a; case a; auto.
 intros a' b' l H' S2.
 elim (H' S2); intros H'1; auto.
 case (eqStateRzDec S2 a' b'); intros EqS2; auto.
-left; change (inclState (addEq (a', b') l) S2) in |- *; auto.
 right; red in |- *; intros H'0; case H'1; auto.
 apply inclStateTrans with (S2 := addEq (a', b') l); auto.
 Defined.
@@ -299,7 +298,6 @@ intros a; case a; auto.
 intros a' b' l H' S2.
 elim (H' S2); intros H'1; auto.
 case (eqStateRzDec S2 a' b'); intros EqS2; auto.
-left; change (inclState (addEq (a', b') l) S2) in |- *; auto.
 right; exists a'; exists b'; split; auto.
 right.
 elim H'1; intros a0 E; elim E; intros b E0; elim E0; intros H'0 H'2;
