@@ -72,13 +72,13 @@ Qed.
 (* Comparison function *)
 
 Definition rlt (a b : rNat) : Prop :=
-  (a ?= b)%positive Datatypes.Eq = Datatypes.Lt.
+  Pcompare a b Datatypes.Eq = Datatypes.Lt.
 (* Decidability over rNat *)
 
 Definition rNatDec : forall n m : rNat, {n = m} + {n <> m}.
 intros n m; generalize (nat_of_P_lt_Lt_compare_morphism n m);
  generalize (nat_of_P_gt_Gt_compare_morphism n m);
- generalize (Pcompare_Eq_eq n m); case ((n ?= m)%positive Datatypes.Eq).
+ generalize (Pcompare_Eq_eq n m); case (Pcompare n m Datatypes.Eq).
 intros H' H'0 H'1; left; auto.
 intros H' H'0 H'1; right; red in |- *; intros H1;
  absurd (nat_of_P n < nat_of_P m); auto.
@@ -92,7 +92,7 @@ Defined.
 Definition rltDec : forall m n : rNat, {rlt m n} + {rlt n m \/ m = n}.
 intros n m; generalize (nat_of_P_lt_Lt_compare_morphism n m);
  generalize (nat_of_P_gt_Gt_compare_morphism n m);
- generalize (Pcompare_Eq_eq n m); case ((n ?= m)%positive Datatypes.Eq).
+ generalize (Pcompare_Eq_eq n m); case (Pcompare n m Datatypes.Eq).
 intros H' H'0 H'1; right; right; auto.
 intros H' H'0 H'1; left; unfold rlt in |- *.
 apply nat_of_P_lt_Lt_compare_complement_morphism; auto.
@@ -105,7 +105,7 @@ Defined.
 Definition rltEDec : forall m n : rNat, {rlt m n} + {rlt n m} + {m = n}.
 intros n m; generalize (nat_of_P_lt_Lt_compare_morphism n m);
  generalize (nat_of_P_gt_Gt_compare_morphism n m);
- generalize (Pcompare_Eq_eq n m); case ((n ?= m)%positive Datatypes.Eq).
+ generalize (Pcompare_Eq_eq n m); case (Pcompare n m Datatypes.Eq).
 intros H' H'0 H'1; right; auto.
 intros H' H'0 H'1; left; left; unfold rlt in |- *.
 apply nat_of_P_lt_Lt_compare_complement_morphism; auto.

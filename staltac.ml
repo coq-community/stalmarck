@@ -1014,11 +1014,10 @@ let coq_I = lazy (constant llogic "I");;
 
 (* From fast_integer *)
 
-let pos_constant =
-  Coqlib.gen_constant_in_modules "Staltac" Coqlib.zarith_base_modules
-let coq_xO = lazy (pos_constant "xO");;
-let coq_xI = lazy (pos_constant "xI");;
-let coq_xH = lazy (pos_constant "xH");;
+let binnums = ["Numbers";"BinNums"];;
+let coq_xO = lazy (constant binnums "xO");;
+let coq_xI = lazy (constant binnums "xI");;
+let coq_xH = lazy (constant binnums "xH");;
 
 let stal_constant dir s =
   let id = id_of_string s in
