@@ -965,6 +965,7 @@ let run m e =
 (* the linking code *) 
 
 open Pp
+open Errors
 open Util
 open Term
 open Termops
