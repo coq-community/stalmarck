@@ -1,10 +1,10 @@
 
 (****************************************************************************
-                                                                           
-          Stalmarck  :  stalt                                           
-                                                                           
-          Pierre Letouzey & Laurent Thery                                  
-                                                                           
+
+          Stalmarck  :  stalt
+
+          Pierre Letouzey & Laurent Thery
+
 ****************************************************************************
 Implementation of the Stalt tactic *)
 
@@ -561,7 +561,7 @@ let doTripletF ar = function
                                                            (addEqMem ar
                                                              p' r')
                                                        | Right ->
-                                                           (match 
+                                                           (match
                                                             rZDec q'
                                                               rZFalse with
                                                               Left ->
@@ -571,27 +571,27 @@ let doTripletF ar = function
                                                               (rZComp
                                                               r'))
                                                             | Right ->
-                                                              (match 
+                                                              (match
                                                               rZDec r'
                                                               rZTrue with
-                                                                
+
                                                               Left ->
                                                               Some
                                                               (addEqMem
                                                               ar p' q')
-                                                              | 
+                                                              |
                                                               Right ->
-                                                              (match 
+                                                              (match
                                                               rZDec r'
                                                               rZFalse with
-                                                                
+
                                                               Left ->
                                                               Some
                                                               (addEqMem
                                                               ar p'
                                                               (rZComp
                                                               q'))
-                                                              | 
+                                                              |
                                                               Right ->
                                                               None)))))))))))))))
 
@@ -962,7 +962,7 @@ let run m e =
 (*-------------------------------------------------------------------*)
 
 
-(* the linking code *) 
+(* the linking code *)
 
 open Pp
 open Errors
@@ -981,7 +981,7 @@ open Libobject
 open Closure
 open Tacred
 open Tactics
-open Pattern 
+open Pattern
 open Hiddentac
 open Constrintern
 
@@ -995,7 +995,7 @@ open Constrintern
 let constant dir s =
   let dir = make_dirpath (List.map id_of_string (List.rev ("Coq"::dir))) in
   let id = id_of_string s in
-  try 
+  try
     global_reference_in_absolute_module dir id
   with Not_found ->
     anomaly ("cannot find "^
@@ -1022,17 +1022,17 @@ let coq_xH = lazy (constant binnums "xH");;
 
 let stal_constant dir s =
   let id = id_of_string s in
-  try 
-    global_reference_in_absolute_module 
+  try
+    global_reference_in_absolute_module
       (make_dirpath (List.map id_of_string (List.rev ("Stalmarck":: dir)))) id
   with _ ->
-  try 
-    global_reference_in_absolute_module  
+  try
+    global_reference_in_absolute_module
       (make_dirpath (List.map id_of_string (List.rev dir))) id
-  with _ -> 
+  with _ ->
     anomaly ("cannot find "^
-	     (Libnames.string_of_qualid 
-                (Libnames.make_qualid 
+	     (Libnames.string_of_qualid
+                (Libnames.make_qualid
                    (make_dirpath (List.map id_of_string (List.rev dir))) id)))
 
 (* From rZ *)
@@ -1116,7 +1116,7 @@ let mkRz = function
 
 (* Turn a caml Expr into a Coq object *)
 
-let rec mkExpr = function 
+let rec mkExpr = function
     | Node (b,t1,t2) ->
         mkApp ((Lazy.force coq_Node)
           ,[| mkBool b; mkExpr t1; mkExpr t2 |])
@@ -1131,7 +1131,7 @@ let rec mkExpr = function
 (* Turn a caml triplet into a Coq object *)
 
 let mkTriplet = function
-  Triplet (b, p, q, r) -> 
+  Triplet (b, p, q, r) ->
     mkApp ((Lazy.force coq_Triplet) ,[| mkRbool b;mkRz p;mkRz q; mkRz r |])
 
 
@@ -1144,7 +1144,7 @@ let rec mkTrace = function
   | SeqTrace (tr1, tr2) ->
     mkApp ((Lazy.force coq_seqTrace) ,[| mkTrace tr1;mkTrace tr2 |])
   | DilemmaTrace (a,b,tr1,tr2) ->
-    mkApp ((Lazy.force coq_dilemmaTrace) ,[|mkRz a; mkRz b; 
+    mkApp ((Lazy.force coq_dilemmaTrace) ,[|mkRz a; mkRz b;
                                            mkTrace tr1;mkTrace tr2|])
 
 let isDependent t = dependent (mkRel 1) t
@@ -1158,16 +1158,16 @@ let convertConcl cl =
   let index = ref zero in
   let rec inspect p =   match (kind_of_term p) with
 (* And *)
-    | App (c,[|t1; t2|]) when c=(Lazy.force coq_and) -> 
+    | App (c,[|t1; t2|]) when c=(Lazy.force coq_and) ->
              (Node (ANd,(inspect t1),(inspect t2)))
 (* Or *)
-    | App (c,[|t1; t2|]) when c=(Lazy.force coq_or) -> 
+    | App (c,[|t1; t2|]) when c=(Lazy.force coq_or) ->
              (Node (Or,(inspect t1),(inspect t2)))
 (* Eq *)
-    | App (c,[|t1; t2|]) when c=(Lazy.force coq_iff) -> 
+    | App (c,[|t1; t2|]) when c=(Lazy.force coq_iff) ->
              (Node (Eq, (inspect t1),(inspect t2)))
 (* Impl *)
-    | Prod (c,t1,t2) when c=Names.Anonymous -> 
+    | Prod (c,t1,t2) when c=Names.Anonymous ->
              (Node (Impl,(inspect t1),(inspect t2)))
     | Prod (c,t1,t2) when not(dependent (mkRel 1) t2) ->
              (Node (Impl,(inspect t1),(inspect t2)))
@@ -1180,14 +1180,14 @@ let convertConcl cl =
 (* False is interpreted as ~(V 0) *)
     | Ind _ when p=(Lazy.force coq_False) ->
              (N (V zero))
-(* Otherwise we generate a new variable if we 
-   haven't already encounter this term *) 
+(* Otherwise we generate a new variable if we
+   haven't already encounter this term *)
     | a ->
-       begin 
+       begin
          try (V (Hashtbl.find varhash p))
-         with Not_found -> 
+         with Not_found ->
            begin
-             index := rnext !index;     
+             index := rnext !index;
              Hashtbl.add varhash p !index;
              (V !index)
            end
@@ -1200,7 +1200,7 @@ let buildEnv hash =
                 ,[| mkLambda (Names.Anonymous, (Lazy.force coq_rNat),
                    (Lazy.force coq_True)) |])) in
   Hashtbl.iter  (fun c n ->
-              acc := (mkApp ((Lazy.force coq_rArraySetP) 
+              acc := (mkApp ((Lazy.force coq_rArraySetP)
                 ,[| !acc;mkRnat n; c |]))) hash;
   (mkApp ((Lazy.force coq_rArrayGetP)  ,[| !acc |]))
 
@@ -1211,7 +1211,7 @@ let buildEnv hash =
 let pop_prop_run gl =
   let rec get_hyps shyp = match shyp with
       [] -> errorlabstrm "popProp" (str "No proposition to generalize");
-    | (is,cst)::shyp' ->  
+    | (is,cst)::shyp' ->
          match (kind_of_term  (pf_type_of gl cst)) with
            Sort(Prop _) -> is
          | _            -> get_hyps shyp'
@@ -1227,8 +1227,8 @@ let stalt_run gl =
   let (res,hash) = convertConcl concl in
 (* we run stalmarck *)
   let  Quatuor (_, b, _, tr) = run (S (S O)) res in
-  match b with 
-   | True -> 
+  match b with
+   | True ->
 (* we have reached a contradiction *)
 (* we first convert the trace *)
        let vv = mkTrace tr in
@@ -1253,4 +1253,3 @@ END
 TACTIC EXTEND pop_prop
  [ "pop_prop" ] -> [ pop_prop_run ]
 END
-
