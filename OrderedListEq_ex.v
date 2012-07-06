@@ -72,7 +72,6 @@ intros H'; right; auto with zarith.
 left; right; auto with zarith.
 apply Zlt_O_minus_lt; auto.
 rewrite H; auto with zarith.
-red in |- *; simpl in |- *; auto.
 intros p H'; left; left.
 apply Zlt_O_minus_lt; auto with zarith.
 rewrite <- (Zopp_involutive (b - a)); auto with zarith.
