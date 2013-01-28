@@ -998,8 +998,8 @@ let constant dir s =
   try
     global_reference_in_absolute_module dir id
   with Not_found ->
-    anomaly ("cannot find "^
-	     (Libnames.string_of_qualid (Libnames.make_qualid dir id)))
+    anomaly (Pp.str ("cannot find "^
+	     (Libnames.string_of_qualid (Libnames.make_qualid dir id))))
 
 (* From logic *)
 
@@ -1030,10 +1030,10 @@ let stal_constant dir s =
     global_reference_in_absolute_module
       (make_dirpath (List.map id_of_string (List.rev dir))) id
   with _ ->
-    anomaly ("cannot find "^
+    anomaly (Pp.str ("cannot find "^
 	     (Libnames.string_of_qualid
                 (Libnames.make_qualid
-                   (make_dirpath (List.map id_of_string (List.rev dir))) id)))
+                   (make_dirpath (List.map id_of_string (List.rev dir))) id))))
 
 (* From rZ *)
 
