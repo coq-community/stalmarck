@@ -40,6 +40,8 @@ triplet.v
 unionState.v 
 wfArray.v 
 staltac.ml4
+-custom "$(COQC) $(COQLIBS) -q -byte StalTac.v" "StalTac.v" StalTac.vo
+-custom "$(COQC) $(COQLIBS) -vm -q -byte StalTac_ex.v" "StalTac.vo" StalTac_ex.vo
 extraction
 -custom
        "@echo '***** test: checking the tautology ztwaalf1_be *****'
