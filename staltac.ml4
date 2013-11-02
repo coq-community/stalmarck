@@ -1247,9 +1247,9 @@ let stalt_run gl =
    | False -> error "StalT can't conclude"
 
 TACTIC EXTEND stalt
- [ "stalt" ] -> [ stalt_run ]
+ [ "stalt" ] -> [ Proofview.V82.tactic stalt_run ]
 END
 
 TACTIC EXTEND pop_prop
- [ "pop_prop" ] -> [ pop_prop_run ]
+ [ "pop_prop" ] -> [ Proofview.V82.tactic pop_prop_run ]
 END
