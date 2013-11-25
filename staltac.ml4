@@ -982,7 +982,6 @@ open Closure
 open Tacred
 open Tactics
 open Pattern
-open Hiddentac
 open Constrintern
 
 (*i*)
