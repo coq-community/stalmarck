@@ -1152,53 +1152,56 @@ let isDependent t = dependent (mkRel 1) t
       composed of the Expr representing the proposition and
       a hash function containing the interpretation of the variable
 *)
+
+module ConstrMap = Map.Make(Constr)
+
 let convertConcl cl =
-  let varhash  = (Hashtbl.create 17 : (constr, positive) Hashtbl.t) in
+  let varhash  = ref ConstrMap.empty in
   let index = ref zero in
   let rec inspect p =   match (kind_of_term p) with
 (* And *)
-    | App (c,[|t1; t2|]) when c=(Lazy.force coq_and) ->
+    | App (c,[|t1; t2|]) when Constr.equal c (Lazy.force coq_and) ->
              (Node (ANd,(inspect t1),(inspect t2)))
 (* Or *)
-    | App (c,[|t1; t2|]) when c=(Lazy.force coq_or) ->
+    | App (c,[|t1; t2|]) when Constr.equal c (Lazy.force coq_or) ->
              (Node (Or,(inspect t1),(inspect t2)))
 (* Eq *)
-    | App (c,[|t1; t2|]) when c=(Lazy.force coq_iff) ->
+    | App (c,[|t1; t2|]) when Constr.equal c (Lazy.force coq_iff) ->
              (Node (Eq, (inspect t1),(inspect t2)))
 (* Impl *)
-    | Prod (c,t1,t2) when c=Names.Anonymous ->
+    | Prod (c,t1,t2) when c == Names.Anonymous ->
              (Node (Impl,(inspect t1),(inspect t2)))
     | Prod (c,t1,t2) when not(dependent (mkRel 1) t2) ->
              (Node (Impl,(inspect t1),(inspect t2)))
 (* Not *)
-    | App (c,[|t|]) when c=(Lazy.force coq_not) ->
+    | App (c,[|t|]) when Constr.equal c (Lazy.force coq_not) ->
              (N (inspect t))
 (* True is interpreted as V 0 *)
-    | Ind _ when p=(Lazy.force coq_True) ->
+    | Ind _ when Constr.equal p (Lazy.force coq_True) ->
              (V zero)
 (* False is interpreted as ~(V 0) *)
-    | Ind _ when p=(Lazy.force coq_False) ->
+    | Ind _ when Constr.equal p (Lazy.force coq_False) ->
              (N (V zero))
 (* Otherwise we generate a new variable if we
    haven't already encounter this term *)
     | a ->
        begin
-         try (V (Hashtbl.find varhash p))
+         try (V (ConstrMap.find p !varhash))
          with Not_found ->
            begin
              index := rnext !index;
-             Hashtbl.add varhash p !index;
+             varhash := ConstrMap.add p !index !varhash;
              (V !index)
            end
        end in
-      (inspect cl,varhash)
+      (inspect cl,!varhash)
 
 (* Convert the hashtable into a function array *)
 let buildEnv hash =
   let acc = ref (mkApp ((Lazy.force coq_rArrayInitP)
                 ,[| mkLambda (Names.Anonymous, (Lazy.force coq_rNat),
                    (Lazy.force coq_True)) |])) in
-  Hashtbl.iter  (fun c n ->
+  ConstrMap.iter  (fun c n ->
               acc := (mkApp ((Lazy.force coq_rArraySetP)
                 ,[| !acc;mkRnat n; c |]))) hash;
   (mkApp ((Lazy.force coq_rArrayGetP)  ,[| !acc |]))
