@@ -1248,6 +1248,8 @@ let stalt_run gl =
                |])) gl
    | False -> error "StalT can't conclude"
 
+DECLARE PLUGIN "staltac"
+
 TACTIC EXTEND stalt
  [ "stalt" ] -> [ Proofview.V82.tactic stalt_run ]
 END
