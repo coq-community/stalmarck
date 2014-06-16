@@ -1239,13 +1239,14 @@ let stalt_run gl =
 (* then we make use of the theorem ExprToPropTautology to give the proof *)
 
 
-       exact_check (mkApp ((Lazy.force coq_ExprToPropTautology)
+       Proofview.V82.of_tactic
+	 (exact_check (mkApp ((Lazy.force coq_ExprToPropTautology)
                ,[| buildEnv hash;
                 Lazy.force coq_I;
                 vres;
                 mkApp ((Lazy.force coq_checkTrace) ,
                    [| vres;vv |])
-               |])) gl
+               |]))) gl
    | False -> error "StalT can't conclude"
 
 DECLARE PLUGIN "staltac"
