@@ -1,3 +1,4 @@
+-I .
 -R . Stalmarck
 BoolAux.v 
 Extract.v 
@@ -40,12 +41,10 @@ triplet.v
 unionState.v 
 wfArray.v 
 staltac.ml4
--custom "$(COQC) $(COQLIBS) -q -byte StalTac.v" "StalTac.v" StalTac.vo
--custom "$(COQC) $(COQLIBS) -vm -q -byte StalTac_ex.v" "StalTac.vo" StalTac_ex.vo
+-extra StalTac.vo StalTac.v "$(COQC) $(COQLIBS) -byte StalTac.v"
+-extra StalTac_ex.vo "StalTac_ex.v StalTac.vo" "$(COQC) $(COQLIBS) -vm -byte $<"
 extraction
--custom
-       "@echo '***** test: checking the tautology ztwaalf1_be *****'
+-extra-phony test extraction "@echo '***** test: checking the tautology ztwaalf1_be *****'
 	extraction/stalmarck 1 extraction/ztwaalf1_be
 	@echo '******************** End of test ***********************'"
-  extraction test
-
+-extra-phony all test ""
