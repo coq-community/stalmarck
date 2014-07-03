@@ -1194,7 +1194,8 @@ let convertConcl cl =
              (V !index)
            end
        end in
-      (inspect cl,!varhash)
+  let term = inspect cl in
+    (term,!varhash)
 
 (* Convert the hashtable into a function array *)
 let buildEnv hash =
@@ -1237,16 +1238,16 @@ let stalt_run gl =
 (* then Expr representing the Propositon *)
        let vres = mkExpr res in
 (* then we make use of the theorem ExprToPropTautology to give the proof *)
-
-
-       Proofview.V82.of_tactic
-	 (exact_check (mkApp ((Lazy.force coq_ExprToPropTautology)
-               ,[| buildEnv hash;
-                Lazy.force coq_I;
-                vres;
-                mkApp ((Lazy.force coq_checkTrace) ,
-                   [| vres;vv |])
-               |]))) gl
+       let term = 
+	 (mkApp ((Lazy.force coq_ExprToPropTautology)
+		,[| buildEnv hash;
+                    Lazy.force coq_I;
+                    vres;
+                    mkApp ((Lazy.force coq_checkTrace) ,
+			   [| vres;vv |])
+		 |]))
+       in
+	 (Proofview.V82.of_tactic (exact_check term)) gl
    | False -> error "StalT can't conclude"
 
 DECLARE PLUGIN "staltac"
