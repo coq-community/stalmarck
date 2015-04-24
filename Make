@@ -1,50 +1,50 @@
 -I .
 -R . Stalmarck
-BoolAux.v 
-Extract.v 
-LetP.v 
-Option.v 
-OrderedListEq.v 
-OrderedListEq_ex.v 
-PolyListAux.v 
+BoolAux.v
+Extract.v
+LetP.v
+Option.v
+OrderedListEq.v
+OrderedListEq_ex.v
+PolyListAux.v
 StalTac.v
 StalTac_ex.v
-addArray.v 
-algoDilemma1.v 
-algoDotriplet.v 
-algoDotriplets.v 
-algoRun.v 
-algoStalmarck.v 
-algoTrace.v 
-complete.v 
-doTriplet.v 
-doTriplets.v 
-equalBefore.v 
-interImplement.v 
-interImplement2.v 
-interImplement2_ex.v 
-interState.v 
-ltState.v 
-makeTriplet.v 
-memoryImplement.v 
-normalize.v 
-rZ.v 
-refl.v 
-restrictState.v 
-sTactic.v 
-stalmarck.v 
-state.v 
-stateDec.v 
-stateExtra.v 
-trace.v 
-triplet.v 
-unionState.v 
-wfArray.v 
+addArray.v
+algoDilemma1.v
+algoDotriplet.v
+algoDotriplets.v
+algoRun.v
+algoStalmarck.v
+algoTrace.v
+complete.v
+doTriplet.v
+doTriplets.v
+equalBefore.v
+interImplement.v
+interImplement2.v
+interImplement2_ex.v
+interState.v
+ltState.v
+makeTriplet.v
+memoryImplement.v
+normalize.v
+rZ.v
+refl.v
+restrictState.v
+sTactic.v
+stalmarck.v
+state.v
+stateDec.v
+stateExtra.v
+trace.v
+triplet.v
+unionState.v
+wfArray.v
 staltac.ml4
--extra StalTac.vo StalTac.v "$(COQC) $(COQLIBS) -byte StalTac.v"
--extra StalTac_ex.vo "StalTac_ex.v StalTac.vo" "$(COQC) $(COQLIBS) -vm -byte $<"
-extraction
--extra-phony test extraction "@echo '***** test: checking the tautology ztwaalf1_be *****'
+-extra extraction/stalmarck Extract.vo
+       "$(MAKE) -C extraction all"
+-extra-phony test extraction/stalmarck "@echo '***** test: checking the tautology ztwaalf1_be *****'
 	extraction/stalmarck 1 extraction/ztwaalf1_be
 	@echo '******************** End of test ***********************'"
+-extra-phony clean "" "$(MAKE) -C extraction clean"
 -extra-phony all test ""

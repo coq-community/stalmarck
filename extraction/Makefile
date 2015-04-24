@@ -9,23 +9,27 @@ OBJ_I = stal.cmx \
 	parser.cmi
 
 OBJ= 	stal.cmx \
- 	lexer.cmx \
+	lexer.cmx \
 	parser.cmx \
 	main.cmx \
- 
+
 PROG= stalmarck
 
 
 all : 	$(PROG)
 
-$(PROG) :  $(OBJ_I) $(OBJ)	
-	$(CC) $(FLAGS) -o $(PROG) $(LIB) $(OBJ) 
+$(PROG) : $(OBJ_I) $(OBJ)
+	$(CC) $(FLAGS) -o $(PROG) $(LIB) $(OBJ)
 
-stal.ml : 
+stal.ml :
 	cp ../run.ml stal.ml
 
-parser.ml parser.mli : parser.mly
+parser.ml : parser.mly
 	$(YACC) parser.mly
+
+parser.mli : parser.ml
+
+parser.cmi : stal.cmi
 
 lexer.ml : lexer.mll
 	$(LEX) lexer.mll
@@ -34,10 +38,12 @@ lexer.ml : lexer.mll
 	$(CC) -c $<
 
 %.cmx : %.ml
-	$(CC) -c $<	 
+	$(CC) -c $<
 
+%.ml.d : %.ml | lexer.ml parser.ml
+	$(CAMLBIN)ocamldep $< > $@
 
-clean : 	
+clean :
 	rm -f *.o *.cmx *.cmi \
 	$(PROG) \
 	stal.ml \
@@ -45,3 +51,6 @@ clean :
 	parser.ml \
 	parser.mli
 
+ifneq ($(MAKECMDGOALS),clean)
+include $(OBJ:.cmx=.ml.d)
+endif
