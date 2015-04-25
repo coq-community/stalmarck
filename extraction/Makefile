@@ -24,6 +24,9 @@ $(PROG) : $(OBJ_I) $(OBJ)
 stal.ml :
 	cp ../run.ml stal.ml
 
+stal.mli :
+	cp ../run.mli stal.mli
+
 parser.ml : parser.mly
 	$(YACC) parser.mly
 
