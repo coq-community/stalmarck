@@ -1215,7 +1215,7 @@ let pop_prop_run gl =
   let rec get_hyps shyp = match shyp with
       [] -> errorlabstrm "popProp" (str "No proposition to generalize");
     | (is,cst)::shyp' ->
-         match (kind_of_term  (pf_type_of gl cst)) with
+         match (kind_of_term  (pf_unsafe_type_of gl cst)) with
            Sort(Prop _) -> is
          | _            -> get_hyps shyp'
   in
