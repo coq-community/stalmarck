@@ -43,8 +43,11 @@ lexer.ml : lexer.mll
 %.cmx : %.ml
 	$(CC) -c $<
 
-%.ml.d : %.ml | lexer.ml parser.ml
-	$(CAMLBIN)ocamldep $< > $@
+.depend : | $(patsubst %.cmx,%.ml,$(OBJ))
+	$(CAMLBIN)ocamldep $^ > $@
+
+lexer.cmx : stal.cmi
+stal.cmx : stal.cmi
 
 clean :
 	rm -f *.o *.cmx *.cmi \
@@ -55,5 +58,5 @@ clean :
 	parser.mli
 
 ifneq ($(MAKECMDGOALS),clean)
-include $(OBJ:.cmx=.ml.d)
+include .depend
 endif
