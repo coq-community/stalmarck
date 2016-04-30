@@ -422,7 +422,7 @@ Theorem doTripletRestrict :
  exists S3 : State,
    doTripletP (restrictState S1 L) t S3 /\ eqState (restrictState S2 L) S3.
 intros S1 S2 t L H' H'0; inversion H';
- apply doTripletRestrictAux1 with (1 := H) ||
+ simple apply doTripletRestrictAux1 with (1 := H) ||
    apply doTripletRestrictAux2 with (1 := H); rewrite <- H0 in H'0;
  simpl in H'0; simpl in |- *; repeat rewrite valRzComp; 
  auto with datatypes; apply restrictStateComp; repeat rewrite valRzComp;

@@ -1,0 +1,8 @@
+stal.cmo :
+stal.cmx :
+lexer.cmo : stal.cmo parser.cmi
+lexer.cmx : stal.cmx parser.cmx
+parser.cmo : stal.cmo parser.cmi
+parser.cmx : stal.cmx parser.cmi
+main.cmo : stal.cmo parser.cmi lexer.cmo
+main.cmx : stal.cmx parser.cmx lexer.cmx
