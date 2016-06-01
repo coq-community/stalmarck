@@ -1220,7 +1220,7 @@ let pop_prop_run gl =
          | _            -> get_hyps shyp'
   in
   let v = (get_hyps (pf_hyps_types gl)) in
-    tclTHEN (generalize [mkVar v]) (clear [v]) gl
+    Proofview.V82.of_tactic (Tacticals.New.tclTHEN (generalize [mkVar v]) (clear [v])) gl
 
 (* Main function *)
 
