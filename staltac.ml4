@@ -965,7 +965,7 @@ let run m e =
 (* the linking code *)
 
 open Pp
-open Errors
+open CErrors
 open Util
 open Term
 open Termops
@@ -978,7 +978,7 @@ open Printer
 open Equality
 open Vernacinterp
 open Libobject
-open Closure
+open CClosure
 open Tacred
 open Tactics
 open Pattern
