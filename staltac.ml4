@@ -1,4 +1,3 @@
-
 (****************************************************************************
 
           Stalmarck  :  stalt
@@ -7,6 +6,8 @@
 
 ****************************************************************************
 Implementation of the Stalt tactic *)
+
+open Ltac_plugin
 
 (* The `Stalt' tactic inspired by the Ring tactic *)
 
