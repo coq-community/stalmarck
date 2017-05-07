@@ -969,6 +969,7 @@ open Pp
 open CErrors
 open Util
 open Term
+open EConstr
 open Termops
 open Names
 open Reduction
@@ -996,7 +997,7 @@ let constant dir s =
   let dir = make_dirpath (List.map id_of_string (List.rev ("Coq"::dir))) in
   let id = id_of_string s in
   try
-    global_reference_in_absolute_module dir id
+    EConstr.of_constr (global_reference_in_absolute_module dir id)
   with Not_found ->
     anomaly (Pp.str ("cannot find "^
 	     (Libnames.string_of_qualid (Libnames.make_qualid dir id))))
@@ -1023,12 +1024,12 @@ let coq_xH = lazy (constant binnums "xH");;
 let stal_constant dir s =
   let id = id_of_string s in
   try
-    global_reference_in_absolute_module
-      (make_dirpath (List.map id_of_string (List.rev ("Stalmarck":: dir)))) id
+    EConstr.of_constr (global_reference_in_absolute_module
+      (make_dirpath (List.map id_of_string (List.rev ("Stalmarck":: dir)))) id)
   with _ ->
   try
-    global_reference_in_absolute_module
-      (make_dirpath (List.map id_of_string (List.rev dir))) id
+    EConstr.of_constr (global_reference_in_absolute_module
+      (make_dirpath (List.map id_of_string (List.rev dir))) id)
   with _ ->
     anomaly (Pp.str ("cannot find "^
 	     (Libnames.string_of_qualid
@@ -1147,7 +1148,7 @@ let rec mkTrace = function
     mkApp ((Lazy.force coq_dilemmaTrace) ,[|mkRz a; mkRz b;
                                            mkTrace tr1;mkTrace tr2|])
 
-let isDependent t = dependent (mkRel 1) t
+let isDependent sigma t = dependent sigma (mkRel 1) t
 
 (* The conclusion is a propostion, convertConcl returns a pair
       composed of the Expr representing the proposition and
@@ -1156,37 +1157,38 @@ let isDependent t = dependent (mkRel 1) t
 
 module ConstrMap = Map.Make(Constr)
 
-let convertConcl cl =
+let convertConcl sigma cl =
   let varhash  = ref ConstrMap.empty in
   let index = ref zero in
-  let rec inspect p =   match (kind_of_term p) with
+  let rec inspect p =   match kind sigma p with
 (* And *)
-    | App (c,[|t1; t2|]) when Constr.equal c (Lazy.force coq_and) ->
+    | App (c,[|t1; t2|]) when EConstr.eq_constr sigma c (Lazy.force coq_and) ->
              (Node (ANd,(inspect t1),(inspect t2)))
 (* Or *)
-    | App (c,[|t1; t2|]) when Constr.equal c (Lazy.force coq_or) ->
+    | App (c,[|t1; t2|]) when EConstr.eq_constr sigma c (Lazy.force coq_or) ->
              (Node (Or,(inspect t1),(inspect t2)))
 (* Eq *)
-    | App (c,[|t1; t2|]) when Constr.equal c (Lazy.force coq_iff) ->
+    | App (c,[|t1; t2|]) when EConstr.eq_constr sigma c (Lazy.force coq_iff) ->
              (Node (Eq, (inspect t1),(inspect t2)))
 (* Impl *)
     | Prod (c,t1,t2) when c == Names.Anonymous ->
              (Node (Impl,(inspect t1),(inspect t2)))
-    | Prod (c,t1,t2) when not(dependent (mkRel 1) t2) ->
+    | Prod (c,t1,t2) when not(dependent sigma (mkRel 1) t2) ->
              (Node (Impl,(inspect t1),(inspect t2)))
 (* Not *)
-    | App (c,[|t|]) when Constr.equal c (Lazy.force coq_not) ->
+    | App (c,[|t|]) when EConstr.eq_constr sigma c (Lazy.force coq_not) ->
              (N (inspect t))
 (* True is interpreted as V 0 *)
-    | Ind _ when Constr.equal p (Lazy.force coq_True) ->
+    | Ind _ when EConstr.eq_constr sigma p (Lazy.force coq_True) ->
              (V zero)
 (* False is interpreted as ~(V 0) *)
-    | Ind _ when Constr.equal p (Lazy.force coq_False) ->
+    | Ind _ when EConstr.eq_constr sigma p (Lazy.force coq_False) ->
              (N (V zero))
 (* Otherwise we generate a new variable if we
    haven't already encounter this term *)
     | a ->
        begin
+         let p = EConstr.to_constr sigma p in
          try (V (ConstrMap.find p !varhash))
          with Not_found ->
            begin
@@ -1205,7 +1207,7 @@ let buildEnv hash =
                    (Lazy.force coq_True)) |])) in
   ConstrMap.iter  (fun c n ->
               acc := (mkApp ((Lazy.force coq_rArraySetP)
-                ,[| !acc;mkRnat n; c |]))) hash;
+                ,[| !acc;mkRnat n; EConstr.of_constr c |]))) hash;
   (mkApp ((Lazy.force coq_rArrayGetP)  ,[| !acc |]))
 
 
@@ -1216,8 +1218,9 @@ let pop_prop_run gl =
   let rec get_hyps shyp = match shyp with
       [] -> user_err ~hdr:"popProp" (str "No proposition to generalize");
     | (is,cst)::shyp' ->
-         match (kind_of_term  (pf_unsafe_type_of gl cst)) with
-           Sort(Prop _) -> is
+         let sigma = project gl in
+         match kind sigma (pf_unsafe_type_of gl cst) with
+           Sort s when (match ESorts.kind sigma s with Prop _ -> true | _ -> false) -> is
          | _            -> get_hyps shyp'
   in
   let v = (get_hyps (pf_hyps_types gl)) in
@@ -1228,7 +1231,7 @@ let pop_prop_run gl =
 let stalt_run gl =
   let concl = pf_concl gl in
 (* We get the expression and the hastable *)
-  let (res,hash) = convertConcl concl in
+  let (res,hash) = convertConcl (project gl) concl in
 (* we run stalmarck *)
   let  Quatuor (_, b, _, tr) = run (S (S O)) res in
   match b with
