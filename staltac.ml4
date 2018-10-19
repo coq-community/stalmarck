@@ -968,7 +968,7 @@ let run m e =
 open Pp
 open CErrors
 open Util
-open Term
+open Constr
 open EConstr
 open Termops
 open Names
