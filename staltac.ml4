@@ -972,18 +972,8 @@ open Term
 open EConstr
 open Termops
 open Names
-open Reduction
 open Tacmach
-open Tacticals
-open Proof_type
-open Printer
-open Equality
-open Vernacinterp
-open Libobject
-open CClosure
-open Tacred
 open Tactics
-open Pattern
 open Constrintern
 
 (*i*)
@@ -993,11 +983,12 @@ open Constrintern
   the constants are loaded in the environment
 *)
 
+
 let constant dir s =
   let dir = make_dirpath (List.map id_of_string (List.rev ("Coq"::dir))) in
   let id = id_of_string s in
   try
-    EConstr.of_constr (global_reference_in_absolute_module dir id)
+    EConstr.of_constr (Universes.constr_of_global (global_reference_in_absolute_module dir id))
   with Not_found ->
     anomaly (Pp.str ("cannot find "^
 	     (Libnames.string_of_qualid (Libnames.make_qualid dir id))))
@@ -1024,12 +1015,12 @@ let coq_xH = lazy (constant binnums "xH");;
 let stal_constant dir s =
   let id = id_of_string s in
   try
-    EConstr.of_constr (global_reference_in_absolute_module
-      (make_dirpath (List.map id_of_string (List.rev ("Stalmarck":: dir)))) id)
+    EConstr.of_constr (Universes.constr_of_global (global_reference_in_absolute_module
+      (make_dirpath (List.map id_of_string (List.rev ("Stalmarck":: dir)))) id))
   with _ ->
   try
-    EConstr.of_constr (global_reference_in_absolute_module
-      (make_dirpath (List.map id_of_string (List.rev dir))) id)
+    EConstr.of_constr (Universes.constr_of_global (global_reference_in_absolute_module
+      (make_dirpath (List.map id_of_string (List.rev dir))) id))
   with _ ->
     anomaly (Pp.str ("cannot find "^
 	     (Libnames.string_of_qualid
@@ -1041,7 +1032,6 @@ let stal_constant dir s =
 let coq_zero = lazy (stal_constant ["rZ"] "zero");;
 let coq_rnext = lazy (stal_constant ["rZ"] "rnext");;
 let coq_rNat = lazy (stal_constant ["rZ"] "rNat");;
-let coq_rZPlus = lazy (stal_constant ["rZ"] "rZPlus");;
 let coq_rZMinus = lazy (stal_constant ["rZ"] "rZMinus");;
 let coq_rZPlus = lazy (stal_constant ["rZ"] "rZPlus");;
 
@@ -1252,7 +1242,7 @@ let stalt_run gl =
 		 |]))
        in
 	 (Proofview.V82.of_tactic (exact_check term)) gl
-   | False -> error "StalT can't conclude"
+   | False -> CErrors.user_err (str "StalT can't conclude")
 
 DECLARE PLUGIN "staltac"
 

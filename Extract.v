@@ -16,6 +16,7 @@
 
 Require Import algoRun.
 Require Import ZArith.
+Require Import Extraction.
 
 Definition eqOp := normalize.Eq. (* To circumvent the clash with Datatypes.Eq *)
 
