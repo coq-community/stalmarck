@@ -79,7 +79,7 @@ Definition listDec :
   forall (A : Set) (eqDec : forall a b : A, {a = b} + {a <> b})
     (L1 L2 : list A), {L1 = L2} + {L1 <> L2}.
 intros A eqDec.
-fix 1.
+fix listDec 1.
 intros L1; case L1.
 intros L2; case L2.
 left; auto.

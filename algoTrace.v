@@ -393,7 +393,7 @@ Definition InDec :
   forall A : Set,
   (forall x y : A, {x = y :>A} + {x <> y :>A}) ->
   forall (a : A) (l : list A), {In a l} + {~ In a l}.
-fix 4.
+fix InDec 4.
 intros A H' a l; case l.
 right; red in |- *; intros H'0; inversion H'0.
 intros a0 l0; case (H' a a0).
@@ -594,7 +594,7 @@ Transparent interMem.
 
 (* How to prove a\/ ~a *)
 
-Let t1 :
+Local Definition t1 :
   Tautology (Node Or (V (rnext zero)) (normalize.N (V (rnext zero)))) :=
   checkTrace (Node Or (V (rnext zero)) (normalize.N (V (rnext zero))))
     (seqTrace

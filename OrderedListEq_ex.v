@@ -29,7 +29,7 @@ Require Import OrderedListEq.
 Require Import Arith.
 
 Definition CNat : forall a b : nat, {a < b} + {b < a} + {a = b}.
-fix 1; intros a; case a; [ idtac | intros a' ]; intros b; case b;
+fix CNat 1; intros a; case a; [ idtac | intros a' ]; intros b; case b;
  try intros b'.
 right; auto.
 left; left; auto with arith.
@@ -40,7 +40,7 @@ left; right; auto with arith.
 right; auto.
 Defined.
 
-Let appnat := appendf _ lt (fun x y : nat => x = y) CNat.
+Local Definition appnat := appendf _ lt (fun x y : nat => x = y) CNat.
 
 Definition eqTriv :
   forall a b : nat,
@@ -50,14 +50,14 @@ Definition eqTriv :
 intros a b H'; left; auto.
 Defined.
 
-Let getminnat :=
+Local Definition getminnat :=
   getMin _ lt (fun x y : nat => x = y) CNat (fun x y : nat => x = y) eqTriv.
 
-Let internat := interf _ lt (fun x y : nat => x = y) CNat.
+Local Definition internat := interf _ lt (fun x y : nat => x = y) CNat.
 
-Let l1 := 1 :: 3 :: 5 :: 7 :: nil.
+Local Definition l1 := 1 :: 3 :: 5 :: 7 :: nil.
 
-Let l2 := 2 :: 3 :: 5 :: 6 :: nil.
+Local Definition l2 := 2 :: 3 :: 5 :: 6 :: nil.
 Eval compute in (appnat l1 l2).
 Eval compute in (getminnat l1 l2).
 Eval compute in (internat l1 l2).
@@ -79,7 +79,7 @@ replace (- (b - a))%Z with (a - b)%Z; auto with zarith.
 rewrite H'; red in |- *; simpl in |- *; auto.
 Defined.
 
-Let appZ := appendf _ Zlt (fun x y : Z => x = y) CZ.
+Local Definition appZ := appendf _ Zlt (fun x y : Z => x = y) CZ.
 
 Definition eqTrivZ :
   forall a b : Z,
@@ -88,15 +88,15 @@ Definition eqTrivZ :
 intros a b H'; left; auto.
 Defined.
 
-Let getminZ :=
+Local Definition getminZ :=
   getMin _ Zlt (fun x y : Z => x = y) CZ (fun x y : Z => x = y) eqTrivZ.
 
-Let interZ := interf _ Zlt (fun x y : Z => x = y) CZ.
+Local Definition interZ := interf _ Zlt (fun x y : Z => x = y) CZ.
 
-Let Zl1 :=
+Local Definition Zl1 :=
   (- Z_of_nat 3)%Z :: (- Z_of_nat 1)%Z :: Z_of_nat 5 :: Z_of_nat 7 :: nil.
 
-Let Zl2 :=
+Local Definition Zl2 :=
   (- Z_of_nat 3)%Z :: (- Z_of_nat 2)%Z :: Z_of_nat 5 :: Z_of_nat 6 :: nil.
 Eval compute in (appZ Zl1 Zl2).
 Eval compute in (getminZ Zl1 Zl2).

@@ -140,7 +140,7 @@ Hint Resolve InEqHead InEqSkip.
 
 Definition InEqDec :
   forall (a : A) (L1 : list A), {InEq a L1} + {~ InEq a L1}.
-fix 2.
+fix InEqDec 2.
 intros a L1; case L1.
 right; red in |- *; intros H'; inversion H'; auto.
 intros a0 l; case (eqADec' a a0); intros Eqaa0.

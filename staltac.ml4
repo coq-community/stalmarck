@@ -985,8 +985,8 @@ open Constrintern
 
 
 let constant dir s =
-  let dir = make_dirpath (List.map id_of_string (List.rev ("Coq"::dir))) in
-  let id = id_of_string s in
+  let dir = DirPath.make (List.map Id.of_string (List.rev ("Coq"::dir))) in
+  let id = Id.of_string s in
   try
     EConstr.of_constr (Universes.constr_of_global (global_reference_in_absolute_module dir id))
   with Not_found ->
@@ -1013,19 +1013,19 @@ let coq_xI = lazy (constant binnums "xI");;
 let coq_xH = lazy (constant binnums "xH");;
 
 let stal_constant dir s =
-  let id = id_of_string s in
+  let id = Id.of_string s in
   try
     EConstr.of_constr (Universes.constr_of_global (global_reference_in_absolute_module
-      (make_dirpath (List.map id_of_string (List.rev ("Stalmarck":: dir)))) id))
+      (DirPath.make (List.map Id.of_string (List.rev ("Stalmarck":: dir)))) id))
   with _ ->
   try
     EConstr.of_constr (Universes.constr_of_global (global_reference_in_absolute_module
-      (make_dirpath (List.map id_of_string (List.rev dir))) id))
+      (DirPath.make (List.map Id.of_string (List.rev dir))) id))
   with _ ->
     anomaly (Pp.str ("cannot find "^
 	     (Libnames.string_of_qualid
                 (Libnames.make_qualid
-                   (make_dirpath (List.map id_of_string (List.rev dir))) id))))
+                   (DirPath.make (List.map Id.of_string (List.rev dir))) id))))
 
 (* From rZ *)
 
