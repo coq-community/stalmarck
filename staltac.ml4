@@ -988,7 +988,7 @@ let constant dir s =
   let dir = DirPath.make (List.map Id.of_string (List.rev ("Coq"::dir))) in
   let id = Id.of_string s in
   try
-    EConstr.of_constr (Universes.constr_of_global (global_reference_in_absolute_module dir id))
+    EConstr.of_constr (UnivGen.constr_of_monomorphic_global (global_reference_in_absolute_module dir id))
   with Not_found ->
     anomaly (Pp.str ("cannot find "^
 	     (Libnames.string_of_qualid (Libnames.make_qualid dir id))))
@@ -1015,11 +1015,11 @@ let coq_xH = lazy (constant binnums "xH");;
 let stal_constant dir s =
   let id = Id.of_string s in
   try
-    EConstr.of_constr (Universes.constr_of_global (global_reference_in_absolute_module
+    EConstr.of_constr (UnivGen.constr_of_monomorphic_global (global_reference_in_absolute_module
       (DirPath.make (List.map Id.of_string (List.rev ("Stalmarck":: dir)))) id))
   with _ ->
   try
-    EConstr.of_constr (Universes.constr_of_global (global_reference_in_absolute_module
+    EConstr.of_constr (UnivGen.constr_of_monomorphic_global (global_reference_in_absolute_module
       (DirPath.make (List.map Id.of_string (List.rev dir))) id))
   with _ ->
     anomaly (Pp.str ("cannot find "^
@@ -1210,7 +1210,7 @@ let pop_prop_run gl =
     | (is,cst)::shyp' ->
          let sigma = project gl in
          match kind sigma (pf_unsafe_type_of gl cst) with
-           Sort s when (match ESorts.kind sigma s with Prop _ -> true | _ -> false) -> is
+           Sort s when (match ESorts.kind sigma s with Sorts.Prop -> true | _ -> false) -> is
          | _            -> get_hyps shyp'
   in
   let v = (get_hyps (pf_hyps_types gl)) in
