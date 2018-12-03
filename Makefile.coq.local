@@ -1,4 +1,4 @@
-post-all:: extraction/stalmarck test
+post-all:: extraction/stalmarck
 
 extraction/stalmarck: Extract.vo
 	$(MAKE) -C extraction all
