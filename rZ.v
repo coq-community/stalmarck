@@ -44,7 +44,7 @@ Definition rNat := positive.
 
 Definition zero := 1%positive.
 
-Definition rnext : rNat -> rNat := Psucc.
+Definition rnext : rNat -> rNat := Pos.succ.
 (* rZ are signed rNat *)
 
 Inductive rZ : Set :=
@@ -509,10 +509,11 @@ Qed.
  Definition of function arrays on an arbitrary Set A, using         
  positive numbers as indexes                                        
                                                                     
-*********************************************************************)
+ *********************************************************************)
+Require Option.
 Section rA.
 Variable A : Set.
-Require Import Option.
+Import Option.
 (* Usual binary tree *)
 
 Inductive rTree : Set :=
