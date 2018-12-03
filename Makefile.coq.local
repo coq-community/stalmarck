@@ -1,0 +1,14 @@
+post-all:: extraction/stalmarck test
+
+extraction/stalmarck: Extract.vo
+	$(MAKE) -C extraction all
+
+test: extraction/stalmarck
+	@echo '***** test: checking the tautology ztwaalf1_be *****'
+	extraction/stalmarck 1 extraction/ztwaalf1_be
+	@echo '******************** End of test ***********************'
+
+clean::
+	$(MAKE) -C extraction clean
+
+.PHONY: test
