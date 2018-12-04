@@ -26,8 +26,8 @@ Some example of computing with stalmarck inside Coq*)
 Require Import ZArith.
 Require Export algoStalmarck.
 Require Export algoTrace.
-Section orun.
 Require Export makeTriplet.
+Section orun.
 Eval compute in
   (makeTriplets
      (norm (Node Or (V (rnext zero)) (normalize.N (V (rnext zero)))))).

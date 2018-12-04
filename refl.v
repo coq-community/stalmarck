@@ -28,10 +28,11 @@ Require Import normalize.
 Require Import Classical.
 Require Import Option.
 Require Import sTactic.
+Require Classical.
 Section refl.
 Variable fmap : rNat -> Prop.
 Hypothesis fmapO : fmap zero.
-Require Import Classical.
+Import Classical.
 (* Standard translation of boolean expression to Propositions, f is the function
  that gives meaning to boolean variables *)
 

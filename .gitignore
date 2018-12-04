@@ -1,1 +1,14 @@
-run.ml*
+Makefile.coq
+Makefile.coq.conf
+*~
+*.d
+*.aux
+*.glob
+*.vo
+*.vio
+*.cmi
+*.cmx
+*.cmxs
+*.o
+run.ml
+run.mli
