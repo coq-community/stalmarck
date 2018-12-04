@@ -12,3 +12,4 @@ Makefile.coq.conf
 *.o
 run.ml
 run.mli
+result
