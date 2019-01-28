@@ -1,0 +1,60 @@
+---
+fullname: Stalmarck
+shortname: stalmarck
+
+description: A two-level approach to prove tautology using Stalmarck's algorithm.
+
+authors:
+- name: Pierre Letouzey
+  initial: true
+- name: Laurent Théry
+  initial: true
+
+maintainers:
+- name: Hugo Herbelin
+  nickname: herbelin
+
+license:
+  fullname: GNU Lesser General Public License v2.1
+  shortname: LGPL-2.1
+
+plugin: true
+
+supported_coq_versions:
+  text: Coq master (use the corresponding branch or release for other Coq versions)
+  opam: '{= "dev" }'
+
+tested_coq_versions:
+- version_or_url: https://github.com/coq/coq/tarball/d6a5375460
+
+tested_coq_opam_version: dev
+
+namespace: Stalmarck
+
+keywords:
+- name: boolean formula
+- name: tautology checker
+
+categories:
+- name: Computer Science/Decision Procedures and Certified Algorithms/Decision procedures
+- name: Miscellaneous/Extracted Programs/Decision procedures
+
+documentation: |
+  This project is composed of :
+
+  - a proof of correctness of the algorithm as described in 
+    "A formalization of Stalmarck's algorithm in COQ" TPHOLs2000.
+
+  - an implementation of the algorithm. With respect to the paper,
+    this implementation is completely functional and can be used inside
+    Coq.
+
+  - a reflected tactic `Stalt`, that uses the extracted code to compute
+    an execution trace, the trace checker is then called inside Coq.
+
+  See `algoRun.v` for examples how to use stalmarck inside Coq
+
+  See `StalTac_ex.v` for examples how to use the reflected tactic.
+
+  WARNING: Stalmarck's method is patented and should not be used for commercial
+  applications without the agreement of Prover Technology. 
