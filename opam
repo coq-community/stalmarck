@@ -1,0 +1,26 @@
+opam-version: "1.2"
+maintainer: "palmskog@gmail.com"
+
+homepage: "https://github.com/coq-community/stalmarck"
+dev-repo: "https://github.com/coq-community/stalmarck.git"
+bug-reports: "https://github.com/coq-community/stalmarck/issues"
+license: "LGPL-2.1"
+
+build: [make "-j%{jobs}%"]
+install: [make "install"]
+remove: ["rm" "-R" "%{lib}%/coq/user-contrib/Stalmarck"]
+depends: [
+  "coq" {>= "8.9" & < "8.10~"}
+]
+
+tags: [
+  "keyword:boolean formula"
+  "keyword:tautology checker"
+  "category:Computer Science/Decision Procedures and Certified Algorithms/Decision procedures"
+  "category:Miscellaneous/Extracted Programs/Decision procedures"
+  "logpath:Stalmarck"
+]
+authors: [
+  "Pierre Letouzey"
+  "Laurent Théry"
+]
