@@ -19,6 +19,7 @@
 
 A two-level approach to prove tautology using Stalmarck's algorithm.
 
+
 ## Meta
 
 - Author(s):
