@@ -4,6 +4,10 @@
 [![Contributing][contributing-shield]][contributing-link]
 [![Code of Conduct][conduct-shield]][conduct-link]
 [![Gitter][gitter-shield]][gitter-link]
+[![DOI][doi-shield]][doi-link]
+
+[doi-shield]: https://zenodo.org/badge/DOI/10.1007/3-540-44659-1_24.svg
+[doi-link]: https://doi.org/10.1007/3-540-44659-1_24
 
 [travis-shield]: https://travis-ci.com/coq-community/stalmarck.svg?branch=master
 [travis-link]: https://travis-ci.com/coq-community/stalmarck/builds
@@ -17,8 +21,11 @@
 [gitter-shield]: https://img.shields.io/badge/chat-on%20gitter-%23c1272d.svg
 [gitter-link]: https://gitter.im/coq-community/Lobby
 
-A two-level approach to prove tautology using Stalmarck's algorithm.
+A two-level approach to prove tautologies using Stålmarck's algorithm.
 
+
+More details about the project can be found in the paper
+[Formalizing Stålmarck&#39;s Algorithm in Coq](https://www.irif.fr/~letouzey/download/stalmarck.ps.gz).
 
 ## Meta
 
@@ -27,7 +34,7 @@ A two-level approach to prove tautology using Stalmarck's algorithm.
   - Laurent Théry (initial)
 - Coq-community maintainer(s):
   - Hugo Herbelin ([**@herbelin**](https://github.com/herbelin))
-- License: [GNU Lesser General Public License v2.1](LICENSE)
+- License: [GNU Lesser General Public License v2.1 or later](LICENSE)
 - Compatible Coq versions: Coq 8.9 (use the corresponding branch or release for other Coq versions)
 - Compatible OCaml versions: all versions supported by Coq
 - Additional dependencies: none
@@ -54,10 +61,12 @@ make install
 After installation, the included modules are available under
 the `Stalmarck` namespace.
 
-This project is composed of :
+## Documentation
+
+This project is composed of:
 
 - a proof of correctness of the algorithm as described in 
-  "A formalization of Stalmarck's algorithm in COQ" TPHOLs2000.
+  "A Formalization of Stålmarck's Algorithm in Coq", TPHOLs2000.
 
 - an implementation of the algorithm. With respect to the paper,
   this implementation is completely functional and can be used inside
@@ -66,10 +75,10 @@ This project is composed of :
 - a reflected tactic `Stalt`, that uses the extracted code to compute
   an execution trace, the trace checker is then called inside Coq.
 
-See `algoRun.v` for examples how to use stalmarck inside Coq
+See `algoRun.v` for examples how to use the algorithm inside Coq.
 
 See `StalTac_ex.v` for examples how to use the reflected tactic.
 
-WARNING: Stalmarck's method is patented and should not be used for commercial
-applications without the agreement of Prover Technology. 
+WARNING: Stålmarck's method is patented and should not be used for commercial
+applications without the agreement of Prover Technology.
 
