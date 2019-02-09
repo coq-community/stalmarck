@@ -2,7 +2,13 @@
 fullname: Stalmarck
 shortname: stalmarck
 
-description: A two-level approach to prove tautology using Stalmarck's algorithm.
+description: |
+  A two-level approach to prove tautologies using Stålmarck's algorithm.
+
+paper:
+  doi: 10.1007/3-540-44659-1_24
+  url: https://www.irif.fr/~letouzey/download/stalmarck.ps.gz
+  title: Formalizing Stålmarck's Algorithm in Coq
 
 authors:
 - name: Pierre Letouzey
@@ -15,8 +21,8 @@ maintainers:
   nickname: herbelin
 
 license:
-  fullname: GNU Lesser General Public License v2.1
-  shortname: LGPL-2.1
+  fullname: GNU Lesser General Public License v2.1 or later
+  identifier: LGPL-2.1-or-later
 
 plugin: true
 
@@ -40,10 +46,12 @@ categories:
 - name: Miscellaneous/Extracted Programs/Decision procedures
 
 documentation: |
-  This project is composed of :
+  ## Documentation
+
+  This project is composed of:
 
   - a proof of correctness of the algorithm as described in 
-    "A formalization of Stalmarck's algorithm in COQ" TPHOLs2000.
+    "A Formalization of Stålmarck's Algorithm in Coq", TPHOLs2000.
 
   - an implementation of the algorithm. With respect to the paper,
     this implementation is completely functional and can be used inside
@@ -52,9 +60,10 @@ documentation: |
   - a reflected tactic `Stalt`, that uses the extracted code to compute
     an execution trace, the trace checker is then called inside Coq.
 
-  See `algoRun.v` for examples how to use stalmarck inside Coq
+  See `algoRun.v` for examples how to use the algorithm inside Coq.
 
   See `StalTac_ex.v` for examples how to use the reflected tactic.
 
-  WARNING: Stalmarck's method is patented and should not be used for commercial
-  applications without the agreement of Prover Technology. 
+  WARNING: Stålmarck's method is patented and should not be used for commercial
+  applications without the agreement of Prover Technology.
+---
