@@ -25,7 +25,7 @@ A two-level approach to prove tautologies using Stålmarck's algorithm.
 
 
 More details about the project can be found in the paper
-[Formalizing Stålmarck&#39;s Algorithm in Coq](https://www.irif.fr/~letouzey/download/stalmarck.ps.gz).
+[Formalizing Stålmarck's Algorithm in Coq](https://www.irif.fr/~letouzey/download/stalmarck.ps.gz).
 
 ## Meta
 
