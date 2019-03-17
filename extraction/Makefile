@@ -53,6 +53,7 @@ clean :
 	rm -f *.o *.cmx *.cmi \
 	$(PROG) \
 	stal.ml \
+	stal.mli \
 	lexer.ml \
 	parser.ml \
 	parser.mli
