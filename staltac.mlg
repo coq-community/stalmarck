@@ -1,0 +1,11 @@
+DECLARE PLUGIN "staltac_plugin"
+
+{
+
+open Ltac_plugin
+open Staltac_lib
+
+}
+
+TACTIC EXTEND _stalt_ | [ "stalt" ] -> { Proofview.V82.tactic stalt_run } END
+TACTIC EXTEND _pop_prop_ | [ "pop_prop" ] -> { Proofview.V82.tactic pop_prop_run } END
