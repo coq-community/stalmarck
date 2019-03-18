@@ -1159,7 +1159,7 @@ let convertConcl sigma cl =
     | App (c,[|t1; t2|]) when EConstr.eq_constr sigma c (Lazy.force coq_iff) ->
              (Node (Eq, (inspect t1),(inspect t2)))
 (* Impl *)
-    | Prod (c,t1,t2) when Context.binder_name c == Names.Name.Anonymous ->
+    | Prod (c,t1,t2) when Context.binder_name c == Names.Anonymous ->
              (Node (Impl,(inspect t1),(inspect t2)))
     | Prod (c,t1,t2) when not(dependent sigma (mkRel 1) t2) ->
              (Node (Impl,(inspect t1),(inspect t2)))
