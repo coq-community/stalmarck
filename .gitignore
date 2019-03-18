@@ -6,10 +6,13 @@ Makefile.coq.conf
 *.glob
 *.vo
 *.vio
+*.a
 *.cmi
 *.cmx
 *.cmxs
+*.cmxa
 *.o
 run.ml
 run.mli
 result
+staltac.ml

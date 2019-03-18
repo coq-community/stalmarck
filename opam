@@ -1,15 +1,22 @@
-opam-version: "1.2"
+opam-version: "2.0"
 maintainer: "palmskog@gmail.com"
 
 homepage: "https://github.com/coq-community/stalmarck"
-dev-repo: "https://github.com/coq-community/stalmarck.git"
+dev-repo: "git+https://github.com/coq-community/stalmarck.git"
 bug-reports: "https://github.com/coq-community/stalmarck/issues"
 license: "LGPL-2.1-or-later"
+
+synopsis: "Proof of Stålmarck's algorithm in Coq"
+description: """
+A two-level approach to prove tautologies using Stålmarck's algorithm in Coq.
+"""
 
 build: [make "-j%{jobs}%"]
 install: [make "install"]
 remove: ["rm" "-R" "%{lib}%/coq/user-contrib/Stalmarck"]
+flags: light-uninstall
 depends: [
+  "ocaml"
   "coq" {= "dev" }
 ]
 

@@ -7,8 +7,6 @@
 ****************************************************************************
 Implementation of the Stalt tactic *)
 
-open Ltac_plugin
-
 (* The `Stalt' tactic inspired by the Ring tactic *)
 
 (* We have just inserted here the extracted code *)
@@ -1161,7 +1159,7 @@ let convertConcl sigma cl =
     | App (c,[|t1; t2|]) when EConstr.eq_constr sigma c (Lazy.force coq_iff) ->
              (Node (Eq, (inspect t1),(inspect t2)))
 (* Impl *)
-    | Prod (c,t1,t2) when c == Names.Anonymous ->
+    | Prod (c,t1,t2) when Context.binder_name c == Names.Anonymous ->
              (Node (Impl,(inspect t1),(inspect t2)))
     | Prod (c,t1,t2) when not(dependent sigma (mkRel 1) t2) ->
              (Node (Impl,(inspect t1),(inspect t2)))
@@ -1193,7 +1191,7 @@ let convertConcl sigma cl =
 (* Convert the hashtable into a function array *)
 let buildEnv hash =
   let acc = ref (mkApp ((Lazy.force coq_rArrayInitP)
-                ,[| mkLambda (Names.Anonymous, (Lazy.force coq_rNat),
+                ,[| mkLambda (Context.make_annot Names.Anonymous Sorts.Relevant, (Lazy.force coq_rNat),
                    (Lazy.force coq_True)) |])) in
   ConstrMap.iter  (fun c n ->
               acc := (mkApp ((Lazy.force coq_rArraySetP)
@@ -1213,8 +1211,8 @@ let pop_prop_run gl =
            Sort s when (match ESorts.kind sigma s with Sorts.Prop -> true | _ -> false) -> is
          | _            -> get_hyps shyp'
   in
-  let v = (get_hyps (pf_hyps_types gl)) in
-    Proofview.V82.of_tactic (Tacticals.New.tclTHEN (generalize [mkVar v]) (clear [v])) gl
+  let v = Context.binder_name (get_hyps (pf_hyps_types gl)) in
+  Proofview.V82.of_tactic (Tacticals.New.tclTHEN (generalize [mkVar v]) (clear [v])) gl
 
 (* Main function *)
 
@@ -1243,13 +1241,3 @@ let stalt_run gl =
        in
 	 (Proofview.V82.of_tactic (exact_check term)) gl
    | False -> CErrors.user_err (str "StalT can't conclude")
-
-DECLARE PLUGIN "staltac"
-
-TACTIC EXTEND stalt
- [ "stalt" ] -> [ Proofview.V82.tactic stalt_run ]
-END
-
-TACTIC EXTEND pop_prop
- [ "pop_prop" ] -> [ Proofview.V82.tactic pop_prop_run ]
-END

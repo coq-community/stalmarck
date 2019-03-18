@@ -6,9 +6,6 @@
 [![Gitter][gitter-shield]][gitter-link]
 [![DOI][doi-shield]][doi-link]
 
-[doi-shield]: https://zenodo.org/badge/DOI/10.1007/3-540-44659-1_24.svg
-[doi-link]: https://doi.org/10.1007/3-540-44659-1_24
-
 [travis-shield]: https://travis-ci.com/coq-community/stalmarck.svg?branch=master
 [travis-link]: https://travis-ci.com/coq-community/stalmarck/builds
 
@@ -21,7 +18,10 @@
 [gitter-shield]: https://img.shields.io/badge/chat-on%20gitter-%23c1272d.svg
 [gitter-link]: https://gitter.im/coq-community/Lobby
 
-A two-level approach to prove tautologies using Stålmarck's algorithm.
+[doi-shield]: https://zenodo.org/badge/DOI/10.1007/3-540-44659-1_24.svg
+[doi-link]: https://doi.org/10.1007/3-540-44659-1_24
+
+A two-level approach to prove tautologies using Stålmarck's algorithm in Coq.
 
 
 More details about the project can be found in the paper
