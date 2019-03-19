@@ -72,8 +72,8 @@ This project is composed of:
   this implementation is completely functional and can be used inside
   Coq.
 
-- a reflected tactic `Stalt`, that uses the extracted code to compute
-  an execution trace, the trace checker is then called inside Coq.
+- a reflected tactic `staltac`, that uses the extracted code to compute
+  an execution trace; the trace checker is then called inside Coq.
 
 See `algoRun.v` for examples how to use the algorithm inside Coq.
 
