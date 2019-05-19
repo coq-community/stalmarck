@@ -6,9 +6,6 @@
 [![Gitter][gitter-shield]][gitter-link]
 [![DOI][doi-shield]][doi-link]
 
-[doi-shield]: https://zenodo.org/badge/DOI/10.1007/3-540-44659-1_24.svg
-[doi-link]: https://doi.org/10.1007/3-540-44659-1_24
-
 [travis-shield]: https://travis-ci.com/coq-community/stalmarck.svg?branch=master
 [travis-link]: https://travis-ci.com/coq-community/stalmarck/builds
 
@@ -21,7 +18,10 @@
 [gitter-shield]: https://img.shields.io/badge/chat-on%20gitter-%23c1272d.svg
 [gitter-link]: https://gitter.im/coq-community/Lobby
 
-A two-level approach to prove tautologies using Stålmarck's algorithm.
+[doi-shield]: https://zenodo.org/badge/DOI/10.1007/3-540-44659-1_24.svg
+[doi-link]: https://doi.org/10.1007/3-540-44659-1_24
+
+A two-level approach to prove tautologies using Stålmarck's algorithm in Coq.
 
 
 More details about the project can be found in the paper
@@ -35,14 +35,14 @@ More details about the project can be found in the paper
 - Coq-community maintainer(s):
   - Hugo Herbelin ([**@herbelin**](https://github.com/herbelin))
 - License: [GNU Lesser General Public License v2.1 or later](LICENSE)
-- Compatible Coq versions: Coq 8.9 (use the corresponding branch or release for other Coq versions)
+- Compatible Coq versions: 8.9 (use the corresponding branch or release for other Coq versions)
 - Compatible OCaml versions: all versions supported by Coq
-- Additional dependencies: none
+- Additional Coq dependencies: none
 
 ## Building and installation instructions
 
-The easiest way to install the latest released version is via
-[OPAM](https://opam.ocaml.org/doc/Install.html):
+The easiest way to install the latest released version of Stalmarck
+is via [OPAM](https://opam.ocaml.org/doc/Install.html):
 
 ```shell
 opam repo add coq-released https://coq.inria.fr/opam/released
@@ -61,6 +61,7 @@ make install
 After installation, the included modules are available under
 the `Stalmarck` namespace.
 
+
 ## Documentation
 
 This project is composed of:
@@ -72,7 +73,7 @@ This project is composed of:
   this implementation is completely functional and can be used inside
   Coq.
 
-- a reflected tactic `Stalt`, that uses the extracted code to compute
+- a reflected tactic `staltac`, that uses the extracted code to compute
   an execution trace, the trace checker is then called inside Coq.
 
 See `algoRun.v` for examples how to use the algorithm inside Coq.

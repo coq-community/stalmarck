@@ -1,9 +1,13 @@
 ---
 fullname: Stalmarck
 shortname: stalmarck
+organization: coq-community
+community: true
+
+synopsis: Proof of Stålmarck's algorithm in Coq
 
 description: |
-  A two-level approach to prove tautologies using Stålmarck's algorithm.
+  A two-level approach to prove tautologies using Stålmarck's algorithm in Coq.
 
 paper:
   doi: 10.1007/3-540-44659-1_24
@@ -27,13 +31,14 @@ license:
 plugin: true
 
 supported_coq_versions:
-  text: Coq 8.9 (use the corresponding branch or release for other Coq versions)
+  text: 8.9 (use the corresponding branch or release for other Coq versions)
   opam: '{>= "8.9" & < "8.10~"}'
 
-tested_coq_versions:
+tested_coq_nix_versions:
 - version_or_url: 8.9
 
-tested_coq_opam_version: 8.9
+tested_coq_opam_versions:
+- version: 8.9
 
 namespace: Stalmarck
 
@@ -57,7 +62,7 @@ documentation: |
     this implementation is completely functional and can be used inside
     Coq.
 
-  - a reflected tactic `Stalt`, that uses the extracted code to compute
+  - a reflected tactic `staltac`, that uses the extracted code to compute
     an execution trace, the trace checker is then called inside Coq.
 
   See `algoRun.v` for examples how to use the algorithm inside Coq.
