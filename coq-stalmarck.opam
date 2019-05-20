@@ -13,11 +13,9 @@ A two-level approach to prove tautologies using Stålmarck's algorithm in Coq.
 
 build: [make "-j%{jobs}%"]
 install: [make "install"]
-remove: ["rm" "-R" "%{lib}%/coq/user-contrib/Stalmarck"]
-flags: light-uninstall
 depends: [
   "ocaml"
-  "coq" {= "dev" }
+  "coq" {>= "8.10" & < "8.11~"}
 ]
 
 tags: [
