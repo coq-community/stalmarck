@@ -35,14 +35,14 @@ More details about the project can be found in the paper
 - Coq-community maintainer(s):
   - Hugo Herbelin ([**@herbelin**](https://github.com/herbelin))
 - License: [GNU Lesser General Public License v2.1 or later](LICENSE)
-- Compatible Coq versions: Coq master (use the corresponding branch or release for other Coq versions)
+- Compatible Coq versions: 8.10 (use the corresponding branch or release for other Coq versions)
 - Compatible OCaml versions: all versions supported by Coq
-- Additional dependencies: none
+- Additional Coq dependencies: none
 
 ## Building and installation instructions
 
-The easiest way to install the latest released version is via
-[OPAM](https://opam.ocaml.org/doc/Install.html):
+The easiest way to install the latest released version of Stalmarck
+is via [OPAM](https://opam.ocaml.org/doc/Install.html):
 
 ```shell
 opam repo add coq-released https://coq.inria.fr/opam/released
@@ -60,6 +60,7 @@ make install
 
 After installation, the included modules are available under
 the `Stalmarck` namespace.
+
 
 ## Documentation
 

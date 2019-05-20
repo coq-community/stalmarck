@@ -74,12 +74,12 @@ apply Zlt_O_minus_lt; auto.
 rewrite H; auto with zarith.
 intros p H'; left; left.
 apply Zlt_O_minus_lt; auto with zarith.
-rewrite <- (Zopp_involutive (b - a)); auto with zarith.
+rewrite <- (Z.opp_involutive (b - a)); auto with zarith.
 replace (- (b - a))%Z with (a - b)%Z; auto with zarith.
 rewrite H'; red in |- *; simpl in |- *; auto.
 Defined.
 
-Local Definition appZ := appendf _ Zlt (fun x y : Z => x = y) CZ.
+Local Definition appZ := appendf _ Z.lt (fun x y : Z => x = y) CZ.
 
 Definition eqTrivZ :
   forall a b : Z,
@@ -89,9 +89,9 @@ intros a b H'; left; auto.
 Defined.
 
 Local Definition getminZ :=
-  getMin _ Zlt (fun x y : Z => x = y) CZ (fun x y : Z => x = y) eqTrivZ.
+  getMin _ Z.lt (fun x y : Z => x = y) CZ (fun x y : Z => x = y) eqTrivZ.
 
-Local Definition interZ := interf _ Zlt (fun x y : Z => x = y) CZ.
+Local Definition interZ := interf _ Z.lt (fun x y : Z => x = y) CZ.
 
 Local Definition Zl1 :=
   (- Z_of_nat 3)%Z :: (- Z_of_nat 1)%Z :: Z_of_nat 5 :: Z_of_nat 7 :: nil.
