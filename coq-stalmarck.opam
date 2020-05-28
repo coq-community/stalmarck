@@ -1,5 +1,6 @@
 opam-version: "2.0"
 maintainer: "palmskog@gmail.com"
+version: "dev"
 
 homepage: "https://github.com/coq-community/stalmarck"
 dev-repo: "git+https://github.com/coq-community/stalmarck.git"
@@ -11,11 +12,10 @@ description: """
 A two-level approach to prove tautologies using Stålmarck's algorithm in Coq.
 """
 
-build: [make "-j%{jobs}%"]
+build: [make "-j%{jobs}%" ]
 install: [make "install"]
 depends: [
-  "ocaml"
-  "coq" {>= "8.12"}
+  "coq" {= "dev" }
 ]
 
 tags: [
