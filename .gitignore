@@ -6,6 +6,8 @@ Makefile.coq.conf
 *.glob
 *.vo
 *.vio
+*.vos
+*.vok
 *.a
 *.cmi
 *.cmx
