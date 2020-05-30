@@ -1207,8 +1207,9 @@ let pop_prop_run gl =
   let rec get_hyps shyp = match shyp with
       [] -> user_err ~hdr:"popProp" (str "No proposition to generalize");
     | (is,cst)::shyp' ->
+         let env = pf_env gl in
          let sigma = project gl in
-         match kind sigma (pf_unsafe_type_of gl cst) with
+         match kind sigma (Retyping.get_type_of env sigma cst) with
            Sort s when (match ESorts.kind sigma s with Sorts.Prop -> true | _ -> false) -> is
          | _            -> get_hyps shyp'
   in
