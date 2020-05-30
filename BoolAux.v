@@ -88,6 +88,6 @@ Qed.
 Lemma orb_false_2 : forall b b' : bool, b || b' = false -> b' = false.
 intros b b'; case b; case b'; auto; absurd (true = false); auto.
 Qed.
-Hint Resolve de_morgan1 de_morgan2 de_morgan3 de_morgan4.
-Hint Resolve implb_b_true implb_b_false implb_true_b implb_false_b implb_elim.
-Hint Resolve eqb_true_b eqb_b_true eqb_b_false eqb_false_b eqb_com.
+Hint Resolve de_morgan1 de_morgan2 de_morgan3 de_morgan4 : core.
+Hint Resolve implb_b_true implb_b_false implb_true_b implb_false_b implb_elim : core.
+Hint Resolve eqb_true_b eqb_b_true eqb_b_false eqb_false_b eqb_com : core.

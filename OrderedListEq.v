@@ -65,7 +65,7 @@ Inductive Olist : list A -> Prop :=
   | OlistCons :
       forall (a b : A) (L : list A),
       Olist (b :: L) -> ltA a b -> Olist (a :: b :: L).
-Hint Resolve OlistNil OlistOne OlistCons.
+Hint Resolve OlistNil OlistOne OlistCons : core.
 (* Inversion lemma *)
 
 Theorem OlistInv : forall (a : A) (L : list A), Olist (a :: L) -> Olist L.
@@ -134,7 +134,7 @@ Qed.
 Inductive InEq : A -> list A -> Prop :=
   | InEqHead : forall (a b : A) (L : list A), eqA a b -> InEq a (b :: L)
   | InEqSkip : forall (a b : A) (L : list A), InEq a L -> InEq a (b :: L).
-Hint Resolve InEqHead InEqSkip.
+Hint Resolve InEqHead InEqSkip : core.
 (* Is it decidable *)
 
 Definition InEqDec :
@@ -198,7 +198,7 @@ Inductive InclEq : list A -> list A -> Prop :=
     InclEqDef :
       forall L1 L2 : list A,
       (forall a : A, InEq a L1 -> InEq a L2) -> InclEq L1 L2.
-Hint Resolve InclEqDef.
+Hint Resolve InclEqDef : core.
 (*  Weakening *)
 
 Theorem inclImpImplEq : forall L1 L2 : list A, incl L1 L2 -> InclEq L1 L2.
@@ -206,10 +206,10 @@ intros L1 L2 H'; apply InclEqDef.
 intros a H'0; generalize H'; elim H'0; auto.
 intros a0 b L H'1 H'2.
 apply InEqComp with (a := b); auto.
-apply inImpInEq; auto with datatypes.
+apply inImpInEq; auto with datatypes core.
 intros a0 b L H'1 H'2 H'3.
 apply H'2; auto.
-apply incl_tran with (A := A) (m := b :: L); auto with datatypes.
+apply incl_tran with (A := A) (m := b :: L); auto with datatypes core.
 Qed.
 (* The empty list is in every list *)
 
@@ -218,14 +218,14 @@ intros L.
 apply InclEqDef; auto.
 intros a H'; inversion H'.
 Qed.
-Hint Resolve InclEqNil.
+Hint Resolve InclEqNil : core.
 (* Reflexivity *)
 
 Theorem InclEqRef : forall L : list A, InclEq L L.
 intros L.
 apply InclEqDef; auto.
 Qed.
-Hint Resolve InclEqRef.
+Hint Resolve InclEqRef : core.
 (* Transitivity *)
 
 Theorem InclEqTrans : transitive (list A) InclEq.
@@ -242,7 +242,7 @@ apply InclEqDef; auto.
 intros a0 H'1; inversion H'1; auto.
 apply InEqComp with (a := a); auto.
 Qed.
-Hint Resolve InclEqCons.
+Hint Resolve InclEqCons : core.
 (* Equality with respect to eqA *)
 
 Inductive EqL : list A -> list A -> Prop :=
@@ -250,7 +250,7 @@ Inductive EqL : list A -> list A -> Prop :=
   | EqLCons :
       forall (a b : A) (L1 L2 : list A),
       eqA a b -> EqL L1 L2 -> EqL (a :: L1) (b :: L2).
-Hint Resolve EqLNil EqLCons.
+Hint Resolve EqLNil EqLCons : core.
 (* InEq is compatible with eqL *)
 
 Theorem EqLInv :
@@ -265,7 +265,7 @@ Qed.
 Theorem EqLRef : forall L : list A, EqL L L.
 intros L; elim L; auto.
 Qed.
-Hint Resolve EqLRef.
+Hint Resolve EqLRef : core.
 (* Transitivity *)
 
 Theorem EqLTrans : forall L : list A, transitive (list A) EqL.
@@ -491,7 +491,7 @@ Inductive append : list A -> list A -> list A -> Prop :=
       forall (a b : A) (L1 L2 L3 : list A),
       ltA b a ->
       append (a :: L1) L2 L3 -> append (a :: L1) (b :: L2) (b :: L3).
-Hint Resolve appendNil1 appendNil2 appendEqA appendLtA1 appendLtA2.
+Hint Resolve appendNil1 appendNil2 appendEqA appendLtA1 appendLtA2 : core.
 (* If the two list are disjoint it does not matter how we do the append *)
 
 Theorem appendCom :
@@ -512,7 +512,7 @@ Qed.
 
 Theorem appendIncl1 :
  forall L1 L2 L3 : list A, append L1 L2 L3 -> InclEq L1 L3.
-intros L1 L2 L3 H'; elim H'; auto with datatypes.
+intros L1 L2 L3 H'; elim H'; auto with datatypes core.
 intros a b L4 L5 L6 H'0 H'1 H'2.
 apply InclEqDef; auto.
 intros a0 H'3; inversion_clear H'3; auto.
@@ -526,23 +526,23 @@ Qed.
 
 Theorem appendDisjIncl1 :
  forall L1 L2 L3 : list A, append L1 L2 L3 -> Disjoint L1 L2 -> incl L1 L3.
-intros L1 L2 L3 H'; elim H'; auto with datatypes.
+intros L1 L2 L3 H'; elim H'; auto with datatypes core.
 intros L4 H'0; red in |- *; intros a H'1; inversion H'1.
 intros a b L4 L5 L6 H'0 H'1 H'2 H'3; inversion_clear H'3.
 lapply (H a); [ intros H'4; case H'4 | idtac ]; auto.
 intros a b L4 L5 L6 H'0 H'1 H'2 H'3; apply incl_cons with (A := A);
- auto with datatypes; apply incl_tran with (m := L6); 
- auto with datatypes.
+ auto with datatypes core; apply incl_tran with (m := L6); 
+ auto with datatypes core.
 apply H'2; apply DisjointInv2 with (a := a); auto.
 intros a b L4 L5 L6 H'0 H'1 H'2 H'3; apply incl_tran with (m := L6);
- simpl in |- *; auto with datatypes.
+ simpl in |- *; auto with datatypes core.
 apply H'2; apply DisjointInv1 with (a := b); auto.
 Qed.
 (* Same for the second argument *)
 
 Theorem appendIncl2 :
  forall L1 L2 L3 : list A, append L1 L2 L3 -> InclEq L2 L3.
-intros L1 L2 L3 H'; elim H'; auto with datatypes.
+intros L1 L2 L3 H'; elim H'; auto with datatypes core.
 intros a b L4 L5 L6 H'0 H'1 H'2; apply InclEqDef.
 intros a0 H'3; inversion_clear H'2; inversion_clear H'3; auto.
 apply InEqComp with (a := b); auto.
@@ -555,17 +555,17 @@ Qed.
 
 Theorem appendDisjIncl2 :
  forall L1 L2 L3 : list A, append L1 L2 L3 -> Disjoint L1 L2 -> incl L2 L3.
-intros L1 L2 L3 H'; elim H'; auto with datatypes.
+intros L1 L2 L3 H'; elim H'; auto with datatypes core.
 intros L4 H'0; red in |- *; intros a H'1; inversion H'1.
 intros a b L4 L5 L6 H'0 H'1 H'2 H'3; inversion_clear H'3.
 lapply (H a); [ intros H'4; case H'4 | idtac ]; auto.
 intros a b L4 L5 L6 H'0 H'1 H'2 H'3; apply incl_tran with (m := L6);
- auto with datatypes.
+ auto with datatypes core.
 apply H'2; auto.
 apply DisjointInv2 with (a := a); auto.
 intros a b L4 L5 L6 H'0 H'1 H'2 H'3; apply incl_cons with (A := A);
- auto with datatypes; apply incl_tran with (m := L6); 
- auto with datatypes.
+ auto with datatypes core; apply incl_tran with (m := L6); 
+ auto with datatypes core.
 apply H'2; apply DisjointInv1 with (a := b); auto.
 Qed.
 (* The element an append belongs to one of the two list *)
@@ -701,8 +701,8 @@ Definition appendf :=
 
 Theorem appendfAppend : forall L1 L2 : list A, append L1 L2 (appendf L1 L2).
 intros L1; elim L1; simpl in |- *.
-intros L2; case L2; simpl in |- *; auto with datatypes.
-intros a l H' L2; case L2; simpl in |- *; auto with datatypes.
+intros L2; case L2; simpl in |- *; auto with datatypes core.
+intros a l H' L2; case L2; simpl in |- *; auto with datatypes core.
 intros a0 l0.
 case (ltADec a a0); intros s; auto.
 Casec s; intros s; auto.
@@ -712,7 +712,7 @@ intros a1 l1 H'0.
 case (ltADec a a1); intros s1; auto.
 Casec s1; intros s1; auto.
 Qed.
-Hint Resolve appendfAppend.
+Hint Resolve appendfAppend : core.
 (* and now we simply lift of the propertiers of append to append f *)
 
 Theorem appendfIncl1 :
@@ -823,8 +823,8 @@ Definition fappendf :=
 Theorem fappendfAppend :
  forall L1 L2 : list A, append L1 (map f L2) (fappendf L1 L2).
 intros L1; elim L1; simpl in |- *.
-intros L2; case L2; simpl in |- *; auto with datatypes.
-intros a l H' L2; case L2; simpl in |- *; auto with datatypes.
+intros L2; case L2; simpl in |- *; auto with datatypes core.
+intros a l H' L2; case L2; simpl in |- *; auto with datatypes core.
 intros a0 l0.
 case (ltADec a a0); intros s; auto.
 Casec s; intros s; auto.
@@ -850,7 +850,7 @@ apply eqATrans with a1; auto.
 apply appendEqA; auto.
 apply eqATrans with a0; auto.
 Qed.
-Hint Resolve fappendfAppend.
+Hint Resolve fappendfAppend : core.
 (* We lift the properties as usual *)
 
 Theorem fappendfIncl1 :
@@ -953,10 +953,10 @@ Theorem geMinIn :
  forall (L1 L2 : list A) (a : A),
  Olist L1 -> Olist L2 -> getMin L1 L2 = Some a -> In a L1.
 intros L1; elim L1; simpl in |- *.
-intros L2; case L2; simpl in |- *; auto with datatypes.
+intros L2; case L2; simpl in |- *; auto with datatypes core.
 intros a H' H'0 H'1; discriminate.
 intros a l a0 H' H'0 H'1; discriminate.
-intros a l H' L2; case L2; simpl in |- *; auto with datatypes.
+intros a l H' L2; case L2; simpl in |- *; auto with datatypes core.
 intros a0 H'0 H'1 H'2; discriminate.
 intros a0 l0 a1 H'0 H'1.
 case (ltADec a a0); intros s; auto.
@@ -993,10 +993,10 @@ Theorem getMinComp :
  Olist L1 ->
  Olist L2 -> getMin L1 L2 = Some a -> exists b : A, test a b /\ In b L2.
 intros L1; elim L1; simpl in |- *.
-intros L2; case L2; simpl in |- *; auto with datatypes.
+intros L2; case L2; simpl in |- *; auto with datatypes core.
 intros a H' H'0 H'1; discriminate.
 intros a l a0 H' H'0 H'1; discriminate.
-intros a l H' L2; case L2; simpl in |- *; auto with datatypes.
+intros a l H' L2; case L2; simpl in |- *; auto with datatypes core.
 intros a0 H'0 H'1 H'2; discriminate.
 intros a0 l0 a1 H'0 H'1.
 case (ltADec a a0); intros s; auto.
@@ -1018,15 +1018,15 @@ apply OlistSkip with (b := a2); auto.
 intros x H'5; elim H'5; intros H'6 H'7; exists x; intuition.
 case (testDec a a2 s1); auto.
 intros H'4 H'5; inversion H'5; auto.
-exists a2; split; auto with datatypes.
+exists a2; split; auto with datatypes core.
 rewrite <- H0; auto.
 intros H'4 H'5; case H'2; auto.
 apply OlistSkip with (b := a2); auto.
-intros x H'6; elim H'6; intros H'7 H'8; exists x; split; auto with datatypes;
- case H'8; auto with datatypes.
+intros x H'6; elim H'6; intros H'7 H'8; exists x; split; auto with datatypes core;
+ case H'8; auto with datatypes core.
 case (testDec a a0 s); auto.
 intros H'2 H'3; inversion H'3; auto.
-exists a0; split; auto with datatypes.
+exists a0; split; auto with datatypes core.
 rewrite <- H0; auto.
 intros H'2 H'3; case (H' l0 a1); auto.
 apply OlistInv with (a := a); auto.
@@ -1042,8 +1042,8 @@ Theorem getMinMin :
  getMin L1 L2 = Some a ->
  forall b c : A, ltA b a -> In b L1 -> In c L2 -> ~ test b c.
 intros L1; elim L1; simpl in |- *.
-intros L2; case L2; simpl in |- *; auto with datatypes.
-intros a l H' L2; case L2; simpl in |- *; auto with datatypes.
+intros L2; case L2; simpl in |- *; auto with datatypes core.
+intros a l H' L2; case L2; simpl in |- *; auto with datatypes core.
 intros a0 l0 a1 H'0 H'1.
 case (ltADec a a0); intros s; auto.
 Casec s; intros s; auto.
@@ -1135,8 +1135,8 @@ Theorem getMinNone :
  Olist L2 ->
  getMin L1 L2 = None -> forall a b : A, In a L1 -> In b L2 -> ~ test a b.
 intros L1; elim L1; simpl in |- *.
-intros L2; case L2; simpl in |- *; auto with datatypes.
-intros a l H' L2; case L2; simpl in |- *; auto with datatypes.
+intros L2; case L2; simpl in |- *; auto with datatypes core.
+intros a l H' L2; case L2; simpl in |- *; auto with datatypes core.
 intros a0 l0 a1 H'0.
 case (ltADec a a0); intros s; auto.
 Casec s; intros s; auto.
@@ -1231,7 +1231,7 @@ Inductive inter : list A -> list A -> list A -> Prop :=
 (* The intersection is included in the first list *)
 
 Theorem interIncl1 : forall L1 L2 L3 : list A, inter L1 L2 L3 -> InclEq L3 L1.
-intros L1 L2 L3 H'; elim H'; auto with datatypes.
+intros L1 L2 L3 H'; elim H'; auto with datatypes core.
 intros a b L4 L5 L6 H'0 H'1 H'2.
 apply InclEqCons; auto.
 apply InclEqTrans with (y := L4); auto.
@@ -1241,7 +1241,7 @@ Qed.
 (* The intersection is included in the second list *)
 
 Theorem interIncl2 : forall L1 L2 L3 : list A, inter L1 L2 L3 -> InclEq L3 L2.
-intros L1 L2 L3 H'; elim H'; auto with datatypes.
+intros L1 L2 L3 H'; elim H'; auto with datatypes core.
 intros a b L4 L5 L6 H'0 H'1 H'2.
 apply InclEqCons; auto.
 apply InclEqTrans with (y := L5); auto.
@@ -1305,7 +1305,7 @@ intros a b L; elim L; auto.
 intros H'; inversion H'; auto.
 intros a0 l H' H'0 H'1; inversion H'0; auto.
 apply ltAeqAComp with (a := b) (b := a0); auto.
-apply OlistSup with (L := a0 :: l); auto with datatypes.
+apply OlistSup with (L := a0 :: l); auto with datatypes core.
 apply H'; auto.
 apply OlistSkip with (b := a0); auto.
 Qed.
@@ -1462,7 +1462,7 @@ Definition interf :=
 Theorem interfProp1 : forall L1 L2 : list A, inter L1 L2 (interf L1 L2).
 intros L1; elim L1; simpl in |- *.
 intros L2; case L2; simpl in |- *; intros; apply interNil2; auto.
-intros a l H' L2; case L2; simpl in |- *; auto with datatypes.
+intros a l H' L2; case L2; simpl in |- *; auto with datatypes core.
 apply interNil1; auto.
 intros a0 l0.
 case (ltADec a a0); intros s; [ Casec s; intros s | idtac ].
@@ -1477,7 +1477,7 @@ apply interLtA2; auto.
 apply interEqA; auto.
 apply interEqA; auto.
 Qed.
-Hint Resolve interfProp1.
+Hint Resolve interfProp1 : core.
 (* Now we can lift the properties *)
 
 Theorem interfIncl1 : forall L1 L2 : list A, InclEq (interf L1 L2) L1.
