@@ -86,16 +86,16 @@ Require Import doTriplet.
 Theorem contradictoryEq :
  forall S1 S2 : State, contradictory S1 -> eqState S1 S2 -> contradictory S2.
 intros S1 S2 H' H'0; inversion H'.
-exists x; auto.
-apply eqStateEq with (S1 := S1); auto.
+exists x; auto with stalmarck.
+apply eqStateEq with (S1 := S1); auto with stalmarck.
 Qed.
 
 Theorem eqStateEvalZ :
  forall (Ar : rArray vM) (S : State) (q : rZ),
  wellFormedArray Ar -> rArrayState Ar S -> eqStateRz S (evalZ Ar q) q.
 intros Ar S q H' H'0.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-apply evalZInv; auto.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+apply evalZInv; auto with stalmarck.
 Qed.
 
 Theorem eqStateEq1 :
@@ -103,17 +103,17 @@ Theorem eqStateEq1 :
  eqStateRz S q s ->
  eqStateRz S r t -> eqState (addEq (q, r) S) (addEq (s, t) S).
 intros S q r s t Eq1 Eq2; split.
-apply inclStateIn; simpl in |- *; auto.
-intros a b H'0; Elimc H'0; intros H'0; auto.
-inversion H'0; clear H'0; auto.
+apply inclStateIn; simpl in |- *; auto with stalmarck.
+intros a b H'0; Elimc H'0; intros H'0; auto with stalmarck.
+inversion H'0; clear H'0; auto with stalmarck.
 rewrite <- H0; rewrite <- H1.
-apply eqStateRzTrans with (b := s); auto.
-apply eqStateRzTrans with (b := t); auto.
-apply inclStateIn; simpl in |- *; auto.
-intros a b H'0; Elimc H'0; intros H'0; auto.
+apply eqStateRzTrans with (b := s); auto with stalmarck.
+apply eqStateRzTrans with (b := t); auto with stalmarck.
+apply inclStateIn; simpl in |- *; auto with stalmarck.
+intros a b H'0; Elimc H'0; intros H'0; auto with stalmarck.
 inversion H'0; clear H'0.
 rewrite <- H0; rewrite <- H1.
-apply eqStateRzTrans with (b := q); auto.
+apply eqStateRzTrans with (b := q); auto with stalmarck.
 Qed.
 
 Theorem eqStateEqEvalZ :
@@ -122,9 +122,9 @@ Theorem eqStateEqEvalZ :
  rArrayState Ar S ->
  eqState (addEq (evalZ Ar q, evalZ Ar r) S) (addEq (q, r) S).
 intros Ar S q r H' H'0.
-apply eqStateEq1; auto.
-apply eqStateEvalZ; auto.
-apply eqStateEvalZ; auto.
+apply eqStateEq1; auto with stalmarck.
+apply eqStateEvalZ; auto with stalmarck.
+apply eqStateEvalZ; auto with stalmarck.
 Qed.
 
 Theorem eqStateEq2 :
@@ -135,26 +135,26 @@ Theorem eqStateEq2 :
  eqStateRz S v x ->
  eqState (addEq (q, r) (addEq (u, v) S)) (addEq (s, t) (addEq (w, x) S)).
 intros S q r s t u v w x Eq1 Eq2 Eq3 Eq4; split.
-apply inclStateIn; simpl in |- *; auto.
-intros a b H'0; Elimc H'0; intros H'0; auto.
-inversion H'0; clear H'0; auto.
+apply inclStateIn; simpl in |- *; auto with stalmarck.
+intros a b H'0; Elimc H'0; intros H'0; auto with stalmarck.
+inversion H'0; clear H'0; auto with stalmarck.
 rewrite <- H0; rewrite <- H1.
-apply eqStateRzTrans with (b := s); auto.
-apply eqStateRzTrans with (b := t); auto.
-Elimc H'0; intros H'0; auto.
-inversion H'0; clear H'0; auto.
+apply eqStateRzTrans with (b := s); auto with stalmarck.
+apply eqStateRzTrans with (b := t); auto with stalmarck.
+Elimc H'0; intros H'0; auto with stalmarck.
+inversion H'0; clear H'0; auto with stalmarck.
 rewrite <- H0; rewrite <- H1.
-apply eqStateRzTrans with (b := w); auto.
-apply eqStateRzTrans with (b := x); auto.
-apply inclStateIn; simpl in |- *; auto.
-intros a b H'0; Elimc H'0; intros H'0; auto.
-inversion H'0; clear H'0; auto.
+apply eqStateRzTrans with (b := w); auto with stalmarck.
+apply eqStateRzTrans with (b := x); auto with stalmarck.
+apply inclStateIn; simpl in |- *; auto with stalmarck.
+intros a b H'0; Elimc H'0; intros H'0; auto with stalmarck.
+inversion H'0; clear H'0; auto with stalmarck.
 rewrite <- H0; rewrite <- H1.
-apply eqStateRzTrans with (b := q); auto.
-Elimc H'0; intros H'0; auto.
-inversion H'0; clear H'0; auto.
+apply eqStateRzTrans with (b := q); auto with stalmarck.
+Elimc H'0; intros H'0; auto with stalmarck.
+inversion H'0; clear H'0; auto with stalmarck.
 rewrite <- H0; rewrite <- H1.
-apply eqStateRzTrans with (b := u); auto.
+apply eqStateRzTrans with (b := u); auto with stalmarck.
 Qed.
 
 Theorem eqStateEq2EvalZ :
@@ -164,11 +164,11 @@ Theorem eqStateEq2EvalZ :
  eqState (addEq (evalZ Ar q, evalZ Ar r) (addEq (evalZ Ar s, evalZ Ar t) S))
    (addEq (q, r) (addEq (s, t) S)).
 intros Ar S q r s t H' H'0.
-apply eqStateEq2; auto.
-apply eqStateEvalZ; auto.
-apply eqStateEvalZ; auto.
-apply eqStateEvalZ; auto.
-apply eqStateEvalZ; auto.
+apply eqStateEq2; auto with stalmarck.
+apply eqStateEvalZ; auto with stalmarck.
+apply eqStateEvalZ; auto with stalmarck.
+apply eqStateEvalZ; auto with stalmarck.
+apply eqStateEvalZ; auto with stalmarck.
 Qed.
 (* The implementation is correct *)
 
@@ -196,517 +196,517 @@ generalize (addEqMem2Correct Ar (evalZ Ar r) rZFalse (evalZ Ar q) rZTrue);
 intros Ar' b' L'; case b'.
 intros H'2; generalize (H'2 S H' H'0); intros H'3;
  exists (addEq (q, rZTrue) (addEq (r, rZFalse) S)); 
- split; auto.
-apply doTripletAndPpmq; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-rewrite evalZComp; auto.
-apply contradictoryEq with (1 := H'3); auto.
-apply eqStateEq2; auto; apply eqStateEvalZ; auto.
+ split; auto with stalmarck.
+apply doTripletAndPpmq; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+rewrite evalZComp; auto with stalmarck.
+apply contradictoryEq with (1 := H'3); auto with stalmarck.
+apply eqStateEq2; auto with stalmarck; apply eqStateEvalZ; auto with stalmarck.
 intros H'2; elim (H'2 S);
  [ intros H'6 H'7; Elimc H'7; intros H'7 H'8; Elimc H'8; intros H'8 H'9
  | idtac
- | idtac ]; auto.
-split; auto.
-split; auto.
-exists (addEq (q, rZTrue) (addEq (r, rZFalse) S)); split; auto.
-apply doTripletAndPpmq; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-rewrite evalZComp; auto.
-apply rArrayStateEqState with (1 := H'7); auto.
-apply eqStateEq2; auto; apply eqStateEvalZ; auto.
+ | idtac ]; auto with stalmarck.
+split; auto with stalmarck.
+split; auto with stalmarck.
+exists (addEq (q, rZTrue) (addEq (r, rZFalse) S)); split; auto with stalmarck.
+apply doTripletAndPpmq; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+rewrite evalZComp; auto with stalmarck.
+apply rArrayStateEqState with (1 := H'7); auto with stalmarck.
+apply eqStateEq2; auto with stalmarck; apply eqStateEvalZ; auto with stalmarck.
 case (rZDec (evalZ Ar p) (rZComp (evalZ Ar r))); intros Eq1.
 generalize (addEqMem2Correct Ar (evalZ Ar r) rZTrue (evalZ Ar q) rZFalse);
  case (addEqMem2 Ar (evalZ Ar r) rZTrue (evalZ Ar q) rZFalse).
 intros Ar' b' L'; case b'.
 intros H'2; generalize (H'2 S H' H'0); intros H'3;
  exists (addEq (q, rZFalse) (addEq (r, rZTrue) S)); 
- split; auto.
-apply doTripletAndPpmr; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-rewrite evalZComp; auto.
-apply contradictoryEq with (1 := H'3); auto.
-apply eqStateEq2; auto; apply eqStateEvalZ; auto.
+ split; auto with stalmarck.
+apply doTripletAndPpmr; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+rewrite evalZComp; auto with stalmarck.
+apply contradictoryEq with (1 := H'3); auto with stalmarck.
+apply eqStateEq2; auto with stalmarck; apply eqStateEvalZ; auto with stalmarck.
 intros H'2; elim (H'2 S);
  [ intros H'6 H'7; Elimc H'7; intros H'7 H'8; Elimc H'8; intros H'8 H'9
  | idtac
- | idtac ]; auto.
-split; auto.
-split; auto.
-exists (addEq (q, rZFalse) (addEq (r, rZTrue) S)); split; auto.
-apply doTripletAndPpmr; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-rewrite evalZComp; auto.
-apply rArrayStateEqState with (1 := H'7); auto.
-apply eqStateEq2; auto; apply eqStateEvalZ; auto.
+ | idtac ]; auto with stalmarck.
+split; auto with stalmarck.
+split; auto with stalmarck.
+exists (addEq (q, rZFalse) (addEq (r, rZTrue) S)); split; auto with stalmarck.
+apply doTripletAndPpmr; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+rewrite evalZComp; auto with stalmarck.
+apply rArrayStateEqState with (1 := H'7); auto with stalmarck.
+apply eqStateEq2; auto with stalmarck; apply eqStateEvalZ; auto with stalmarck.
 case (rZDec (evalZ Ar q) (evalZ Ar r)); intros Eq2.
 generalize (addEqMemCorrect Ar (evalZ Ar p) (evalZ Ar r));
  case (addEqMem Ar (evalZ Ar p) (evalZ Ar r)).
 intros Ar' b' L'; case b'.
 intros H'2; generalize (H'2 S H' H'0); intros H'3; exists (addEq (p, r) S);
- split; auto.
-apply doTripletAndPqr; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-apply contradictoryEq with (1 := H'3); auto.
-apply eqStateEq1; auto; apply eqStateEvalZ; auto.
+ split; auto with stalmarck.
+apply doTripletAndPqr; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+apply contradictoryEq with (1 := H'3); auto with stalmarck.
+apply eqStateEq1; auto with stalmarck; apply eqStateEvalZ; auto with stalmarck.
 intros H'2; elim (H'2 S);
  [ intros H'6 H'7; Elimc H'7; intros H'7 H'8; Elimc H'8; intros H'8 H'9
  | idtac
- | idtac ]; auto.
-split; auto.
-split; auto.
-exists (addEq (p, r) S); split; auto.
-apply doTripletAndPqr; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-apply rArrayStateEqState with (1 := H'7); auto.
-apply eqStateEq1; auto; apply eqStateEvalZ; auto.
+ | idtac ]; auto with stalmarck.
+split; auto with stalmarck.
+split; auto with stalmarck.
+exists (addEq (p, r) S); split; auto with stalmarck.
+apply doTripletAndPqr; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+apply rArrayStateEqState with (1 := H'7); auto with stalmarck.
+apply eqStateEq1; auto with stalmarck; apply eqStateEvalZ; auto with stalmarck.
 case (rZDec (evalZ Ar q) (rZComp (evalZ Ar r))); intros Eq3.
 generalize (addEqMemCorrect Ar (evalZ Ar p) rZFalse);
  case (addEqMem Ar (evalZ Ar p) rZFalse).
 intros Ar' b' L'; case b'.
 intros H'2; generalize (H'2 S H' H'0); intros H'3;
- exists (addEq (p, rZFalse) S); split; auto.
-apply doTripletAndPqmr; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-rewrite evalZComp; auto.
-apply contradictoryEq with (1 := H'3); auto.
-apply eqStateEq1; auto; apply eqStateEvalZ; auto.
+ exists (addEq (p, rZFalse) S); split; auto with stalmarck.
+apply doTripletAndPqmr; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+rewrite evalZComp; auto with stalmarck.
+apply contradictoryEq with (1 := H'3); auto with stalmarck.
+apply eqStateEq1; auto with stalmarck; apply eqStateEvalZ; auto with stalmarck.
 intros H'2; elim (H'2 S);
  [ intros H'6 H'7; Elimc H'7; intros H'7 H'8; Elimc H'8; intros H'8 H'9
  | idtac
- | idtac ]; auto.
-split; auto.
-split; auto.
-exists (addEq (p, rZFalse) S); split; auto.
-apply doTripletAndPqmr; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-rewrite evalZComp; auto.
-apply rArrayStateEqState with (1 := H'7); auto.
-apply eqStateEq1; auto; apply eqStateEvalZ; auto.
+ | idtac ]; auto with stalmarck.
+split; auto with stalmarck.
+split; auto with stalmarck.
+exists (addEq (p, rZFalse) S); split; auto with stalmarck.
+apply doTripletAndPqmr; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+rewrite evalZComp; auto with stalmarck.
+apply rArrayStateEqState with (1 := H'7); auto with stalmarck.
+apply eqStateEq1; auto with stalmarck; apply eqStateEvalZ; auto with stalmarck.
 case (rZDec (evalZ Ar p) rZTrue); intros Eq4.
 generalize (addEqMem2Correct Ar (evalZ Ar r) rZTrue (evalZ Ar q) rZTrue);
  case (addEqMem2 Ar (evalZ Ar r) rZTrue (evalZ Ar q) rZTrue).
 intros Ar' b' L'; case b'.
 intros H'2; generalize (H'2 S H' H'0); intros H'3;
  exists (addEq (q, rZTrue) (addEq (r, rZTrue) S)); 
- split; auto.
-apply doTripletAndPpT; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-rewrite evalZTrue; auto.
-apply contradictoryEq with (1 := H'3); auto.
-apply eqStateEq2; auto; apply eqStateEvalZ; auto.
+ split; auto with stalmarck.
+apply doTripletAndPpT; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+rewrite evalZTrue; auto with stalmarck.
+apply contradictoryEq with (1 := H'3); auto with stalmarck.
+apply eqStateEq2; auto with stalmarck; apply eqStateEvalZ; auto with stalmarck.
 intros H'2; elim (H'2 S);
  [ intros H'6 H'7; Elimc H'7; intros H'7 H'8; Elimc H'8; intros H'8 H'9
  | idtac
- | idtac ]; auto.
-split; auto.
-split; auto.
-exists (addEq (q, rZTrue) (addEq (r, rZTrue) S)); split; auto.
-apply doTripletAndPpT; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-rewrite evalZTrue; auto.
-apply rArrayStateEqState with (1 := H'7); auto.
-apply eqStateEq2; auto; apply eqStateEvalZ; auto.
+ | idtac ]; auto with stalmarck.
+split; auto with stalmarck.
+split; auto with stalmarck.
+exists (addEq (q, rZTrue) (addEq (r, rZTrue) S)); split; auto with stalmarck.
+apply doTripletAndPpT; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+rewrite evalZTrue; auto with stalmarck.
+apply rArrayStateEqState with (1 := H'7); auto with stalmarck.
+apply eqStateEq2; auto with stalmarck; apply eqStateEvalZ; auto with stalmarck.
 case (rZDec (evalZ Ar q) rZTrue); intros Eq5.
 generalize (addEqMemCorrect Ar (evalZ Ar p) (evalZ Ar r));
  case (addEqMem Ar (evalZ Ar p) (evalZ Ar r)).
 intros Ar' b' L'; case b'.
 intros H'2; generalize (H'2 S H' H'0); intros H'3; exists (addEq (p, r) S);
- split; auto.
-apply doTripletAndPqT; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-rewrite evalZTrue; auto.
-apply contradictoryEq with (1 := H'3); auto.
-apply eqStateEq1; auto; apply eqStateEvalZ; auto.
+ split; auto with stalmarck.
+apply doTripletAndPqT; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+rewrite evalZTrue; auto with stalmarck.
+apply contradictoryEq with (1 := H'3); auto with stalmarck.
+apply eqStateEq1; auto with stalmarck; apply eqStateEvalZ; auto with stalmarck.
 intros H'2; elim (H'2 S);
  [ intros H'6 H'7; Elimc H'7; intros H'7 H'8; Elimc H'8; intros H'8 H'9
  | idtac
- | idtac ]; auto.
-split; auto.
-split; auto.
-exists (addEq (p, r) S); split; auto.
-apply doTripletAndPqT; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-rewrite evalZTrue; auto.
-apply rArrayStateEqState with (1 := H'7); auto.
-apply eqStateEq1; auto; apply eqStateEvalZ; auto.
+ | idtac ]; auto with stalmarck.
+split; auto with stalmarck.
+split; auto with stalmarck.
+exists (addEq (p, r) S); split; auto with stalmarck.
+apply doTripletAndPqT; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+rewrite evalZTrue; auto with stalmarck.
+apply rArrayStateEqState with (1 := H'7); auto with stalmarck.
+apply eqStateEq1; auto with stalmarck; apply eqStateEvalZ; auto with stalmarck.
 case (rZDec (evalZ Ar q) rZFalse); intros Eq6.
 generalize (addEqMemCorrect Ar (evalZ Ar p) rZFalse);
  case (addEqMem Ar (evalZ Ar p) rZFalse).
 intros Ar' b' L'; case b'.
 intros H'2; generalize (H'2 S H' H'0); intros H'3;
- exists (addEq (p, rZFalse) S); split; auto.
-apply doTripletAndPqF; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-rewrite evalZFalse; auto.
-apply contradictoryEq with (1 := H'3); auto.
-apply eqStateEq1; auto; apply eqStateEvalZ; auto.
+ exists (addEq (p, rZFalse) S); split; auto with stalmarck.
+apply doTripletAndPqF; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+rewrite evalZFalse; auto with stalmarck.
+apply contradictoryEq with (1 := H'3); auto with stalmarck.
+apply eqStateEq1; auto with stalmarck; apply eqStateEvalZ; auto with stalmarck.
 intros H'2; elim (H'2 S);
  [ intros H'6 H'7; Elimc H'7; intros H'7 H'8; Elimc H'8; intros H'8 H'9
  | idtac
- | idtac ]; auto.
-split; auto.
-split; auto.
-exists (addEq (p, rZFalse) S); split; auto.
-apply doTripletAndPqF; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-rewrite evalZFalse; auto.
-apply rArrayStateEqState with (1 := H'7); auto.
-apply eqStateEq1; auto; apply eqStateEvalZ; auto.
+ | idtac ]; auto with stalmarck.
+split; auto with stalmarck.
+split; auto with stalmarck.
+exists (addEq (p, rZFalse) S); split; auto with stalmarck.
+apply doTripletAndPqF; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+rewrite evalZFalse; auto with stalmarck.
+apply rArrayStateEqState with (1 := H'7); auto with stalmarck.
+apply eqStateEq1; auto with stalmarck; apply eqStateEvalZ; auto with stalmarck.
 case (rZDec (evalZ Ar r) rZTrue); intros Eq7.
 generalize (addEqMemCorrect Ar (evalZ Ar p) (evalZ Ar q));
  case (addEqMem Ar (evalZ Ar p) (evalZ Ar q)).
 intros Ar' b' L'; case b'.
 intros H'2; generalize (H'2 S H' H'0); intros H'3; exists (addEq (p, q) S);
- split; auto.
-apply doTripletAndPrT; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-rewrite evalZTrue; auto.
-apply contradictoryEq with (1 := H'3); auto.
-apply eqStateEq1; auto; apply eqStateEvalZ; auto.
+ split; auto with stalmarck.
+apply doTripletAndPrT; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+rewrite evalZTrue; auto with stalmarck.
+apply contradictoryEq with (1 := H'3); auto with stalmarck.
+apply eqStateEq1; auto with stalmarck; apply eqStateEvalZ; auto with stalmarck.
 intros H'2; elim (H'2 S);
  [ intros H'6 H'7; Elimc H'7; intros H'7 H'8; Elimc H'8; intros H'8 H'9
  | idtac
- | idtac ]; auto.
-split; auto.
-split; auto.
-exists (addEq (p, q) S); split; auto.
-apply doTripletAndPrT; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-rewrite evalZTrue; auto.
-apply rArrayStateEqState with (1 := H'7); auto.
-apply eqStateEq1; auto; apply eqStateEvalZ; auto.
+ | idtac ]; auto with stalmarck.
+split; auto with stalmarck.
+split; auto with stalmarck.
+exists (addEq (p, q) S); split; auto with stalmarck.
+apply doTripletAndPrT; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+rewrite evalZTrue; auto with stalmarck.
+apply rArrayStateEqState with (1 := H'7); auto with stalmarck.
+apply eqStateEq1; auto with stalmarck; apply eqStateEvalZ; auto with stalmarck.
 case (rZDec (evalZ Ar r) rZFalse); intros Eq8.
 generalize (addEqMemCorrect Ar (evalZ Ar p) rZFalse);
  case (addEqMem Ar (evalZ Ar p) rZFalse).
 intros Ar' b' L'; case b'.
 intros H'2; generalize (H'2 S H' H'0); intros H'3;
- exists (addEq (p, rZFalse) S); split; auto.
-apply doTripletAndPrF; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-rewrite evalZFalse; auto.
-apply contradictoryEq with (1 := H'3); auto.
-apply eqStateEq1; auto; apply eqStateEvalZ; auto.
+ exists (addEq (p, rZFalse) S); split; auto with stalmarck.
+apply doTripletAndPrF; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+rewrite evalZFalse; auto with stalmarck.
+apply contradictoryEq with (1 := H'3); auto with stalmarck.
+apply eqStateEq1; auto with stalmarck; apply eqStateEvalZ; auto with stalmarck.
 intros H'2; elim (H'2 S);
  [ intros H'6 H'7; Elimc H'7; intros H'7 H'8; Elimc H'8; intros H'8 H'9
  | idtac
- | idtac ]; auto.
-split; auto.
-split; auto.
-exists (addEq (p, rZFalse) S); split; auto.
-apply doTripletAndPrF; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-rewrite evalZFalse; auto.
-apply rArrayStateEqState with (1 := H'7); auto.
-apply eqStateEq1; auto; apply eqStateEvalZ; auto.
-intros S'; red in |- *; intros H'1; inversion H'1; auto.
+ | idtac ]; auto with stalmarck.
+split; auto with stalmarck.
+split; auto with stalmarck.
+exists (addEq (p, rZFalse) S); split; auto with stalmarck.
+apply doTripletAndPrF; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+rewrite evalZFalse; auto with stalmarck.
+apply rArrayStateEqState with (1 := H'7); auto with stalmarck.
+apply eqStateEq1; auto with stalmarck; apply eqStateEvalZ; auto with stalmarck.
+intros S'; red in |- *; intros H'1; inversion H'1; auto with stalmarck.
 Contradict Eq0; rewrite <- evalZComp; apply rArrayStateDef1 with (S := S);
- auto.
+ auto with stalmarck.
 Contradict Eq1; rewrite <- evalZComp; apply rArrayStateDef1 with (S := S);
- auto.
-Contradict Eq2; apply rArrayStateDef1 with (S := S); auto.
+ auto with stalmarck.
+Contradict Eq2; apply rArrayStateDef1 with (S := S); auto with stalmarck.
 Contradict Eq3; rewrite <- evalZComp; apply rArrayStateDef1 with (S := S);
- auto.
+ auto with stalmarck.
 Contradict Eq4; rewrite <- (evalZTrue Ar H');
- apply rArrayStateDef1 with (S := S); auto.
+ apply rArrayStateDef1 with (S := S); auto with stalmarck.
 Contradict Eq5; rewrite <- (evalZTrue Ar H');
- apply rArrayStateDef1 with (S := S); auto.
+ apply rArrayStateDef1 with (S := S); auto with stalmarck.
 Contradict Eq6; rewrite <- (evalZFalse Ar H');
- apply rArrayStateDef1 with (S := S); auto.
+ apply rArrayStateDef1 with (S := S); auto with stalmarck.
 Contradict Eq7; rewrite <- (evalZTrue Ar H');
- apply rArrayStateDef1 with (S := S); auto.
+ apply rArrayStateDef1 with (S := S); auto with stalmarck.
 Contradict Eq8; rewrite <- (evalZFalse Ar H');
- apply rArrayStateDef1 with (S := S); auto.
+ apply rArrayStateDef1 with (S := S); auto with stalmarck.
 case (rZDec (evalZ Ar p) (evalZ Ar q)); intros Eq0.
 generalize (addEqMemCorrect Ar (evalZ Ar r) rZTrue);
  case (addEqMem Ar (evalZ Ar r) rZTrue).
 intros Ar' b' L'; case b'.
 intros H'2; generalize (H'2 S H' H'0); intros H'3;
- exists (addEq (r, rZTrue) S); split; auto.
-apply doTripletEqPpq; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-apply contradictoryEq with (1 := H'3); auto.
-apply eqStateEq1; auto; apply eqStateEvalZ; auto.
+ exists (addEq (r, rZTrue) S); split; auto with stalmarck.
+apply doTripletEqPpq; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+apply contradictoryEq with (1 := H'3); auto with stalmarck.
+apply eqStateEq1; auto with stalmarck; apply eqStateEvalZ; auto with stalmarck.
 intros H'2; elim (H'2 S);
  [ intros H'6 H'7; Elimc H'7; intros H'7 H'8; Elimc H'8; intros H'8 H'9
  | idtac
- | idtac ]; auto.
-split; auto.
-split; auto.
-exists (addEq (r, rZTrue) S); split; auto.
-apply doTripletEqPpq; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-apply rArrayStateEqState with (1 := H'7); auto.
-apply eqStateEq1; auto; apply eqStateEvalZ; auto.
+ | idtac ]; auto with stalmarck.
+split; auto with stalmarck.
+split; auto with stalmarck.
+exists (addEq (r, rZTrue) S); split; auto with stalmarck.
+apply doTripletEqPpq; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+apply rArrayStateEqState with (1 := H'7); auto with stalmarck.
+apply eqStateEq1; auto with stalmarck; apply eqStateEvalZ; auto with stalmarck.
 case (rZDec (evalZ Ar p) (rZComp (evalZ Ar q))); intros Eq1.
 generalize (addEqMemCorrect Ar (evalZ Ar r) rZFalse);
  case (addEqMem Ar (evalZ Ar r) rZFalse).
 intros Ar' b' L'; case b'.
 intros H'2; generalize (H'2 S H' H'0); intros H'3;
- exists (addEq (r, rZFalse) S); split; auto.
-apply doTripletEqPpmq; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-rewrite evalZComp; auto.
-apply contradictoryEq with (1 := H'3); auto.
-apply eqStateEq1; auto; apply eqStateEvalZ; auto.
+ exists (addEq (r, rZFalse) S); split; auto with stalmarck.
+apply doTripletEqPpmq; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+rewrite evalZComp; auto with stalmarck.
+apply contradictoryEq with (1 := H'3); auto with stalmarck.
+apply eqStateEq1; auto with stalmarck; apply eqStateEvalZ; auto with stalmarck.
 intros H'2; elim (H'2 S);
  [ intros H'6 H'7; Elimc H'7; intros H'7 H'8; Elimc H'8; intros H'8 H'9
  | idtac
- | idtac ]; auto.
-split; auto.
-split; auto.
-exists (addEq (r, rZFalse) S); split; auto.
-apply doTripletEqPpmq; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-rewrite evalZComp; auto.
-apply rArrayStateEqState with (1 := H'7); auto.
-apply eqStateEq1; auto; apply eqStateEvalZ; auto.
+ | idtac ]; auto with stalmarck.
+split; auto with stalmarck.
+split; auto with stalmarck.
+exists (addEq (r, rZFalse) S); split; auto with stalmarck.
+apply doTripletEqPpmq; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+rewrite evalZComp; auto with stalmarck.
+apply rArrayStateEqState with (1 := H'7); auto with stalmarck.
+apply eqStateEq1; auto with stalmarck; apply eqStateEvalZ; auto with stalmarck.
 case (rZDec (evalZ Ar p) (evalZ Ar r)); intros Eq2.
 generalize (addEqMemCorrect Ar (evalZ Ar q) rZTrue);
  case (addEqMem Ar (evalZ Ar q) rZTrue).
 intros Ar' b' L'; case b'.
 intros H'2; generalize (H'2 S H' H'0); intros H'3;
- exists (addEq (q, rZTrue) S); split; auto.
-apply doTripletEqPpr; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-apply contradictoryEq with (1 := H'3); auto.
-apply eqStateEq1; auto; apply eqStateEvalZ; auto.
+ exists (addEq (q, rZTrue) S); split; auto with stalmarck.
+apply doTripletEqPpr; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+apply contradictoryEq with (1 := H'3); auto with stalmarck.
+apply eqStateEq1; auto with stalmarck; apply eqStateEvalZ; auto with stalmarck.
 intros H'2; elim (H'2 S);
  [ intros H'6 H'7; Elimc H'7; intros H'7 H'8; Elimc H'8; intros H'8 H'9
  | idtac
- | idtac ]; auto.
-split; auto.
-split; auto.
-exists (addEq (q, rZTrue) S); split; auto.
-apply doTripletEqPpr; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-apply rArrayStateEqState with (1 := H'7); auto.
-apply eqStateEq1; auto; apply eqStateEvalZ; auto.
+ | idtac ]; auto with stalmarck.
+split; auto with stalmarck.
+split; auto with stalmarck.
+exists (addEq (q, rZTrue) S); split; auto with stalmarck.
+apply doTripletEqPpr; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+apply rArrayStateEqState with (1 := H'7); auto with stalmarck.
+apply eqStateEq1; auto with stalmarck; apply eqStateEvalZ; auto with stalmarck.
 case (rZDec (evalZ Ar p) (rZComp (evalZ Ar r))); intros Eq3.
 generalize (addEqMemCorrect Ar (evalZ Ar q) rZFalse);
  case (addEqMem Ar (evalZ Ar q) rZFalse).
 intros Ar' b' L'; case b'.
 intros H'2; generalize (H'2 S H' H'0); intros H'3;
- exists (addEq (q, rZFalse) S); split; auto.
-apply doTripletEqPpmr; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-rewrite evalZComp; auto.
-apply contradictoryEq with (1 := H'3); auto.
-apply eqStateEq1; auto; apply eqStateEvalZ; auto.
+ exists (addEq (q, rZFalse) S); split; auto with stalmarck.
+apply doTripletEqPpmr; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+rewrite evalZComp; auto with stalmarck.
+apply contradictoryEq with (1 := H'3); auto with stalmarck.
+apply eqStateEq1; auto with stalmarck; apply eqStateEvalZ; auto with stalmarck.
 intros H'2; elim (H'2 S);
  [ intros H'6 H'7; Elimc H'7; intros H'7 H'8; Elimc H'8; intros H'8 H'9
  | idtac
- | idtac ]; auto.
-split; auto.
-split; auto.
-exists (addEq (q, rZFalse) S); split; auto.
-apply doTripletEqPpmr; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-rewrite evalZComp; auto.
-apply rArrayStateEqState with (1 := H'7); auto.
-apply eqStateEq1; auto; apply eqStateEvalZ; auto.
+ | idtac ]; auto with stalmarck.
+split; auto with stalmarck.
+split; auto with stalmarck.
+exists (addEq (q, rZFalse) S); split; auto with stalmarck.
+apply doTripletEqPpmr; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+rewrite evalZComp; auto with stalmarck.
+apply rArrayStateEqState with (1 := H'7); auto with stalmarck.
+apply eqStateEq1; auto with stalmarck; apply eqStateEvalZ; auto with stalmarck.
 case (rZDec (evalZ Ar q) (evalZ Ar r)); intros Eq4.
 generalize (addEqMemCorrect Ar (evalZ Ar p) rZTrue);
  case (addEqMem Ar (evalZ Ar p) rZTrue).
 intros Ar' b' L'; case b'.
 intros H'2; generalize (H'2 S H' H'0); intros H'3;
- exists (addEq (p, rZTrue) S); split; auto.
-apply doTripletEqPqr; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-apply contradictoryEq with (1 := H'3); auto.
-apply eqStateEq1; auto; apply eqStateEvalZ; auto.
+ exists (addEq (p, rZTrue) S); split; auto with stalmarck.
+apply doTripletEqPqr; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+apply contradictoryEq with (1 := H'3); auto with stalmarck.
+apply eqStateEq1; auto with stalmarck; apply eqStateEvalZ; auto with stalmarck.
 intros H'2; elim (H'2 S);
  [ intros H'6 H'7; Elimc H'7; intros H'7 H'8; Elimc H'8; intros H'8 H'9
  | idtac
- | idtac ]; auto.
-split; auto.
-split; auto.
-exists (addEq (p, rZTrue) S); split; auto.
-apply doTripletEqPqr; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-apply rArrayStateEqState with (1 := H'7); auto.
-apply eqStateEq1; auto; apply eqStateEvalZ; auto.
+ | idtac ]; auto with stalmarck.
+split; auto with stalmarck.
+split; auto with stalmarck.
+exists (addEq (p, rZTrue) S); split; auto with stalmarck.
+apply doTripletEqPqr; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+apply rArrayStateEqState with (1 := H'7); auto with stalmarck.
+apply eqStateEq1; auto with stalmarck; apply eqStateEvalZ; auto with stalmarck.
 case (rZDec (evalZ Ar q) (rZComp (evalZ Ar r))); intros Eq5.
 generalize (addEqMemCorrect Ar (evalZ Ar p) rZFalse);
  case (addEqMem Ar (evalZ Ar p) rZFalse).
 intros Ar' b' L'; case b'.
 intros H'2; generalize (H'2 S H' H'0); intros H'3;
- exists (addEq (p, rZFalse) S); split; auto.
-apply doTripletEqPqmr; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-rewrite evalZComp; auto.
-apply contradictoryEq with (1 := H'3); auto.
-apply eqStateEq1; auto; apply eqStateEvalZ; auto.
+ exists (addEq (p, rZFalse) S); split; auto with stalmarck.
+apply doTripletEqPqmr; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+rewrite evalZComp; auto with stalmarck.
+apply contradictoryEq with (1 := H'3); auto with stalmarck.
+apply eqStateEq1; auto with stalmarck; apply eqStateEvalZ; auto with stalmarck.
 intros H'2; elim (H'2 S);
  [ intros H'6 H'7; Elimc H'7; intros H'7 H'8; Elimc H'8; intros H'8 H'9
  | idtac
- | idtac ]; auto.
-split; auto.
-split; auto.
-exists (addEq (p, rZFalse) S); split; auto.
-apply doTripletEqPqmr; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-rewrite evalZComp; auto.
-apply rArrayStateEqState with (1 := H'7); auto.
-apply eqStateEq1; auto; apply eqStateEvalZ; auto.
+ | idtac ]; auto with stalmarck.
+split; auto with stalmarck.
+split; auto with stalmarck.
+exists (addEq (p, rZFalse) S); split; auto with stalmarck.
+apply doTripletEqPqmr; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+rewrite evalZComp; auto with stalmarck.
+apply rArrayStateEqState with (1 := H'7); auto with stalmarck.
+apply eqStateEq1; auto with stalmarck; apply eqStateEvalZ; auto with stalmarck.
 case (rZDec (evalZ Ar p) rZTrue); intros Eq6.
 generalize (addEqMemCorrect Ar (evalZ Ar q) (evalZ Ar r));
  case (addEqMem Ar (evalZ Ar q) (evalZ Ar r)).
 intros Ar' b' L'; case b'.
 intros H'2; generalize (H'2 S H' H'0); intros H'3; exists (addEq (q, r) S);
- split; auto.
-apply doTripletEqPpT; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-rewrite evalZTrue; auto.
-apply contradictoryEq with (1 := H'3); auto.
-apply eqStateEq1; auto; apply eqStateEvalZ; auto.
+ split; auto with stalmarck.
+apply doTripletEqPpT; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+rewrite evalZTrue; auto with stalmarck.
+apply contradictoryEq with (1 := H'3); auto with stalmarck.
+apply eqStateEq1; auto with stalmarck; apply eqStateEvalZ; auto with stalmarck.
 intros H'2; elim (H'2 S);
  [ intros H'6 H'7; Elimc H'7; intros H'7 H'8; Elimc H'8; intros H'8 H'9
  | idtac
- | idtac ]; auto.
-split; auto.
-split; auto.
-exists (addEq (q, r) S); split; auto.
-apply doTripletEqPpT; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-rewrite evalZTrue; auto.
-apply rArrayStateEqState with (1 := H'7); auto.
-apply eqStateEq1; auto; apply eqStateEvalZ; auto.
+ | idtac ]; auto with stalmarck.
+split; auto with stalmarck.
+split; auto with stalmarck.
+exists (addEq (q, r) S); split; auto with stalmarck.
+apply doTripletEqPpT; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+rewrite evalZTrue; auto with stalmarck.
+apply rArrayStateEqState with (1 := H'7); auto with stalmarck.
+apply eqStateEq1; auto with stalmarck; apply eqStateEvalZ; auto with stalmarck.
 case (rZDec (evalZ Ar p) rZFalse); intros Eq7.
 generalize (addEqMemCorrect Ar (evalZ Ar q) (rZComp (evalZ Ar r)));
  case (addEqMem Ar (evalZ Ar q) (rZComp (evalZ Ar r))).
 intros Ar' b' L'; case b'.
 intros H'2; generalize (H'2 S H' H'0); intros H'3;
- exists (addEq (q, rZComp r) S); split; auto.
-apply doTripletEqPpF; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-rewrite evalZFalse; auto.
-apply contradictoryEq with (1 := H'3); auto.
-apply eqStateEq1; try apply eqStateRzInv; apply eqStateEvalZ; auto.
+ exists (addEq (q, rZComp r) S); split; auto with stalmarck.
+apply doTripletEqPpF; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+rewrite evalZFalse; auto with stalmarck.
+apply contradictoryEq with (1 := H'3); auto with stalmarck.
+apply eqStateEq1; try apply eqStateRzInv; apply eqStateEvalZ; auto with stalmarck.
 intros H'2; elim (H'2 S);
  [ intros H'6 H'7; Elimc H'7; intros H'7 H'8; Elimc H'8; intros H'8 H'9
  | idtac
- | idtac ]; auto.
-split; auto.
-split; auto.
-exists (addEq (q, rZComp r) S); split; auto.
-apply doTripletEqPpF; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-rewrite evalZFalse; auto.
-apply rArrayStateEqState with (1 := H'7); auto.
-apply eqStateEq1; auto; try apply eqStateRzInv; apply eqStateEvalZ; auto.
+ | idtac ]; auto with stalmarck.
+split; auto with stalmarck.
+split; auto with stalmarck.
+exists (addEq (q, rZComp r) S); split; auto with stalmarck.
+apply doTripletEqPpF; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+rewrite evalZFalse; auto with stalmarck.
+apply rArrayStateEqState with (1 := H'7); auto with stalmarck.
+apply eqStateEq1; auto with stalmarck; try apply eqStateRzInv; apply eqStateEvalZ; auto with stalmarck.
 case (rZDec (evalZ Ar q) rZTrue); intros Eq8.
 generalize (addEqMemCorrect Ar (evalZ Ar p) (evalZ Ar r));
  case (addEqMem Ar (evalZ Ar p) (evalZ Ar r)).
 intros Ar' b' L'; case b'.
 intros H'2; generalize (H'2 S H' H'0); intros H'3; exists (addEq (p, r) S);
- split; auto.
-apply doTripletEqPqT; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-rewrite evalZTrue; auto.
-apply contradictoryEq with (1 := H'3); auto.
-apply eqStateEq1; auto; apply eqStateEvalZ; auto.
+ split; auto with stalmarck.
+apply doTripletEqPqT; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+rewrite evalZTrue; auto with stalmarck.
+apply contradictoryEq with (1 := H'3); auto with stalmarck.
+apply eqStateEq1; auto with stalmarck; apply eqStateEvalZ; auto with stalmarck.
 intros H'2; elim (H'2 S);
  [ intros H'6 H'7; Elimc H'7; intros H'7 H'8; Elimc H'8; intros H'8 H'9
  | idtac
- | idtac ]; auto.
-split; auto.
-split; auto.
-exists (addEq (p, r) S); split; auto.
-apply doTripletEqPqT; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-rewrite evalZTrue; auto.
-apply rArrayStateEqState with (1 := H'7); auto.
-apply eqStateEq1; auto; apply eqStateEvalZ; auto.
+ | idtac ]; auto with stalmarck.
+split; auto with stalmarck.
+split; auto with stalmarck.
+exists (addEq (p, r) S); split; auto with stalmarck.
+apply doTripletEqPqT; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+rewrite evalZTrue; auto with stalmarck.
+apply rArrayStateEqState with (1 := H'7); auto with stalmarck.
+apply eqStateEq1; auto with stalmarck; apply eqStateEvalZ; auto with stalmarck.
 case (rZDec (evalZ Ar q) rZFalse); intros Eq9.
 generalize (addEqMemCorrect Ar (evalZ Ar p) (rZComp (evalZ Ar r)));
  case (addEqMem Ar (evalZ Ar p) (rZComp (evalZ Ar r))).
 intros Ar' b' L'; case b'.
 intros H'2; generalize (H'2 S H' H'0); intros H'3;
- exists (addEq (p, rZComp r) S); split; auto.
-apply doTripletEqPqF; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-rewrite evalZFalse; auto.
-apply contradictoryEq with (1 := H'3); auto.
-apply eqStateEq1; auto; try apply eqStateRzInv; apply eqStateEvalZ; auto.
+ exists (addEq (p, rZComp r) S); split; auto with stalmarck.
+apply doTripletEqPqF; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+rewrite evalZFalse; auto with stalmarck.
+apply contradictoryEq with (1 := H'3); auto with stalmarck.
+apply eqStateEq1; auto with stalmarck; try apply eqStateRzInv; apply eqStateEvalZ; auto with stalmarck.
 intros H'2; elim (H'2 S);
  [ intros H'6 H'7; Elimc H'7; intros H'7 H'8; Elimc H'8; intros H'8 H'9
  | idtac
- | idtac ]; auto.
-split; auto.
-split; auto.
-exists (addEq (p, rZComp r) S); split; auto.
-apply doTripletEqPqF; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-rewrite evalZFalse; auto.
-apply rArrayStateEqState with (1 := H'7); auto.
-apply eqStateEq1; auto; try apply eqStateRzInv; apply eqStateEvalZ; auto.
+ | idtac ]; auto with stalmarck.
+split; auto with stalmarck.
+split; auto with stalmarck.
+exists (addEq (p, rZComp r) S); split; auto with stalmarck.
+apply doTripletEqPqF; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+rewrite evalZFalse; auto with stalmarck.
+apply rArrayStateEqState with (1 := H'7); auto with stalmarck.
+apply eqStateEq1; auto with stalmarck; try apply eqStateRzInv; apply eqStateEvalZ; auto with stalmarck.
 case (rZDec (evalZ Ar r) rZTrue); intros Eq10.
 generalize (addEqMemCorrect Ar (evalZ Ar p) (evalZ Ar q));
  case (addEqMem Ar (evalZ Ar p) (evalZ Ar q)).
 intros Ar' b' L'; case b'.
 intros H'2; generalize (H'2 S H' H'0); intros H'3; exists (addEq (p, q) S);
- split; auto.
-apply doTripletEqPrT; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-rewrite evalZTrue; auto.
-apply contradictoryEq with (1 := H'3); auto.
-apply eqStateEq1; auto; apply eqStateEvalZ; auto.
+ split; auto with stalmarck.
+apply doTripletEqPrT; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+rewrite evalZTrue; auto with stalmarck.
+apply contradictoryEq with (1 := H'3); auto with stalmarck.
+apply eqStateEq1; auto with stalmarck; apply eqStateEvalZ; auto with stalmarck.
 intros H'2; elim (H'2 S);
  [ intros H'6 H'7; Elimc H'7; intros H'7 H'8; Elimc H'8; intros H'8 H'9
  | idtac
- | idtac ]; auto.
-split; auto.
-split; auto.
-exists (addEq (p, q) S); split; auto.
-apply doTripletEqPrT; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-rewrite evalZTrue; auto.
-apply rArrayStateEqState with (1 := H'7); auto.
-apply eqStateEq1; auto; apply eqStateEvalZ; auto.
+ | idtac ]; auto with stalmarck.
+split; auto with stalmarck.
+split; auto with stalmarck.
+exists (addEq (p, q) S); split; auto with stalmarck.
+apply doTripletEqPrT; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+rewrite evalZTrue; auto with stalmarck.
+apply rArrayStateEqState with (1 := H'7); auto with stalmarck.
+apply eqStateEq1; auto with stalmarck; apply eqStateEvalZ; auto with stalmarck.
 case (rZDec (evalZ Ar r) rZFalse); intros Eq11.
 generalize (addEqMemCorrect Ar (evalZ Ar p) (rZComp (evalZ Ar q)));
  case (addEqMem Ar (evalZ Ar p) (rZComp (evalZ Ar q))).
 intros Ar' b' L'; case b'.
 intros H'2; generalize (H'2 S H' H'0); intros H'3;
- exists (addEq (p, rZComp q) S); split; auto.
-apply doTripletEqPrF; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-rewrite evalZFalse; auto.
-apply contradictoryEq with (1 := H'3); auto.
-apply eqStateEq1; auto; try apply eqStateRzInv; apply eqStateEvalZ; auto.
+ exists (addEq (p, rZComp q) S); split; auto with stalmarck.
+apply doTripletEqPrF; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+rewrite evalZFalse; auto with stalmarck.
+apply contradictoryEq with (1 := H'3); auto with stalmarck.
+apply eqStateEq1; auto with stalmarck; try apply eqStateRzInv; apply eqStateEvalZ; auto with stalmarck.
 intros H'2; elim (H'2 S);
  [ intros H'6 H'7; Elimc H'7; intros H'7 H'8; Elimc H'8; intros H'8 H'9
  | idtac
- | idtac ]; auto.
-split; auto.
-split; auto.
-exists (addEq (p, rZComp q) S); split; auto.
-apply doTripletEqPrF; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-rewrite evalZFalse; auto.
-apply rArrayStateEqState with (1 := H'7); auto.
-apply eqStateEq1; auto; try apply eqStateRzInv; apply eqStateEvalZ; auto.
-intros S'; red in |- *; intros H'1; inversion H'1; auto.
-Contradict Eq0; apply rArrayStateDef1 with (S := S); auto.
+ | idtac ]; auto with stalmarck.
+split; auto with stalmarck.
+split; auto with stalmarck.
+exists (addEq (p, rZComp q) S); split; auto with stalmarck.
+apply doTripletEqPrF; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+rewrite evalZFalse; auto with stalmarck.
+apply rArrayStateEqState with (1 := H'7); auto with stalmarck.
+apply eqStateEq1; auto with stalmarck; try apply eqStateRzInv; apply eqStateEvalZ; auto with stalmarck.
+intros S'; red in |- *; intros H'1; inversion H'1; auto with stalmarck.
+Contradict Eq0; apply rArrayStateDef1 with (S := S); auto with stalmarck.
 Contradict Eq1; rewrite <- evalZComp; apply rArrayStateDef1 with (S := S);
- auto.
-Contradict Eq2; apply rArrayStateDef1 with (S := S); auto.
+ auto with stalmarck.
+Contradict Eq2; apply rArrayStateDef1 with (S := S); auto with stalmarck.
 Contradict Eq3; rewrite <- evalZComp; apply rArrayStateDef1 with (S := S);
- auto.
-Contradict Eq4; apply rArrayStateDef1 with (S := S); auto.
+ auto with stalmarck.
+Contradict Eq4; apply rArrayStateDef1 with (S := S); auto with stalmarck.
 Contradict Eq5; rewrite <- evalZComp; apply rArrayStateDef1 with (S := S);
- auto.
+ auto with stalmarck.
 Contradict Eq6; rewrite <- (evalZTrue Ar H');
- apply rArrayStateDef1 with (S := S); auto.
+ apply rArrayStateDef1 with (S := S); auto with stalmarck.
 Contradict Eq7; rewrite <- (evalZFalse Ar H');
- apply rArrayStateDef1 with (S := S); auto.
+ apply rArrayStateDef1 with (S := S); auto with stalmarck.
 Contradict Eq8; rewrite <- (evalZTrue Ar H');
- apply rArrayStateDef1 with (S := S); auto.
+ apply rArrayStateDef1 with (S := S); auto with stalmarck.
 Contradict Eq9; rewrite <- (evalZFalse Ar H');
- apply rArrayStateDef1 with (S := S); auto.
+ apply rArrayStateDef1 with (S := S); auto with stalmarck.
 Contradict Eq10; rewrite <- (evalZTrue Ar H');
- apply rArrayStateDef1 with (S := S); auto.
+ apply rArrayStateDef1 with (S := S); auto with stalmarck.
 Contradict Eq11; rewrite <- (evalZFalse Ar H');
- apply rArrayStateDef1 with (S := S); auto.
+ apply rArrayStateDef1 with (S := S); auto with stalmarck.
 Qed.
 End algo.

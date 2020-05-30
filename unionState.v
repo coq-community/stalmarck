@@ -35,27 +35,27 @@ Inductive unionStateP : State -> State -> State -> Prop :=
       (forall S4 : State,
        inclState S1 S4 -> inclState S2 S4 -> inclState S3 S4) ->
       unionStateP S1 S2 S3.
-Hint Resolve unionStatePDef.
+Hint Resolve unionStatePDef : stalmarck.
 
 Theorem unionStatePRef : forall S1 : State, unionStateP S1 S1 S1.
-auto.
+auto with stalmarck.
 Qed.
 
 Theorem unionStatePSym :
  forall S1 S2 S3 : State, unionStateP S1 S2 S3 -> unionStateP S2 S1 S3.
-intros S1 S2 S3 H'; inversion H'; auto.
+intros S1 S2 S3 H'; inversion H'; auto with stalmarck.
 Qed.
 
 Theorem unionStatePIncl :
  forall S1 S2 S3 S4 : State,
  unionStateP S1 S2 S3 ->
  inclState S1 S4 -> inclState S2 S4 -> inclState S3 S4.
-intros S1 S2 S3 S4 H' H'0 H'1; inversion H'; auto.
+intros S1 S2 S3 S4 H' H'0 H'1; inversion H'; auto with stalmarck.
 Qed.
 
 Theorem unionStatePInclSelf :
  forall S1 S2 : State, inclState S2 S1 -> unionStateP S1 S2 S1.
-auto.
+auto with stalmarck.
 Qed.
 
 Theorem unionStatePEq :
@@ -63,14 +63,14 @@ Theorem unionStatePEq :
  unionStateP S1 S2 S3 ->
  unionStateP S'1 S'2 S'3 ->
  eqState S1 S'1 -> eqState S2 S'2 -> eqState S3 S'3.
-intros S1 S2 S'1 S'2 S3 S'3 H' H'0; inversion H'; inversion H'0; auto.
-intros H'1 H'2; red in |- *; split; auto.
-apply H1; auto.
-apply inclStateEqStateComp with (S1 := S'1) (S3 := S'3); auto.
-apply inclStateEqStateComp with (S1 := S'2) (S3 := S'3); auto.
-apply H7; auto.
-apply inclStateEqStateComp with (S1 := S1) (S3 := S3); auto.
-apply inclStateEqStateComp with (S1 := S2) (S3 := S3); auto.
+intros S1 S2 S'1 S'2 S3 S'3 H' H'0; inversion H'; inversion H'0; auto with stalmarck.
+intros H'1 H'2; red in |- *; split; auto with stalmarck.
+apply H1; auto with stalmarck.
+apply inclStateEqStateComp with (S1 := S'1) (S3 := S'3); auto with stalmarck.
+apply inclStateEqStateComp with (S1 := S'2) (S3 := S'3); auto with stalmarck.
+apply H7; auto with stalmarck.
+apply inclStateEqStateComp with (S1 := S1) (S3 := S3); auto with stalmarck.
+apply inclStateEqStateComp with (S1 := S2) (S3 := S3); auto with stalmarck.
 Qed.
 
 Theorem unionStatePEqComp :
@@ -79,17 +79,17 @@ Theorem unionStatePEqComp :
  eqState S1 S'1 ->
  eqState S2 S'2 -> eqState S3 S'3 -> unionStateP S'1 S'2 S'3.
 intros S1 S2 S3 S'1 S'2 S'3 H' H'0 H'1 H'2.
-apply unionStatePDef; auto.
-apply inclStateEqStateComp with (S1 := S1) (S3 := S3); auto.
-inversion H'; auto.
-apply inclStateEqStateComp with (S1 := S2) (S3 := S3); auto.
-inversion H'; auto.
+apply unionStatePDef; auto with stalmarck.
+apply inclStateEqStateComp with (S1 := S1) (S3 := S3); auto with stalmarck.
+inversion H'; auto with stalmarck.
+apply inclStateEqStateComp with (S1 := S2) (S3 := S3); auto with stalmarck.
+inversion H'; auto with stalmarck.
 intros S4 H'3 H'4.
-apply inclStateEqStateComp with (S1 := S3) (S3 := S4); auto.
-inversion H'; auto.
-apply H1; auto.
-apply inclStateEqStateComp with (S1 := S'1) (S3 := S4); auto.
-apply inclStateEqStateComp with (S1 := S'2) (S3 := S4); auto.
+apply inclStateEqStateComp with (S1 := S3) (S3 := S4); auto with stalmarck.
+inversion H'; auto with stalmarck.
+apply H1; auto with stalmarck.
+apply inclStateEqStateComp with (S1 := S'1) (S3 := S4); auto with stalmarck.
+apply inclStateEqStateComp with (S1 := S'2) (S3 := S4); auto with stalmarck.
 Qed.
 
 Theorem unionStateAssoc1 :
@@ -97,22 +97,22 @@ Theorem unionStateAssoc1 :
  unionStateP S1 S2 S'1 ->
  unionStateP S'1 S3 S'2 -> unionStateP S2 S3 S'3 -> unionStateP S1 S'3 S'2.
 intros S1 S2 S3 S'1 S'2 S'3 H' H'0 H'1.
-apply unionStatePDef; auto.
-apply inclStateTrans with (S2 := S'1); auto.
-inversion H'; auto.
-inversion H'0; auto.
-apply unionStatePIncl with (1 := H'1); auto.
-apply inclStateTrans with (S2 := S'1); auto.
-inversion H'; auto.
-inversion H'0; auto.
-inversion H'0; auto.
+apply unionStatePDef; auto with stalmarck.
+apply inclStateTrans with (S2 := S'1); auto with stalmarck.
+inversion H'; auto with stalmarck.
+inversion H'0; auto with stalmarck.
+apply unionStatePIncl with (1 := H'1); auto with stalmarck.
+apply inclStateTrans with (S2 := S'1); auto with stalmarck.
+inversion H'; auto with stalmarck.
+inversion H'0; auto with stalmarck.
+inversion H'0; auto with stalmarck.
 intros S4 H'2 H'3.
-apply unionStatePIncl with (1 := H'0); auto.
-apply unionStatePIncl with (1 := H'); auto.
-apply inclStateTrans with (S2 := S'3); auto.
-inversion H'1; auto.
-apply inclStateTrans with (S2 := S'3); auto.
-inversion H'1; auto.
+apply unionStatePIncl with (1 := H'0); auto with stalmarck.
+apply unionStatePIncl with (1 := H'); auto with stalmarck.
+apply inclStateTrans with (S2 := S'3); auto with stalmarck.
+inversion H'1; auto with stalmarck.
+apply inclStateTrans with (S2 := S'3); auto with stalmarck.
+inversion H'1; auto with stalmarck.
 Qed.
 
 Theorem unionStatePAssoc2 :
@@ -120,31 +120,31 @@ Theorem unionStatePAssoc2 :
  unionStateP S2 S3 S'1 ->
  unionStateP S1 S'1 S'2 -> unionStateP S1 S2 S'3 -> unionStateP S'3 S3 S'2.
 intros S1 S2 S3 S'1 S'2 S'3 H' H'0 H'1.
-apply unionStatePDef; auto.
-apply unionStatePIncl with (1 := H'1); auto.
-inversion H'0; auto.
-apply inclStateTrans with (S2 := S'1); auto.
-inversion H'; auto.
-inversion H'0; auto.
-apply inclStateTrans with (S2 := S'1); auto.
-inversion H'; auto.
-inversion H'0; auto.
+apply unionStatePDef; auto with stalmarck.
+apply unionStatePIncl with (1 := H'1); auto with stalmarck.
+inversion H'0; auto with stalmarck.
+apply inclStateTrans with (S2 := S'1); auto with stalmarck.
+inversion H'; auto with stalmarck.
+inversion H'0; auto with stalmarck.
+apply inclStateTrans with (S2 := S'1); auto with stalmarck.
+inversion H'; auto with stalmarck.
+inversion H'0; auto with stalmarck.
 intros S4 H'2 H'3.
-apply unionStatePIncl with (1 := H'0); auto.
-apply inclStateTrans with (S2 := S'3); auto.
-inversion H'1; auto.
-apply unionStatePIncl with (1 := H'); auto.
-apply inclStateTrans with (S2 := S'3); auto.
-inversion H'1; auto.
+apply unionStatePIncl with (1 := H'0); auto with stalmarck.
+apply inclStateTrans with (S2 := S'3); auto with stalmarck.
+inversion H'1; auto with stalmarck.
+apply unionStatePIncl with (1 := H'); auto with stalmarck.
+apply inclStateTrans with (S2 := S'3); auto with stalmarck.
+inversion H'1; auto with stalmarck.
 Qed.
 
 Theorem addEqUnion :
  forall (S : State) (p q : rZ),
  unionStateP ((p, q) :: nil) S (addEq (p, q) S).
 intros S p q.
-apply unionStatePDef; auto.
-apply inclStateIn; simpl in |- *; auto.
-intros a b H'; elim H'; intros H'0; inversion H'0; auto.
+apply unionStatePDef; auto with stalmarck.
+apply inclStateIn; simpl in |- *; auto with stalmarck.
+intros a b H'; elim H'; intros H'0; inversion H'0; auto with stalmarck.
 Qed.
 
 (* To compute of two states, one simply needs to append the two list of equations *)
@@ -153,75 +153,75 @@ Definition unionState (S1 S2 : State) := S1 ++ S2.
 
 Theorem unionStatePunionState :
  forall S1 S2 : State, unionStateP S1 S2 (unionState S1 S2).
-intros S1; elim S1; simpl in |- *; auto.
+intros S1; elim S1; simpl in |- *; auto with stalmarck.
 intros S2.
-apply unionStatePSym; auto.
-apply unionStatePInclSelf; auto.
-apply inclStateIn; simpl in |- *; auto.
-intros a b H'; elim H'; auto.
+apply unionStatePSym; auto with stalmarck.
+apply unionStatePInclSelf; auto with stalmarck.
+apply inclStateIn; simpl in |- *; auto with stalmarck.
+intros a b H'; elim H'; auto with stalmarck.
 intros p l H' S2; case p; intros a b.
 apply
  unionStatePAssoc2
   with (S1 := (a, b) :: nil) (S2 := l) (S'1 := unionState l S2); 
- auto.
-generalize addEqUnion; unfold addEq in |- *; auto.
-generalize addEqUnion; unfold addEq in |- *; auto.
+ auto with stalmarck.
+generalize addEqUnion; unfold addEq in |- *; auto with stalmarck.
+generalize addEqUnion; unfold addEq in |- *; auto with stalmarck.
 Qed.
 
 Theorem unionStateInclL :
  forall S1 S2 : State, inclState S1 (unionState S1 S2).
 intros S1 S2.
-destruct (unionStatePunionState S1 S2); auto.
+destruct (unionStatePunionState S1 S2); auto with stalmarck.
 Qed.
-Hint Resolve unionStateInclL.
+Hint Resolve unionStateInclL : stalmarck.
 
 Theorem unionStateInclR :
  forall S1 S2 : State, inclState S2 (unionState S1 S2).
 intros S1 S2.
-destruct (unionStatePunionState S1 S2); auto.
+destruct (unionStatePunionState S1 S2); auto with stalmarck.
 Qed.
-Hint Resolve unionStateInclR.
+Hint Resolve unionStateInclR : stalmarck.
 
 Theorem unionStateMin :
  forall S1 S2 S3 : State,
  inclState S1 S3 -> inclState S2 S3 -> inclState (unionState S1 S2) S3.
 intros S1 S2 S3 H' H'0.
-destruct (unionStatePunionState S1 S2); auto.
+destruct (unionStatePunionState S1 S2); auto with stalmarck.
 Qed.
-Hint Resolve unionStateMin.
+Hint Resolve unionStateMin : stalmarck.
 
 Theorem unionStateSym :
  forall S1 S2 : State, eqState (unionState S1 S2) (unionState S2 S1).
-intros S1 S2; red in |- *; split; auto.
+intros S1 S2; red in |- *; split; auto with stalmarck.
 Qed.
-Hint Immediate unionStateSym.
+Hint Immediate unionStateSym : stalmarck.
 
 Theorem unionStateEq :
  forall S1 S2 S3 S4 : State,
  eqState S1 S3 ->
  eqState S2 S4 -> eqState (unionState S1 S2) (unionState S3 S4).
-intros S1 S2 S3 S4 H' H'0; red in |- *; split; auto.
-apply unionStateMin; auto.
-apply inclStateEqStateComp with (S1 := S3) (S3 := unionState S3 S4); auto.
-apply inclStateEqStateComp with (S1 := S4) (S3 := unionState S3 S4); auto.
-apply unionStateMin; auto.
-apply inclStateEqStateComp with (S1 := S1) (S3 := unionState S1 S2); auto.
-apply inclStateEqStateComp with (S1 := S2) (S3 := unionState S1 S2); auto.
+intros S1 S2 S3 S4 H' H'0; red in |- *; split; auto with stalmarck.
+apply unionStateMin; auto with stalmarck.
+apply inclStateEqStateComp with (S1 := S3) (S3 := unionState S3 S4); auto with stalmarck.
+apply inclStateEqStateComp with (S1 := S4) (S3 := unionState S3 S4); auto with stalmarck.
+apply unionStateMin; auto with stalmarck.
+apply inclStateEqStateComp with (S1 := S1) (S3 := unionState S1 S2); auto with stalmarck.
+apply inclStateEqStateComp with (S1 := S2) (S3 := unionState S1 S2); auto with stalmarck.
 Qed.
-Hint Resolve unionStateEq.
+Hint Resolve unionStateEq : stalmarck.
 
 Theorem unionStateAssoc :
  forall S1 S2 S3 : State,
  eqState (unionState S1 (unionState S2 S3))
    (unionState (unionState S1 S2) S3).
 intros S1 S2 S3; red in |- *; split.
-apply unionStateMin; auto.
-apply inclStateTrans with (S2 := unionState S1 S2); auto.
-apply unionStateMin; auto.
-apply inclStateTrans with (S2 := unionState S1 S2); auto.
-apply unionStateMin; auto.
-apply unionStateMin; auto.
-apply inclStateTrans with (S2 := unionState S2 S3); auto.
-apply inclStateTrans with (S2 := unionState S2 S3); auto.
+apply unionStateMin; auto with stalmarck.
+apply inclStateTrans with (S2 := unionState S1 S2); auto with stalmarck.
+apply unionStateMin; auto with stalmarck.
+apply inclStateTrans with (S2 := unionState S1 S2); auto with stalmarck.
+apply unionStateMin; auto with stalmarck.
+apply unionStateMin; auto with stalmarck.
+apply inclStateTrans with (S2 := unionState S2 S3); auto with stalmarck.
+apply inclStateTrans with (S2 := unionState S2 S3); auto with stalmarck.
 Qed.
-Hint Resolve unionStateMin.
+Hint Resolve unionStateMin : stalmarck.

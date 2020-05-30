@@ -58,8 +58,8 @@ Theorem rArrayContradictory :
  rArrayState Ar S -> ~ contradictory S.
 intros Ar H' S H'0; red in |- *; intros H'1; case H'1.
 intros x H'2; absurd (evalZ Ar x = evalZ Ar (rZComp x)).
-rewrite evalZComp; auto.
-apply rArrayStateDef1 with (S := S); auto.
+rewrite evalZComp; auto with stalmarck.
+apply rArrayStateDef1 with (S := S); auto with stalmarck.
 Qed.
 (* I dont like this but it makes Coq run faster *)
 Opaque addEqMem.
@@ -89,12 +89,12 @@ Theorem addInterAuxProp :
  end.
 intros L Ar1 Ar2 Ar3 H' H'0 H'1 S1 S2 S3 H'2 H'3 H'4 H'5 H'6.
 elim L; simpl in |- *.
-split; [ idtac | split; [ exists S1; repeat split | idtac ] ]; auto.
-intros H'7; apply rArrayStateDef1 with (S := S1); auto.
-intros H'7; apply rArrayStateDef2 with (Ar := Ar1); auto.
+split; [ idtac | split; [ exists S1; repeat split | idtac ] ]; auto with stalmarck.
+intros H'7; apply rArrayStateDef1 with (S := S1); auto with stalmarck.
+intros H'7; apply rArrayStateDef2 with (Ar := Ar1); auto with stalmarck.
 intros a H'7; inversion H'7.
-split; auto.
-red in |- *; apply OlistNil; auto.
+split; auto with stalmarck.
+red in |- *; apply OlistNil; auto with stalmarck.
 intros a l; case (addInterAux Ar2 Ar3 l Ar1).
 intros Ar3' L2 H'7; Elimc H'7; intros H'7 H'8; Elimc H'8; intros H'8 H'9;
  Elimc H'8; intros S4 E; Elimc E; intros H'8 H'10; 
@@ -105,52 +105,52 @@ generalize
  (addEqMemCorrect Ar3' (rZPlus (valRz a)) (getEquivMin Ar2 Ar3 (valRz a)) S4
     H'7 H'8);
  case (addEqMem Ar3' (rZPlus (valRz a)) (getEquivMin Ar2 Ar3 (valRz a)));
- auto.
+ auto with stalmarck.
 intros Ar3'' b L2'; case b.
 intros H'15; absurd (contradictory S2).
-apply rArrayContradictory with (Ar := Ar2); auto.
+apply rArrayContradictory with (Ar := Ar2); auto with stalmarck.
 case H'15.
 intros x H'16; exists x.
 apply
  eqStateIncl
   with (S1 := addEq (rZPlus (valRz a), getEquivMin Ar2 Ar3 (valRz a)) S4);
- auto.
-apply inclStateAddEqInv; auto.
-apply getEquivMinEq1; auto.
+ auto with stalmarck.
+apply inclStateAddEqInv; auto with stalmarck.
+apply getEquivMinEq1; auto with stalmarck.
 intros H'15; Elimc H'15; intros H'15 H'16; Elimc H'16; intros H'16 H'17;
  Elimc H'17; intros H'17 H'18.
-split; auto; split; auto.
+split; auto with stalmarck; split; auto with stalmarck.
 exists (addEq (rZPlus (valRz a), getEquivMin Ar2 Ar3 (valRz a)) S4);
- repeat split; auto.
-intros H'19; apply rArrayStateDef1 with (1 := H'16); auto.
-intros H'19; apply rArrayStateDef2 with (1 := H'16); auto.
-apply inclStateAddEqInv; auto.
-apply getEquivMinEq1; auto.
-apply inclStateAddEqInv; auto.
-apply getEquivMinEq2; auto.
-apply inclStateTrans with S4; auto.
+ repeat split; auto with stalmarck.
+intros H'19; apply rArrayStateDef1 with (1 := H'16); auto with stalmarck.
+intros H'19; apply rArrayStateDef2 with (1 := H'16); auto with stalmarck.
+apply inclStateAddEqInv; auto with stalmarck.
+apply getEquivMinEq1; auto with stalmarck.
+apply inclStateAddEqInv; auto with stalmarck.
+apply getEquivMinEq2; auto with stalmarck.
+apply inclStateTrans with S4; auto with stalmarck.
 intros a0 H'19; inversion H'19.
-case eqRzElim with (1 := H1); auto.
-intros H'20; rewrite <- H'20; simpl in |- *; auto.
+case eqRzElim with (1 := H1); auto with stalmarck.
+intros H'20; rewrite <- H'20; simpl in |- *; auto with stalmarck.
 intros H'20; replace a with (rZComp (rZPlus a0)).
-simpl in |- *; auto.
-rewrite H'20; rewrite rZCompInv; auto.
-apply eqStateaddEq2; auto.
-split; auto.
+simpl in |- *; auto with stalmarck.
+rewrite H'20; rewrite rZCompInv; auto with stalmarck.
+apply eqStateaddEq2; auto with stalmarck.
+split; auto with stalmarck.
 intros e H'19.
-rewrite H'18; auto.
-apply H'9; auto.
-Contradict H'19; auto.
+rewrite H'18; auto with stalmarck.
+apply H'9; auto with stalmarck.
+Contradict H'19; auto with stalmarck.
 unfold appendRz in |- *.
 generalize (appendfInclEq1 _ rZlt eqRz rZltEDec L2 L2'); intros H'22;
- inversion H'22; auto.
-apply H; auto.
-Contradict H'19; auto.
+ inversion H'22; auto with stalmarck.
+apply H; auto with stalmarck.
+Contradict H'19; auto with stalmarck.
 unfold appendRz in |- *.
 generalize (appendfInclEq2 _ rZlt eqRz eqrZSym eqrZTrans rZltEDec L2 L2');
- intros H'20; inversion H'20; auto.
-apply H; auto.
-red in |- *; unfold appendRz in |- *; apply appendfOlist; auto.
+ intros H'20; inversion H'20; auto with stalmarck.
+apply H; auto with stalmarck.
+red in |- *; unfold appendRz in |- *; apply appendfOlist; auto with stalmarck.
 try exact rZltEqComp.
 Qed.
 
@@ -193,61 +193,61 @@ unfold interMem in |- *;
  case (addInterAux Ar1 Ar2 (interf rZ rZlt eqRz rZltEDec L1 L2) Ar3).
 intros Ar4 L4 H'; Elimc H'; intros H' H'0; Elimc H'0; intros H'0 H'1;
  Elimc H'1; intros H'1 H'2.
-split; [ idtac | split; [ idtac | split ] ]; auto.
+split; [ idtac | split; [ idtac | split ] ]; auto with stalmarck.
 Elimc H'0; intros S4 E; Elimc E; intros H'0 H'3; Elimc H'3; intros H'3 H'4;
  Elimc H'4; intros H'4 H'5; Elimc H'5; intros H'5 H'6.
-apply rArrayStateEqState with (S := S4); auto.
-split; auto.
-apply getEquivInter with (Ar1 := Ar1) (Ar2 := Ar2); auto.
+apply rArrayStateEqState with (S := S4); auto with stalmarck.
+split; auto with stalmarck.
+apply getEquivInter with (Ar1 := Ar1) (Ar2 := Ar2); auto with stalmarck.
 intros a.
 case (InRzDec (rZPlus a) L1); intros In1.
 case (InRzDec (rZPlus a) L2); intros In2.
-apply H'6; auto.
+apply H'6; auto with stalmarck.
 cut (InclEq _ eqRz (rZPlus a :: nil) (interf rZ rZlt eqRz rZltEDec L1 L2));
- auto.
+ auto with stalmarck.
 intros H'7; inversion H'7.
-apply H; apply InEqHead; auto.
-apply interfMin; auto.
+apply H; apply InEqHead; auto with stalmarck.
+apply interfMin; auto with stalmarck.
 try exact rZltEqComp.
-apply OlistOne; auto.
-apply InclEqDef; auto.
-intros a0 H'7; inversion H'7; auto.
-apply InEqComp with (a := rZPlus a); auto.
+apply OlistOne; auto with stalmarck.
+apply InclEqDef; auto with stalmarck.
+intros a0 H'7; inversion H'7; auto with stalmarck.
+apply InEqComp with (a := rZPlus a); auto with stalmarck.
 inversion H1.
-apply InclEqDef; auto.
-intros a0 H'7; inversion H'7; auto.
-apply InEqComp with (a := rZPlus a); auto.
+apply InclEqDef; auto with stalmarck.
+intros a0 H'7; inversion H'7; auto with stalmarck.
+apply InEqComp with (a := rZPlus a); auto with stalmarck.
 inversion H1.
-rewrite getEquivIdL with (S1 := S1) (S2 := S2); auto.
+rewrite getEquivIdL with (S1 := S1) (S2 := S2); auto with stalmarck.
 replace (evalZ Ar2 (rZPlus a)) with (evalZ Ar3 (rZPlus a)).
-apply eqStateIncl with (S1 := S3); auto.
-apply rArrayStateDef2 with (Ar := Ar3); auto.
-rewrite evalZInv; auto.
-simpl in |- *; auto.
+apply eqStateIncl with (S1 := S3); auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar3); auto with stalmarck.
+rewrite evalZInv; auto with stalmarck.
+simpl in |- *; auto with stalmarck.
 unfold evalN in |- *.
-rewrite (D2 a); auto.
+rewrite (D2 a); auto with stalmarck.
 replace (evalZ Ar2 (rZPlus a)) with (evalZ Ar3 (rZPlus a)).
-apply eqStateIncl with (S1 := S3); auto.
-apply rArrayStateDef2 with (Ar := Ar3); auto.
-rewrite evalZInv; auto.
-simpl in |- *; auto.
+apply eqStateIncl with (S1 := S3); auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar3); auto with stalmarck.
+rewrite evalZInv; auto with stalmarck.
+simpl in |- *; auto with stalmarck.
 unfold evalN in |- *.
-rewrite (D2 a); auto.
-rewrite getEquivIdR with (S1 := S1) (S2 := S2); auto.
+rewrite (D2 a); auto with stalmarck.
+rewrite getEquivIdR with (S1 := S1) (S2 := S2); auto with stalmarck.
 replace (evalZ Ar1 (rZPlus a)) with (evalZ Ar3 (rZPlus a)).
-apply eqStateIncl with (S1 := S3); auto.
-apply rArrayStateDef2 with (Ar := Ar3); auto.
-rewrite evalZInv; auto.
-simpl in |- *; auto.
+apply eqStateIncl with (S1 := S3); auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar3); auto with stalmarck.
+rewrite evalZInv; auto with stalmarck.
+simpl in |- *; auto with stalmarck.
 unfold evalN in |- *.
-rewrite (D1 a); auto.
+rewrite (D1 a); auto with stalmarck.
 replace (evalZ Ar1 (rZPlus a)) with (evalZ Ar3 (rZPlus a)).
-apply eqStateIncl with (S1 := S3); auto.
-apply rArrayStateDef2 with (Ar := Ar3); auto.
-rewrite evalZInv; auto.
-simpl in |- *; auto.
+apply eqStateIncl with (S1 := S3); auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar3); auto with stalmarck.
+rewrite evalZInv; auto with stalmarck.
+simpl in |- *; auto with stalmarck.
 unfold evalN in |- *.
-rewrite (D1 a); auto.
+rewrite (D1 a); auto with stalmarck.
 Qed.
 Transparent addEqMem.
 End inter.

@@ -62,16 +62,16 @@ generalize
 case
  (stal (getT (buildL l)) (nat_of_P (valRz r)) m
     (rArrayInit vM (fun _ : rNat => class nil)) r rZFalse); 
- auto.
-intros Ar1 b1 L1 T1; case b1; auto.
+ auto with stalmarck.
+intros Ar1 b1 L1 T1; case b1; auto with stalmarck.
 intros H'0; Elimc H'0; intros S' E; Elimc E; intros H'0 H'1; Elimc H'1;
  intros H'1 H'2.
 case (TautoRTauto e).
 intros H'3 H'4; apply H'4.
 case (rTautotTauto (norm e)).
-intros H'5 H'6; apply H'6; auto.
+intros H'5 H'6; apply H'6; auto with stalmarck.
 red in |- *; rewrite H'.
-apply stalmarckGivesValidEquation with (S := S'); auto.
+apply stalmarckGivesValidEquation with (S := S'); auto with stalmarck.
 Qed.
 Transparent addEqMem.
 Transparent stal.
@@ -107,8 +107,8 @@ Definition getB (a : mbDT) : bool := match a with
 Theorem runC :
  forall (m : nat) (e : Expr), getB (run m e) = true -> Tautology e.
 intros m e; generalize (runCorrect m e).
-case (run m e); auto.
-intros r b l t; case b; simpl in |- *; auto.
+case (run m e); auto with stalmarck.
+intros r b l t; case b; simpl in |- *; auto with stalmarck.
 intros H' H'0; discriminate.
 Qed.
 

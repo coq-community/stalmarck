@@ -67,7 +67,7 @@ Ltac RecExpr :=
       inversion B; clear B
    | intros r r0 H' r1 A l l' n n' s'; CaseMake l n r0; intros l0 r2 r3 B;
       CaseMake l0 r3 r1; intros l2 r4 r5 C D; inversion D; 
-      clear D ]; auto.
+      clear D ]; auto with stalmarck.
 
 Lemma makeTripletsFunMax :
  forall (e : rExpr) (l l' : list triplet) (n n' : rNat) (s' : rZ),
@@ -75,34 +75,34 @@ Lemma makeTripletsFunMax :
 RecExpr.
 intro H'3. lapply (H' l l0 n n' r0);
   [ intros H'8; lapply H'8; [ intros H'9; clear H'8 | clear H'8 ] | idtac ];
-  auto.
-rewrite <- H2; auto.
-red in |- *. auto.
+  auto with stalmarck.
+rewrite <- H2; auto with stalmarck.
+red in |- *. auto with stalmarck.
 Qed.
 
 Lemma makeTripletsFunIncr :
  forall (e : rExpr) (l l' : list triplet) (n n' : rNat) (s' : rZ),
  makeTripletsFun l n e = tRC l' s' n' -> rlt n (rnext n').
 RecExpr.
-lapply (H' l l0 n n' r0); auto. rewrite <- H2; auto.
-lapply (H' l l0 n r3 r2); [ intros H'9 | auto ].
-lapply (A l0 l2 r3 r5 r4); [ intros H'10 | auto ].
-apply rltTrans with (y := rnext r3); auto.
+lapply (H' l l0 n n' r0); auto with stalmarck. rewrite <- H2; auto with stalmarck.
+lapply (H' l l0 n r3 r2); [ intros H'9 | auto with stalmarck ].
+lapply (A l0 l2 r3 r5 r4); [ intros H'10 | auto with stalmarck ].
+apply rltTrans with (y := rnext r3); auto with stalmarck.
 Qed.
-Hint Resolve makeTripletsFunIncr.
+Hint Resolve makeTripletsFunIncr : stalmarck.
 
 Lemma makeTripletsFunIncl :
  forall (e : rExpr) (l l' : list triplet) (n n' : rNat) (s' : rZ),
  makeTripletsFun l n e = tRC l' s' n' -> incl l l'.
 RecExpr.
-auto with datatypes.
-lapply (H' l l' n r1 r0); auto. rewrite <- H0; auto.
-lapply (H' l l0 n r3 r2); [ intros H'9 | idtac ]; auto.
-lapply (A l0 l2 r3 r5 r4); [ intros H'10 | idtac ]; auto.
-apply incl_tran with l0; auto.
-apply incl_tran with l2; auto with datatypes.
+auto with datatypes stalmarck.
+lapply (H' l l' n r1 r0); auto with stalmarck. rewrite <- H0; auto with stalmarck.
+lapply (H' l l0 n r3 r2); [ intros H'9 | idtac ]; auto with stalmarck.
+lapply (A l0 l2 r3 r5 r4); [ intros H'10 | idtac ]; auto with stalmarck.
+apply incl_tran with l0; auto with stalmarck.
+apply incl_tran with l2; auto with datatypes stalmarck.
 Qed.
-Hint Resolve makeTripletsFunIncr.
+Hint Resolve makeTripletsFunIncr : stalmarck.
 
 Lemma maxVarTripletsRlt :
  forall (e : rExpr) (l l' : list triplet) (n n' : rNat) (s' : rZ),
@@ -114,28 +114,28 @@ lapply (H' l l0 n r1 r0);
  [ intros H'9; lapply H'9;
     [ intros H'10; lapply H'10; [ clear H'10 H'9 | clear H'10 H'9 ]
     | clear H'9 ]
- | idtac ]; auto.
+ | idtac ]; auto with stalmarck.
 simpl in |- *.
-apply rmaxRlt; auto.
-apply rmaxRlt; auto.
-apply rmaxRlt; auto.
-apply rltTrans with (y := r3); auto.
+apply rmaxRlt; auto with stalmarck.
+apply rmaxRlt; auto with stalmarck.
+apply rmaxRlt; auto with stalmarck.
+apply rltTrans with (y := r3); auto with stalmarck.
 change (rVlt r2 r3) in |- *.
-eapply makeTripletsFunMax; eauto.
-eapply rmaxRltLeft; eauto.
-eauto.
-apply rltTrans with (y := r5); auto.
+eapply makeTripletsFunMax; eauto with stalmarck.
+eapply rmaxRltLeft; eauto with stalmarck.
+eauto with stalmarck.
+apply rltTrans with (y := r5); auto with stalmarck.
 change (rVlt r4 r5) in |- *.
-eapply makeTripletsFunMax; eauto.
-apply rltTransRnext2 with (m := n); eauto.
-eapply rmaxRltRight; eauto.
-apply rltTrans with (y := r5); auto.
-eapply A; eauto.
-apply rltTransRnext2 with (m := n); auto.
-eapply rmaxRltRight; eauto.
-eauto.
-eapply H'; eauto.
-eapply rmaxRltLeft; eauto.
+eapply makeTripletsFunMax; eauto with stalmarck.
+apply rltTransRnext2 with (m := n); eauto with stalmarck.
+eapply rmaxRltRight; eauto with stalmarck.
+apply rltTrans with (y := r5); auto with stalmarck.
+eapply A; eauto with stalmarck.
+apply rltTransRnext2 with (m := n); auto with stalmarck.
+eapply rmaxRltRight; eauto with stalmarck.
+eauto with stalmarck.
+eapply H'; eauto with stalmarck.
+eapply rmaxRltLeft; eauto with stalmarck.
 Qed.
 
 Theorem extendEvalMakeTripletsFun :
@@ -148,67 +148,67 @@ Theorem extendEvalMakeTripletsFun :
  exists g : rNat -> bool,
    equalBefore n f g /\ realizeTriplets g l' /\ rEval f e = rZEval g s'.
 RecExpr; intros f H'4 H'5 H'6.
-exists f; split; [ idtac | split ]; auto; try rewrite <- H0; red in |- *;
- auto.
+exists f; split; [ idtac | split ]; auto with stalmarck; try rewrite <- H0; red in |- *;
+ auto with stalmarck.
 rewrite H0 in A.
-elim (H' l l' n r1 r0 A f); auto.
+elim (H' l l' n r1 r0 A f); auto with stalmarck.
 intros g E; elim E; intros H'15 H'16; elim H'16; intros H'17 H'18;
  clear H'16 E.
-rewrite H'18; exists g; split; [ idtac | split ]; simpl in |- *; auto.
-case r0; simpl in |- *; auto.
-intros r2; case (g r2); auto.
+rewrite H'18; exists g; split; [ idtac | split ]; simpl in |- *; auto with stalmarck.
+case r0; simpl in |- *; auto with stalmarck.
+intros r2; case (g r2); auto with stalmarck.
 cut (rlt (maxVar r0) n);
- [ intros Rlt1 | apply rmaxRltLeft with (p := maxVar r1); auto ].
+ [ intros Rlt1 | apply rmaxRltLeft with (p := maxVar r1); auto with stalmarck ].
 cut (rlt (maxVar r1) n);
- [ intros Rlt2 | apply rmaxRltRight with (m := maxVar r0); auto ].
-cut (rlt n (rnext r3)); [ intros Rlt3 | eauto ].
+ [ intros Rlt2 | apply rmaxRltRight with (m := maxVar r0); auto with stalmarck ].
+cut (rlt n (rnext r3)); [ intros Rlt3 | eauto with stalmarck ].
 cut (rlt (rmax (maxVar r0) (maxVar r1)) r3);
- [ intros Rllt0 | apply rltTransRnext2 with (m := n); auto ].
-elim (H' l l0 n r3 r2 B f); auto.
+ [ intros Rllt0 | apply rltTransRnext2 with (m := n); auto with stalmarck ].
+elim (H' l l0 n r3 r2 B f); auto with stalmarck.
 intros g E; elim E; intros H'17 H'18; elim H'18; intros H'19 H'20;
  clear H'18 E.
-elim (A l0 l2 r3 r5 r4 C g); auto.
+elim (A l0 l2 r3 r5 r4 C g); auto with stalmarck.
 intros g0 E; elim E; intros H'18 H'21; elim H'21; intros H'22 H'23;
  clear H'21 E.
-2: apply rltTransRnext2 with (m := n); auto.
-2: apply maxVarTripletsRlt with (1 := B); auto.
-cut (rlt r3 (rnext r5)); [ intros Rlt4 | eauto ].
+2: apply rltTransRnext2 with (m := n); auto with stalmarck.
+2: apply maxVarTripletsRlt with (1 := B); auto with stalmarck.
+cut (rlt r3 (rnext r5)); [ intros Rlt4 | eauto with stalmarck ].
 exists (extendFun r5 g0 (rBoolOpFun r (rEval f r0) (rEval g r1))); split;
- [ idtac | split ]; auto.
-apply (equalBeforeTrans n) with (y := g); auto.
-apply equalBeforeLt with (m := r3); auto.
-apply (equalBeforeTrans r3) with (y := g0); auto.
-red in |- *; simpl in |- *; auto.
+ [ idtac | split ]; auto with stalmarck.
+apply (equalBeforeTrans n) with (y := g); auto with stalmarck.
+apply equalBeforeLt with (m := r3); auto with stalmarck.
+apply (equalBeforeTrans r3) with (y := g0); auto with stalmarck.
+red in |- *; simpl in |- *; auto with stalmarck.
 intros t H'7; elim H'7;
  [ intros H'8; rewrite <- H'8; clear H'7 | intros H'8; clear H'7 ]; 
- auto.
+ auto with stalmarck.
 unfold tEval in |- *.
 rewrite (extendFunrZEval g0 r5 r2 (rBoolOpFun r (rEval f r0) (rEval g r1)));
- auto.
+ auto with stalmarck.
 rewrite (extendFunrZEval g0 r5 r4 (rBoolOpFun r (rEval f r0) (rEval g r1)));
- auto.
-rewrite extendFunrZEvalExact; auto.
-rewrite H'20; rewrite H'23; auto; auto.
-rewrite <- (equalBeforerZEval g g0 r3 r2); auto.
-case (rBoolOpFun r (rZEval g r2) (rZEval g0 r4)); auto.
-eapply makeTripletsFunMax; eauto.
-eapply makeTripletsFunMax; eauto.
-eapply rmaxRltRight; eauto.
-red in |- *; apply rltTransRnext2 with (m := r3); auto.
+ auto with stalmarck.
+rewrite extendFunrZEvalExact; auto with stalmarck.
+rewrite H'20; rewrite H'23; auto with stalmarck; auto with stalmarck.
+rewrite <- (equalBeforerZEval g g0 r3 r2); auto with stalmarck.
+case (rBoolOpFun r (rZEval g r2) (rZEval g0 r4)); auto with stalmarck.
+eapply makeTripletsFunMax; eauto with stalmarck.
+eapply makeTripletsFunMax; eauto with stalmarck.
+eapply rmaxRltRight; eauto with stalmarck.
+red in |- *; apply rltTransRnext2 with (m := r3); auto with stalmarck.
 change (rVlt r2 r3) in |- *.
-apply makeTripletsFunMax with (e := r0) (l := l) (l' := l0) (n := n); auto.
+apply makeTripletsFunMax with (e := r0) (l := l) (l' := l0) (n := n); auto with stalmarck.
 cut
  (realizeTriplets (extendFun r5 g0 (rBoolOpFun r (rEval f r0) (rEval g r1)))
-    l2); auto.
-apply supportTriplets with (f := g0); auto.
-apply equalBeforeExtend; auto.
-apply rnextMono; auto.
-eapply maxVarTripletsRlt; eauto.
-eapply rmaxRltRight; eauto.
-eapply maxVarTripletsRlt; eauto.
-rewrite extendFunrZEvalExact; auto.
-rewrite (equalBeforeREval f g r1); auto.
-apply equalBeforeLt with (m := n); auto.
+    l2); auto with stalmarck.
+apply supportTriplets with (f := g0); auto with stalmarck.
+apply equalBeforeExtend; auto with stalmarck.
+apply rnextMono; auto with stalmarck.
+eapply maxVarTripletsRlt; eauto with stalmarck.
+eapply rmaxRltRight; eauto with stalmarck.
+eapply maxVarTripletsRlt; eauto with stalmarck.
+rewrite extendFunrZEvalExact; auto with stalmarck.
+rewrite (equalBeforeREval f g r1); auto with stalmarck.
+apply equalBeforeLt with (m := n); auto with stalmarck.
 Qed.
 
 Theorem extendEvalMakeTriplets :
@@ -219,7 +219,7 @@ Theorem extendEvalMakeTriplets :
    realizeTriplets g l /\ rEval f e = rZEval g s.
 intros f e l n s H'.
 apply extendEvalMakeTripletsFun with (l := nil (A:=triplet)) (n' := n);
- simpl in |- *; auto.
+ simpl in |- *; auto with stalmarck.
 Qed.
 
 Theorem equalBeforeMakeTripletsFun :
@@ -231,48 +231,48 @@ Theorem equalBeforeMakeTripletsFun :
  equalBefore n f g ->
  realizeTriplets f l' -> realizeTriplets g l' -> equalBefore n' f g.
 RecExpr; intros f g H'4 H'5 H'6 H'7 H'8.
-apply H' with (l := l) (l' := l') (n := n) (s' := r0); auto.
-rewrite <- H0; rewrite <- H2; auto.
-cut (rlt n (rnext r3)); [ intros Rle0 | eapply makeTripletsFunIncr; eauto ].
+apply H' with (l := l) (l' := l') (n := n) (s' := r0); auto with stalmarck.
+rewrite <- H0; rewrite <- H2; auto with stalmarck.
+cut (rlt n (rnext r3)); [ intros Rle0 | eapply makeTripletsFunIncr; eauto with stalmarck ].
 cut (equalBefore r5 f g); [ intros eB0 | idtac ].
-apply equalBeforeNext; auto.
+apply equalBeforeNext; auto with stalmarck.
 cut (tEval f (Triplet r (rZPlus r5) r2 r4) = true); [ simpl in |- * | idtac ].
 cut (tEval g (Triplet r (rZPlus r5) r2 r4) = true); [ simpl in |- * | idtac ].
-rewrite (equalBeforerZEval f g r5 r4); auto.
-rewrite (equalBeforerZEval f g r5 r2); auto.
-case (f r5); auto; case (g r5); auto;
- case (rBoolOpFun r (rZEval g r2) (rZEval g r4)); auto.
-red in |- *; apply rltTransRnext2 with (m := r3); auto.
+rewrite (equalBeforerZEval f g r5 r4); auto with stalmarck.
+rewrite (equalBeforerZEval f g r5 r2); auto with stalmarck.
+case (f r5); auto with stalmarck; case (g r5); auto with stalmarck;
+ case (rBoolOpFun r (rZEval g r2) (rZEval g r4)); auto with stalmarck.
+red in |- *; apply rltTransRnext2 with (m := r3); auto with stalmarck.
 change (rVlt r2 r3) in |- *.
-eapply makeTripletsFunMax; eauto.
-apply rmaxRltLeft with (p := maxVar r1); auto.
-eapply makeTripletsFunIncr; eauto.
-eapply makeTripletsFunMax; eauto.
-apply rmaxRltRight with (m := maxVar r0); auto.
-apply rltTransRnext2 with (m := n); auto.
-apply H'8; auto with datatypes.
-apply H'7; auto with datatypes.
+eapply makeTripletsFunMax; eauto with stalmarck.
+apply rmaxRltLeft with (p := maxVar r1); auto with stalmarck.
+eapply makeTripletsFunIncr; eauto with stalmarck.
+eapply makeTripletsFunMax; eauto with stalmarck.
+apply rmaxRltRight with (m := maxVar r0); auto with stalmarck.
+apply rltTransRnext2 with (m := n); auto with stalmarck.
+apply H'8; auto with datatypes stalmarck.
+apply H'7; auto with datatypes stalmarck.
 rewrite H0 in H'7.
 rewrite H0 in H'8.
-apply A with (1 := C); auto.
-apply rmaxRltRight with (m := maxVar r0); auto.
-apply rltTransRnext2 with (m := n); auto.
-eapply maxVarTripletsRlt; eauto.
-apply rmaxRltLeft with (p := maxVar r1); auto.
-apply H' with (1 := B); auto.
-apply rmaxRltLeft with (p := maxVar r1); auto.
-apply realizeTripletIncl with (L1 := l'); auto.
-rewrite <- H0; auto.
-apply incl_tran with (m := l2); auto with datatypes.
-eapply makeTripletsFunIncl; eauto.
-apply realizeTripletIncl with (L1 := l'); auto.
-rewrite <- H0; auto.
-apply incl_tran with (m := l2); auto with datatypes.
-eapply makeTripletsFunIncl; eauto.
-apply realizeTripletIncl with (L1 := l'); auto.
-rewrite <- H0; auto with datatypes.
-apply realizeTripletIncl with (L1 := l'); auto.
-rewrite <- H0; auto with datatypes.
+apply A with (1 := C); auto with stalmarck.
+apply rmaxRltRight with (m := maxVar r0); auto with stalmarck.
+apply rltTransRnext2 with (m := n); auto with stalmarck.
+eapply maxVarTripletsRlt; eauto with stalmarck.
+apply rmaxRltLeft with (p := maxVar r1); auto with stalmarck.
+apply H' with (1 := B); auto with stalmarck.
+apply rmaxRltLeft with (p := maxVar r1); auto with stalmarck.
+apply realizeTripletIncl with (L1 := l'); auto with stalmarck.
+rewrite <- H0; auto with stalmarck.
+apply incl_tran with (m := l2); auto with datatypes stalmarck.
+eapply makeTripletsFunIncl; eauto with stalmarck.
+apply realizeTripletIncl with (L1 := l'); auto with stalmarck.
+rewrite <- H0; auto with stalmarck.
+apply incl_tran with (m := l2); auto with datatypes stalmarck.
+eapply makeTripletsFunIncl; eauto with stalmarck.
+apply realizeTripletIncl with (L1 := l'); auto with stalmarck.
+rewrite <- H0; auto with datatypes stalmarck.
+apply realizeTripletIncl with (L1 := l'); auto with stalmarck.
+rewrite <- H0; auto with datatypes stalmarck.
 Qed.
 
 Theorem equalBeforeMakeTriplets :
@@ -282,11 +282,11 @@ Theorem equalBeforeMakeTriplets :
  realizeTriplets f l ->
  realizeTriplets g l -> makeTriplets e = tRC l s n -> rZEval f s = rZEval g s.
 intros f g e l n s H' H'0 H'1 H'2.
-apply equalBeforerZEval with (n := n); auto.
+apply equalBeforerZEval with (n := n); auto with stalmarck.
 apply
  makeTripletsFunMax
   with (e := e) (l := nil (A:=triplet)) (l' := l) (n := rnext (maxVar e));
- auto.
+ auto with stalmarck.
 apply
  equalBeforeMakeTripletsFun
   with
@@ -294,7 +294,7 @@ apply
     (l := nil (A:=triplet))
     (l' := l)
     (n := rnext (maxVar e))
-    (s' := s); auto.
+    (s' := s); auto with stalmarck.
 Qed.
 
 Theorem rZEvalREvalMakeTriplets :
@@ -306,19 +306,19 @@ intros f g e l n s H' H'0 H'1.
 elim (extendEvalMakeTriplets f e l n s);
  [ intros g0 E; elim E; intros H'8 H'9; elim H'9; intros H'10 H'11;
     rewrite H'11; clear H'9 E
- | idtac ]; auto.
-apply equalBeforeMakeTriplets with (e := e) (l := l) (n := n); auto.
-apply (equalBeforeTrans (rnext (maxVar e))) with (y := f); auto.
-apply (equalBeforeSym (rnext (maxVar e))); auto.
+ | idtac ]; auto with stalmarck.
+apply equalBeforeMakeTriplets with (e := e) (l := l) (n := n); auto with stalmarck.
+apply (equalBeforeTrans (rnext (maxVar e))) with (y := f); auto with stalmarck.
+apply (equalBeforeSym (rnext (maxVar e))); auto with stalmarck.
 Qed.
 
 Theorem rZEvalEvalRZMakeTriplets :
  forall (f : rNat -> bool) (e : rExpr) (l : list triplet) (n : rNat) (s : rZ),
  realizeTriplets f l -> makeTriplets e = tRC l s n -> rEval f e = rZEval f s.
 intros f e l n s H' H'0.
-apply sym_equal; auto.
-apply rZEvalREvalMakeTriplets with (l := l) (n := n); auto.
-red in |- *; auto.
+apply sym_equal; auto with stalmarck.
+apply rZEvalREvalMakeTriplets with (l := l) (n := n); auto with stalmarck.
+red in |- *; auto with stalmarck.
 Qed.
 
 (* A tautology for triplets is simply that top_variable := true is a valid equation *)
@@ -333,21 +333,21 @@ Theorem rTautotTauto : forall e : rExpr, rTautology e <-> tTautology e.
 intros e; unfold tTautology in |- *; unfold rTautology in |- *.
 DCase (makeTriplets e).
 intros l r r0 H'; split; intros H'1.
-red in |- *; simpl in |- *; auto.
+red in |- *; simpl in |- *; auto with stalmarck.
 intros f H'0 fZ0; simpl in |- *.
-rewrite fZ0; auto.
-rewrite <- (H'1 f); auto.
-apply rZEvalREvalMakeTriplets with (l := l) (n := r0); auto.
-red in |- *; auto.
+rewrite fZ0; auto with stalmarck.
+rewrite <- (H'1 f); auto with stalmarck.
+apply rZEvalREvalMakeTriplets with (l := l) (n := r0); auto with stalmarck.
+red in |- *; auto with stalmarck.
 intros f fZ0.
 red in H'1.
 elim (extendEvalMakeTriplets f e l r0 r);
  [ intros g E; elim E; intros H'7 H'8; elim H'8; intros H'9 H'10; clear H'8 E
- | idtac ]; auto.
+ | idtac ]; auto with stalmarck.
 rewrite H'10.
-rewrite (H'1 g); simpl in |- *; auto.
-rewrite <- equalBeforeElim with (1 := H'7); auto.
-rewrite <- equalBeforeElim with (1 := H'7); auto.
+rewrite (H'1 g); simpl in |- *; auto with stalmarck.
+rewrite <- equalBeforeElim with (1 := H'7); auto with stalmarck.
+rewrite <- equalBeforeElim with (1 := H'7); auto with stalmarck.
 Qed.
 (* The top variable occurs in the list of triplets *)
 
@@ -356,13 +356,13 @@ Theorem makeTripletsIn :
  match makeTriplets e with
  | tRC l s n => l <> nil -> inTriplets s l
  end.
-unfold makeTriplets in |- *; intros e; elim e; simpl in |- *; auto.
-intros r H'; case H'; auto.
-intros r; case (makeTripletsFun nil (rnext (maxVar r)) r); auto.
+unfold makeTriplets in |- *; intros e; elim e; simpl in |- *; auto with stalmarck.
+intros r H'; case H'; auto with stalmarck.
+intros r; case (makeTripletsFun nil (rnext (maxVar r)) r); auto with stalmarck.
 intros l r0 H' H'0 H'1.
-apply inTripletsComp; auto.
+apply inTripletsComp; auto with stalmarck.
 intros r r0 H' r1 H'0.
 case (makeTripletsFun nil (rnext (rmax (maxVar r0) (maxVar r1))) r0).
 intros l r2 r3.
-case (makeTripletsFun l r3 r1); simpl in |- *; auto.
+case (makeTripletsFun l r3 r1); simpl in |- *; auto with stalmarck.
 Qed.

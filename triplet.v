@@ -44,7 +44,7 @@ Inductive triplet : Set :=
 (* Equality on triplets is decidable *)
 
 Definition rBoolOpDec : forall a b : rBoolOp, {a = b} + {a <> b}.
-intros a b; case a; case b; auto; right; red in |- *; intros; discriminate.
+intros a b; case a; case b; auto with stalmarck; right; red in |- *; intros; discriminate.
 Defined.
 (* Equality is decidable *)
 
@@ -52,17 +52,17 @@ Definition tripletDec : forall t1 t2 : triplet, {t1 = t2} + {t1 <> t2}.
 intros t1 t2; case t1; case t2.
 intros r r0 r1 r2 r3 r4 r5 r6; case (rBoolOpDec r3 r);
  [ idtac | intros H; right; Contradict H; inversion H ]; 
- auto.
+ auto with stalmarck.
 intros H1; case (rZDec r4 r0);
  [ idtac | intros H; right; Contradict H; inversion H ]; 
- auto.
+ auto with stalmarck.
 intros H2; case (rZDec r5 r1);
  [ idtac | intros H; right; Contradict H; inversion H ]; 
- auto.
+ auto with stalmarck.
 intros H3; case (rZDec r6 r2);
  [ idtac | intros H; right; Contradict H; inversion H ]; 
- auto.
-intros H4; left; rewrite H1; rewrite H2; rewrite H3; rewrite H4; auto.
+ auto with stalmarck.
+intros H4; left; rewrite H1; rewrite H2; rewrite H3; rewrite H4; auto with stalmarck.
 Defined.
 
 (* Evaluation  tEval(a=b/\c)=(f(a)=f(b)/\f(b)) *)
@@ -82,22 +82,22 @@ Theorem realizeTripletNil : forall f : rNat -> bool, realizeTriplets f nil.
 intros f; red in |- *.
 intros t H'; inversion H'.
 Qed.
-Hint Resolve realizeTripletNil.
+Hint Resolve realizeTripletNil : stalmarck.
 
 Theorem realizeTripletCons :
  forall (f : rNat -> bool) (t : triplet) (L : list triplet),
  tEval f t = true -> realizeTriplets f L -> realizeTriplets f (t :: L).
 intros f t L H' H'0; red in |- *; simpl in |- *.
-intros t0 H'1; elim H'1; intros H'2; auto; rewrite <- H'2; auto.
+intros t0 H'1; elim H'1; intros H'2; auto with stalmarck; rewrite <- H'2; auto with stalmarck.
 Qed.
-Hint Resolve realizeTripletCons.
+Hint Resolve realizeTripletCons : stalmarck.
 
 Theorem realizeTripletIncl :
  forall (f : rNat -> bool) (L1 L2 : list triplet),
  realizeTriplets f L1 -> incl L2 L1 -> realizeTriplets f L2.
-intros f L1 L2 H'0 H'1; red in |- *; auto.
+intros f L1 L2 H'0 H'1; red in |- *; auto with stalmarck.
 Qed.
-Hint Resolve realizeTripletIncl.
+Hint Resolve realizeTripletIncl : stalmarck.
 
 (* An equation is valid if every f that realizes f and f(rZrue)=true
    then f(a)=f(b) *)
@@ -130,11 +130,11 @@ Definition inTriplet (a : rZ) (t : triplet) :=
 Definition inTripletDec :
   forall (a : rZ) (t : triplet), {inTriplet a t} + {~ inTriplet a t}.
 intros a t; case t; simpl in |- *; intros b v1 v2 v3; unfold eqRz in |- *.
-case (rNatDec (valRz a) (valRz v1)); auto;
- case (rNatDec (valRz a) (valRz v2)); auto;
- case (rNatDec (valRz a) (valRz v3)); auto.
+case (rNatDec (valRz a) (valRz v1)); auto with stalmarck;
+ case (rNatDec (valRz a) (valRz v2)); auto with stalmarck;
+ case (rNatDec (valRz a) (valRz v3)); auto with stalmarck.
 intros H' H'0 H'1; right; red in |- *; intros H'2; Elimc H'2; intros H'2;
- [ idtac | Elimc H'2; intros H'2 ]; auto.
+ [ idtac | Elimc H'2; intros H'2 ]; auto with stalmarck.
 Qed.
 (*Check if a variable is in a list of triplets*)
 
@@ -146,48 +146,48 @@ Fixpoint inTriplets (v : rZ) (l : list triplet) {struct l} : Prop :=
 
 Definition inTripletsDec :
   forall (a : rZ) (L : list triplet), {inTriplets a L} + {~ inTriplets a L}.
-intros a L; elim L; simpl in |- *; auto.
-unfold eqRz in |- *; apply rNatDec; auto.
-intros a0 l H'; case H'; auto.
-case (inTripletDec a a0); auto.
-intros H'0 H'1; right; red in |- *; intros H'2; elim H'2; auto.
+intros a L; elim L; simpl in |- *; auto with stalmarck.
+unfold eqRz in |- *; apply rNatDec; auto with stalmarck.
+intros a0 l H'; case H'; auto with stalmarck.
+case (inTripletDec a a0); auto with stalmarck.
+intros H'0 H'1; right; red in |- *; intros H'2; elim H'2; auto with stalmarck.
 Qed.
 
 Theorem inTripletsTrue : forall L : list triplet, inTriplets rZTrue L.
-intros L; elim L; simpl in |- *; auto.
+intros L; elim L; simpl in |- *; auto with stalmarck.
 Qed.
 
 Theorem inTripletsFalse : forall L : list triplet, inTriplets rZFalse L.
-intros L; elim L; simpl in |- *; auto.
+intros L; elim L; simpl in |- *; auto with stalmarck.
 Qed.
 
 Theorem inTripletsComp :
  forall (L : list triplet) (v : rZ),
  inTriplets v L -> inTriplets (rZComp v) L.
-intros L; elim L; simpl in |- *; auto.
-unfold eqRz in |- *; auto.
-intros v H'; rewrite <- H'; case v; auto.
-intros a; case a; simpl in |- *; auto.
-unfold eqRz in |- *; auto.
+intros L; elim L; simpl in |- *; auto with stalmarck.
+unfold eqRz in |- *; auto with stalmarck.
+intros v H'; rewrite <- H'; case v; auto with stalmarck.
+intros a; case a; simpl in |- *; auto with stalmarck.
+unfold eqRz in |- *; auto with stalmarck.
 intros H' r r0 r1 l H'0 v H'1; Elimc H'1; intros H'1;
  [ Elimc H'1; intros H'1;
     [ rewrite <- H'1 | Elimc H'1; intros H'1; rewrite <- H'1 ]
- | idtac ]; auto; case v; auto.
+ | idtac ]; auto with stalmarck; case v; auto with stalmarck.
 Qed.
 
 Theorem inTripletsCompInv :
  forall (L : list triplet) (v : rZ),
  inTriplets (rZComp v) L -> inTriplets v L.
 intros L v H'; rewrite (rZCompInvol v).
-apply inTripletsComp; auto.
+apply inTripletsComp; auto with stalmarck.
 Qed.
 
 Theorem inTripletsIn :
  forall (t : triplet) (L : list triplet) (v : rZ),
  inTriplet v t -> In t L -> inTriplets v L.
-intros t L; elim L; simpl in |- *; auto.
-intros v H' H'0; elim H'0; auto.
-intros a l H' v H'0 H'1; elim H'1; intros H'2; auto; rewrite H'2; auto.
+intros t L; elim L; simpl in |- *; auto with stalmarck.
+intros v H' H'0; elim H'0; auto with stalmarck.
+intros a l H' v H'0 H'1; elim H'1; intros H'2; auto with stalmarck; rewrite H'2; auto with stalmarck.
 Qed.
 (* Compute the list of all signed variable in the list of triplets *)
 
@@ -198,48 +198,48 @@ Fixpoint varTriplets (L : list triplet) : list rZ :=
   end.
 
 Lemma varTripletTrue : forall L : list triplet, In rZTrue (varTriplets L).
-simple induction L; simpl in |- *; auto.
-intros t L' HR; case t; simpl in |- *; auto.
+simple induction L; simpl in |- *; auto with stalmarck.
+intros t L' HR; case t; simpl in |- *; auto with stalmarck.
 Qed.
 
 Lemma varTripletTriplet1 :
  forall (p q r : rZ) (b : rBoolOp) (L : list triplet),
  In (Triplet b p q r) L -> In p (varTriplets L).
-simple induction L; simpl in |- *; auto.
+simple induction L; simpl in |- *; auto with stalmarck.
 intros t L' HR Ht; elim Ht; intros Ht1; [ rewrite Ht1 | case t ];
- simpl in |- *; auto.
+ simpl in |- *; auto with stalmarck.
 Qed.
 
 Lemma varTripletTriplet2 :
  forall (p q r : rZ) (b : rBoolOp) (L : list triplet),
  In (Triplet b p q r) L -> In q (varTriplets L).
-simple induction L; simpl in |- *; auto.
+simple induction L; simpl in |- *; auto with stalmarck.
 intros t L' HR Ht; elim Ht; intros Ht1; [ rewrite Ht1 | case t ];
- simpl in |- *; auto.
+ simpl in |- *; auto with stalmarck.
 Qed.
 
 Lemma varTripletsTriplet3 :
  forall (p q r : rZ) (b : rBoolOp) (L : list triplet),
  In (Triplet b p q r) L -> In r (varTriplets L).
-simple induction L; simpl in |- *; auto.
+simple induction L; simpl in |- *; auto with stalmarck.
 intros t L' HR Ht; elim Ht; intros Ht1; [ rewrite Ht1 | case t ];
- simpl in |- *; auto.
+ simpl in |- *; auto with stalmarck.
 Qed.
 
 Lemma eqRzElim : forall a b : rZ, eqRz a b -> a = b \/ a = rZComp b.
 intros a b; case a; case b; unfold eqRz in |- *; simpl in |- *;
- intros r r0 H'; rewrite H'; auto.
+ intros r r0 H'; rewrite H'; auto with stalmarck.
 Qed.
 
 Lemma inTripletsVarTriplet :
  forall (L : list triplet) (a : rZ),
  inTriplets a L -> In a (varTriplets L) \/ In (rZComp a) (varTriplets L).
-intros L; elim L; simpl in |- *; auto.
-intros a H'; case (eqRzElim _ _ H'); intros H'1; rewrite H'1; auto.
-intros a; case a; auto.
-intros r r0 r1 r2 l H' a0 H'0; Elimc H'0; intros H'0; auto.
+intros L; elim L; simpl in |- *; auto with stalmarck.
+intros a H'; case (eqRzElim _ _ H'); intros H'1; rewrite H'1; auto with stalmarck.
+intros a; case a; auto with stalmarck.
+intros r r0 r1 r2 l H' a0 H'0; Elimc H'0; intros H'0; auto with stalmarck.
 simpl in H'0; Casec H'0; intros H'0; [ idtac | Casec H'0; intros H'0 ];
  case (eqRzElim _ _ H'0); intros H'1; rewrite H'1; 
- simpl in |- *; auto.
-elim (H' _ H'0); auto with datatypes.
+ simpl in |- *; auto with stalmarck.
+elim (H' _ H'0); auto with datatypes stalmarck.
 Qed.

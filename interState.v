@@ -34,14 +34,14 @@ Definition interStateP (S1 S2 S3 : State) : Prop :=
   (forall S4 : State, inclState S4 S1 -> inclState S4 S2 -> inclState S4 S3).
 
 Theorem interStatePRef : forall S1 : State, interStateP S1 S1 S1.
-intros S1; red in |- *; auto.
+intros S1; red in |- *; auto with stalmarck.
 Qed.
 
 Theorem interStatePIncl :
  forall S1 S2 S3 S4 : State,
  interStateP S1 S2 S3 ->
  inclState S4 S1 -> inclState S4 S2 -> inclState S4 S3.
-intros S1 S2 S3 S4 H H1 H2; case H; intros H' H'1; case H'1; auto.
+intros S1 S2 S3 S4 H H1 H2; case H; intros H' H'1; case H'1; auto with stalmarck.
 Qed.
 
 Theorem interStatePSym :
@@ -84,52 +84,52 @@ Theorem eqConstrStateInL :
  forall (S : State) (a b : rZ),
  eqConstrState S a b ->
  a <> b -> ~ (forall a b : rZ, eqStateRz S a b) -> In a (stripRz S).
-intros S a b H'; Elimc H'; clear S a b; auto; simpl in |- *.
-intros a H'0; case H'0; auto.
-intros a b p; case p; intros a' b'; simpl in |- *; auto.
-intros S H' H'0 H'1 H'2; right; right; right; right; auto.
+intros S a b H'; Elimc H'; clear S a b; auto with stalmarck; simpl in |- *.
+intros a H'0; case H'0; auto with stalmarck.
+intros a b p; case p; intros a' b'; simpl in |- *; auto with stalmarck.
+intros S H' H'0 H'1 H'2; right; right; right; right; auto with stalmarck.
 intros a b c d S H' H'0 H'1 H'2 H'3 H'4.
-case (rZDec a b); intros Eq1; auto.
-right; right; right; right; auto.
+case (rZDec a b); intros Eq1; auto with stalmarck.
+right; right; right; right; auto with stalmarck.
 intros a b c d S H' H'0 H'1 H'2 H'3 H'4.
-case (rZDec a c); intros Eq1; auto.
-right; right; right; right; auto.
+case (rZDec a c); intros Eq1; auto with stalmarck.
+right; right; right; right; auto with stalmarck.
 intros a b c d S H' H'0 H'1 H'2 H'3 H'4.
-case (rZDec a (rZComp b)); intros Eq1; auto.
-right; right; right; right; auto.
+case (rZDec a (rZComp b)); intros Eq1; auto with stalmarck.
+right; right; right; right; auto with stalmarck.
 intros a b c d S H' H'0 H'1 H'2 H'3 H'4.
-case (rZDec a (rZComp c)); intros Eq1; auto.
-right; right; right; right; auto.
+case (rZDec a (rZComp c)); intros Eq1; auto with stalmarck.
+right; right; right; right; auto with stalmarck.
 intros a b c d S H' H'0 H'1 H'2.
 case H'2; intros a0 b0.
-apply eqStateRzContr with (a := b); auto.
-apply eqStateRzTrans with (b := a); auto.
+apply eqStateRzContr with (a := b); auto with stalmarck.
+apply eqStateRzTrans with (b := a); auto with stalmarck.
 Qed.
 
 Theorem eqConstrStateInR :
  forall (S : State) (a b : rZ),
  eqConstrState S a b ->
  a <> b -> ~ (forall a b : rZ, eqStateRz S a b) -> In b (stripRz S).
-intros S a b H'; Elimc H'; clear S a b; auto; simpl in |- *.
-intros a H'0; case H'0; auto.
-intros a b p; case p; intros a' b'; simpl in |- *; auto.
-intros S H' H'0 H'1 H'2; right; right; right; right; auto.
+intros S a b H'; Elimc H'; clear S a b; auto with stalmarck; simpl in |- *.
+intros a H'0; case H'0; auto with stalmarck.
+intros a b p; case p; intros a' b'; simpl in |- *; auto with stalmarck.
+intros S H' H'0 H'1 H'2; right; right; right; right; auto with stalmarck.
 intros a b c d S H' H'0 H'1 H'2 H'3 H'4.
-case (rZDec c d); intros Eq1; auto.
-right; right; right; right; auto.
+case (rZDec c d); intros Eq1; auto with stalmarck.
+right; right; right; right; auto with stalmarck.
 intros a b c d S H' H'0 H'1 H'2 H'3 H'4.
-case (rZDec b d); intros Eq1; auto.
-right; right; right; right; auto.
+case (rZDec b d); intros Eq1; auto with stalmarck.
+right; right; right; right; auto with stalmarck.
 intros a b c d S H' H'0 H'1 H'2 H'3 H'4.
-case (rZDec (rZComp c) d); intros Eq1; auto.
-right; right; right; right; auto.
+case (rZDec (rZComp c) d); intros Eq1; auto with stalmarck.
+right; right; right; right; auto with stalmarck.
 intros a b c d S H' H'0 H'1 H'2 H'3 H'4.
-case (rZDec (rZComp b) d); intros Eq1; auto.
-right; right; right; right; auto.
+case (rZDec (rZComp b) d); intros Eq1; auto with stalmarck.
+right; right; right; right; auto with stalmarck.
 intros a b c d S H' H'0 H'1 H'2.
 case H'2; intros a0 b0.
-apply eqStateRzContr with (a := b); auto.
-apply eqStateRzTrans with (b := a); auto.
+apply eqStateRzContr with (a := b); auto with stalmarck.
+apply eqStateRzTrans with (b := a); auto with stalmarck.
 Qed.
 (* Given 2 list of signed variable returns the list of all possible equations *)
 
@@ -143,14 +143,14 @@ Fixpoint prodRz (L1 : list rZ) : list rZ -> State :=
 Theorem prodRzProp :
  forall (a b : rZ) (S1 S2 : list rZ),
  In a S1 -> In b S2 -> In (a, b) (prodRz S1 S2).
-intros a b S1; elim S1; simpl in |- *; auto.
-intros a0 l H' S2 H'0; Elimc H'0; intros H'0; [ rewrite H'0 | idtac ]; auto.
-intros H'1; apply in_or_app; auto.
+intros a b S1; elim S1; simpl in |- *; auto with stalmarck.
+intros a0 l H' S2 H'0; Elimc H'0; intros H'0; [ rewrite H'0 | idtac ]; auto with stalmarck.
+intros H'1; apply in_or_app; auto with stalmarck.
 left.
 change (In ((fun b0 : rZ => (a, b0)) b) (map (fun b0 : rZ => (a, b0)) S2))
  in |- *.
-apply in_map; auto.
-intros H'1; apply in_or_app; auto.
+apply in_map; auto with stalmarck.
+intros H'1; apply in_or_app; auto with stalmarck.
 Qed.
 (* Every non trivial equal is in the product of the strip *)
 
@@ -161,9 +161,9 @@ Theorem eqConstrStateInDouble :
  ~ (forall a b : rZ, eqStateRz S a b) ->
  In (a, b) (prodRz (stripRz S) (stripRz S)).
 intros S a b H' H'0 H'1.
-apply prodRzProp; auto.
-apply eqConstrStateInL with (b := b); auto.
-apply eqConstrStateInR with (a := a); auto.
+apply prodRzProp; auto with stalmarck.
+apply eqConstrStateInL with (b := b); auto with stalmarck.
+apply eqConstrStateInR with (a := a); auto with stalmarck.
 Qed.
 (* Now we can compute all the non-trivial equation of a state *)
 
@@ -180,36 +180,36 @@ Fixpoint stripRzDec (S1 S2 : State) {struct S2} : State :=
 Theorem stripRzDecProp1 :
  forall (S1 S2 : State) (a b : rZ),
  In (a, b) (stripRzDec S1 S2) -> In (a, b) S2.
-intros S1 S2; elim S2; simpl in |- *; auto.
-intros p; case p; auto.
-intros c d l H' a b; case (eqConstrStateDec S1 c d); simpl in |- *; auto.
+intros S1 S2; elim S2; simpl in |- *; auto with stalmarck.
+intros p; case p; auto with stalmarck.
+intros c d l H' a b; case (eqConstrStateDec S1 c d); simpl in |- *; auto with stalmarck.
 intros H'0 H'1; Elimc H'1; intros H'1;
- [ generalize H'0; inversion H'1 | idtac ]; auto.
+ [ generalize H'0; inversion H'1 | idtac ]; auto with stalmarck.
 Qed.
 
 Theorem stripRzDecProp2 :
  forall (S1 S2 : State) (a b : rZ),
  In (a, b) (stripRzDec S1 S2) -> eqConstrState S1 a b.
-intros S1 S2; elim S2; simpl in |- *; auto.
+intros S1 S2; elim S2; simpl in |- *; auto with stalmarck.
 intros a b H'; Elimc H'; clear a b.
-intros p; case p; auto.
-intros c d l H' a b; case (eqConstrStateDec S1 c d); simpl in |- *; auto.
+intros p; case p; auto with stalmarck.
+intros c d l H' a b; case (eqConstrStateDec S1 c d); simpl in |- *; auto with stalmarck.
 intros H'0 H'1; Elimc H'1; intros H'1;
- [ generalize H'0; inversion H'1 | idtac ]; auto.
+ [ generalize H'0; inversion H'1 | idtac ]; auto with stalmarck.
 Qed.
 
 Theorem stripRzDecProp3 :
  forall (S1 S2 : State) (a b : rZ),
  In (a, b) S2 -> eqStateRz S1 a b -> In (a, b) (stripRzDec S1 S2).
-intros S1 S2; elim S2; simpl in |- *; auto.
-intros p; case p; auto.
-intros c d l H' a b; case (eqConstrStateDec S1 c d); simpl in |- *; auto.
+intros S1 S2; elim S2; simpl in |- *; auto with stalmarck.
+intros p; case p; auto with stalmarck.
+intros c d l H' a b; case (eqConstrStateDec S1 c d); simpl in |- *; auto with stalmarck.
 intros H'0 H'1; Elimc H'1; intros H'1;
- [ generalize H'0; inversion H'1 | idtac ]; auto.
+ [ generalize H'0; inversion H'1 | idtac ]; auto with stalmarck.
 intros H'0 H'1; Elimc H'1; intros H'1;
- [ generalize H'0; inversion H'1 | idtac ]; auto.
-intros H'2 H'3; case H'0; auto.
-rewrite H0; rewrite H1; auto.
+ [ generalize H'0; inversion H'1 | idtac ]; auto with stalmarck.
+intros H'2 H'3; case H'0; auto with stalmarck.
+rewrite H0; rewrite H1; auto with stalmarck.
 Qed.
 
 (* We compute the intersection by removing of the non-trivial equalities on S2
@@ -224,46 +224,46 @@ Definition interState (S1 S2 : State) : State :=
 
 Theorem interMemInL : forall S1 S2 : State, inclState (interState S1 S2) S1.
 intros S1 S2; unfold interState in |- *.
-case (eqStateRzContrDec S1); auto.
-intros H'; apply inclStateIn; auto.
-intros H'; apply inclStateIn; auto.
+case (eqStateRzContrDec S1); auto with stalmarck.
+intros H'; apply inclStateIn; auto with stalmarck.
+intros H'; apply inclStateIn; auto with stalmarck.
 intros a b H'1.
 apply eqConstrStateImpeqStateRz.
-apply stripRzDecProp2 with (S2 := prodRz (stripRz S1) (stripRz S1)); auto.
-apply stripRzDecProp1 with (S1 := S2); auto.
+apply stripRzDecProp2 with (S2 := prodRz (stripRz S1) (stripRz S1)); auto with stalmarck.
+apply stripRzDecProp1 with (S1 := S2); auto with stalmarck.
 Qed.
-Hint Resolve interMemInL.
+Hint Resolve interMemInL : stalmarck.
 
 Theorem interMemInR : forall S1 S2 : State, inclState (interState S1 S2) S2.
 intros S1 S2; unfold interState in |- *.
-case (eqStateRzContrDec S1); auto.
-intros H'; apply inclStateIn; auto.
+case (eqStateRzContrDec S1); auto with stalmarck.
+intros H'; apply inclStateIn; auto with stalmarck.
 intros a b H'1.
 apply eqConstrStateImpeqStateRz.
 apply
  stripRzDecProp2
   with (S2 := stripRzDec S1 (prodRz (stripRz S1) (stripRz S1))); 
- auto.
+ auto with stalmarck.
 Qed.
-Hint Resolve interMemInR.
+Hint Resolve interMemInR : stalmarck.
 
 Theorem interMemEqStateRz :
  forall (S1 S2 : State) (a b : rZ),
  eqStateRz S1 a b -> eqStateRz S2 a b -> eqStateRz (interState S1 S2) a b.
 intros S1 S2; unfold interState in |- *.
-case (eqStateRzContrDec S1); auto.
-intros H' a b H'0 H'1; case (rZDec a b); intros Eqab; auto.
-rewrite <- Eqab; auto.
-apply eqStateRzIn; auto.
-repeat apply stripRzDecProp3; auto.
-apply eqConstrStateInDouble; auto.
+case (eqStateRzContrDec S1); auto with stalmarck.
+intros H' a b H'0 H'1; case (rZDec a b); intros Eqab; auto with stalmarck.
+rewrite <- Eqab; auto with stalmarck.
+apply eqStateRzIn; auto with stalmarck.
+repeat apply stripRzDecProp3; auto with stalmarck.
+apply eqConstrStateInDouble; auto with stalmarck.
 Qed.
 
 Theorem interMemProp :
  forall S1 S2 : State, interStateP S1 S2 (interState S1 S2).
-intros S1 S2; repeat split; auto.
+intros S1 S2; repeat split; auto with stalmarck.
 intros S4 H1 H2; red in |- *; intros i j H3.
-apply interMemEqStateRz; auto.
+apply interMemEqStateRz; auto with stalmarck.
 Qed.
 
 Theorem interMemMin :
@@ -271,147 +271,147 @@ Theorem interMemMin :
  inclState S3 S1 -> inclState S3 S2 -> inclState S3 (interState S1 S2).
 intros S1 S2 S3 H' H'0.
 assert (H'2 := interMemProp S1 S2).
-apply (interStatePIncl S1 S2); auto.
+apply (interStatePIncl S1 S2); auto with stalmarck.
 Qed.
-Hint Resolve interMemMin.
+Hint Resolve interMemMin : stalmarck.
 
 Theorem interStateEq :
  forall S1 S2 S3 S4 : State,
  eqState S1 S3 ->
  eqState S2 S4 -> eqState (interState S1 S2) (interState S3 S4).
-intros S1 S2 S3 S4 H' H'0; red in |- *; split; apply interMemMin; auto.
-apply inclStateEqStateComp with (S1 := interState S1 S2) (S3 := S1); auto.
-apply inclStateEqStateComp with (S1 := interState S1 S2) (S3 := S2); auto.
-apply inclStateEqStateComp with (S1 := interState S3 S4) (S3 := S3); auto.
-apply inclStateEqStateComp with (S1 := interState S3 S4) (S3 := S4); auto.
+intros S1 S2 S3 S4 H' H'0; red in |- *; split; apply interMemMin; auto with stalmarck.
+apply inclStateEqStateComp with (S1 := interState S1 S2) (S3 := S1); auto with stalmarck.
+apply inclStateEqStateComp with (S1 := interState S1 S2) (S3 := S2); auto with stalmarck.
+apply inclStateEqStateComp with (S1 := interState S3 S4) (S3 := S3); auto with stalmarck.
+apply inclStateEqStateComp with (S1 := interState S3 S4) (S3 := S4); auto with stalmarck.
 Qed.
-Hint Resolve interStateEq.
+Hint Resolve interStateEq : stalmarck.
 
 Theorem interStateSym :
  forall S1 S2 : State, eqState (interState S1 S2) (interState S2 S1).
-red in |- *; split; auto.
+red in |- *; split; auto with stalmarck.
 Qed.
-Hint Immediate interStateSym.
+Hint Immediate interStateSym : stalmarck.
 
 Theorem interAssoc :
  forall S1 S2 S3 : State,
  eqState (interState S1 (interState S2 S3))
    (interState (interState S1 S2) S3).
-intros S1 S2 S3; red in |- *; split; auto.
-apply interMemMin; auto.
-apply interMemMin; auto; apply inclStateTrans with (S2 := interState S2 S3);
- auto.
-apply inclStateTrans with (S2 := interState S2 S3); auto.
-apply interMemMin; auto.
-apply inclStateTrans with (S2 := interState S1 S2); auto.
-apply interMemMin; auto.
-apply inclStateTrans with (S2 := interState S1 S2); auto.
+intros S1 S2 S3; red in |- *; split; auto with stalmarck.
+apply interMemMin; auto with stalmarck.
+apply interMemMin; auto with stalmarck; apply inclStateTrans with (S2 := interState S2 S3);
+ auto with stalmarck.
+apply inclStateTrans with (S2 := interState S2 S3); auto with stalmarck.
+apply interMemMin; auto with stalmarck.
+apply inclStateTrans with (S2 := interState S1 S2); auto with stalmarck.
+apply interMemMin; auto with stalmarck.
+apply inclStateTrans with (S2 := interState S1 S2); auto with stalmarck.
 Qed.
-Hint Resolve interAssoc.
+Hint Resolve interAssoc : stalmarck.
 
 Theorem ContrInterL :
  forall S : State,
  eqState S (interState S ((rZPlus zero, rZMinus zero) :: nil)).
-red in |- *; split; auto.
+red in |- *; split; auto with stalmarck.
 Qed.
-Hint Resolve ContrInterL.
+Hint Resolve ContrInterL : stalmarck.
 
 Theorem ContrInterR :
  forall S : State,
  eqState S (interState ((rZPlus zero, rZMinus zero) :: nil) S).
-red in |- *; split; auto.
+red in |- *; split; auto with stalmarck.
 Qed.
-Hint Resolve ContrInterR.
-Hint Resolve eqConstrStateImpeqStateRz.
+Hint Resolve ContrInterR : stalmarck.
+Hint Resolve eqConstrStateImpeqStateRz : stalmarck.
 
 Theorem CompInterR :
  forall (S : State) (a b : rZ),
  eqState S (interState (addEq (a, b) S) (addEq (a, rZComp b) S)).
-red in |- *; split; auto.
+red in |- *; split; auto with stalmarck.
 red in |- *.
 intros i j H'.
 cut (eqStateRz (addEq (a, b) S) i j);
  [ intros Eq1
  | apply (interMemInL (addEq (a, b) S) (addEq (a, rZComp b) S) i j) ]; 
- auto.
+ auto with stalmarck.
 cut (eqStateRz (addEq (a, rZComp b) S) i j);
  [ intros Eq2
  | apply (interMemInR (addEq (a, b) S) (addEq (a, rZComp b) S) i j) ]; 
- auto.
+ auto with stalmarck.
 clear H'.
-cut (eqConstrState ((a, b) :: S) i j); [ intros EqC1; inversion EqC1 | auto ].
-auto.
+cut (eqConstrState ((a, b) :: S) i j); [ intros EqC1; inversion EqC1 | auto with stalmarck ].
+auto with stalmarck.
 cut (eqConstrState ((a, rZComp b) :: S) i j);
- [ intros EqC2; inversion EqC2 | auto ].
-auto.
-apply eqStateContr with (p := j) (q := b); auto.
-apply eqStateContr with (p := a) (q := b); auto.
-apply eqStateRzTrans with (b := j); auto.
-apply eqStateRzTrans with (b := i); auto.
-apply eqStateContr with (p := i) (q := a); auto.
-apply eqStateContr with (p := a) (q := b); auto.
-apply eqStateRzTrans with (b := i); auto.
-rewrite <- (rZCompInv b); auto.
-apply eqStateRzTrans with (b := rZComp j); auto.
-apply eqStateRzTrans with (b := a); auto.
-apply eqStateRzTrans with (b := b); auto.
-rewrite <- (rZCompInv b); auto.
+ [ intros EqC2; inversion EqC2 | auto with stalmarck ].
+auto with stalmarck.
+apply eqStateContr with (p := j) (q := b); auto with stalmarck.
+apply eqStateContr with (p := a) (q := b); auto with stalmarck.
+apply eqStateRzTrans with (b := j); auto with stalmarck.
+apply eqStateRzTrans with (b := i); auto with stalmarck.
+apply eqStateContr with (p := i) (q := a); auto with stalmarck.
+apply eqStateContr with (p := a) (q := b); auto with stalmarck.
+apply eqStateRzTrans with (b := i); auto with stalmarck.
+rewrite <- (rZCompInv b); auto with stalmarck.
+apply eqStateRzTrans with (b := rZComp j); auto with stalmarck.
+apply eqStateRzTrans with (b := a); auto with stalmarck.
+apply eqStateRzTrans with (b := b); auto with stalmarck.
+rewrite <- (rZCompInv b); auto with stalmarck.
 cut (eqConstrState ((a, rZComp b) :: S) i j);
- [ intros EqC2; inversion EqC2 | auto ].
-auto.
-apply eqStateContr with (p := a) (q := b); auto.
-apply eqStateRzTrans with (b := i); auto.
-apply eqStateRzTrans with (b := j); auto.
-apply eqStateContr with (p := i) (q := b); auto.
-apply eqStateContr with (p := a) (q := b); auto.
-apply eqStateRzTrans with (b := j); auto.
-rewrite <- (rZCompInv b); auto.
-apply eqStateRzTrans with (b := rZComp i); auto.
-apply eqStateContr with (p := j) (q := a); auto.
-apply eqStateRzTrans with (b := a); auto.
-apply eqStateRzTrans with (b := b); auto.
-rewrite <- (rZCompInv b); auto.
+ [ intros EqC2; inversion EqC2 | auto with stalmarck ].
+auto with stalmarck.
+apply eqStateContr with (p := a) (q := b); auto with stalmarck.
+apply eqStateRzTrans with (b := i); auto with stalmarck.
+apply eqStateRzTrans with (b := j); auto with stalmarck.
+apply eqStateContr with (p := i) (q := b); auto with stalmarck.
+apply eqStateContr with (p := a) (q := b); auto with stalmarck.
+apply eqStateRzTrans with (b := j); auto with stalmarck.
+rewrite <- (rZCompInv b); auto with stalmarck.
+apply eqStateRzTrans with (b := rZComp i); auto with stalmarck.
+apply eqStateContr with (p := j) (q := a); auto with stalmarck.
+apply eqStateRzTrans with (b := a); auto with stalmarck.
+apply eqStateRzTrans with (b := b); auto with stalmarck.
+rewrite <- (rZCompInv b); auto with stalmarck.
 cut (eqConstrState ((a, rZComp b) :: S) i j);
- [ intros EqC2; inversion EqC2 | auto ].
-auto.
-apply eqStateContr with (p := i) (q := a); auto.
-apply eqStateContr with (p := a) (q := b); auto.
-apply eqStateRzTrans with (b := rZComp i); auto.
-apply eqStateRzTrans with (b := j); auto.
-apply eqStateContr with (p := j) (q := b); auto.
-rewrite <- (rZCompInv b); auto.
-apply eqStateContr with (p := a) (q := b); auto.
-apply eqStateRzTrans with (b := rZComp j); auto.
-apply eqStateRzTrans with (b := rZComp i); auto.
-apply eqStateRzTrans with (b := rZComp a); auto.
-apply eqStateRzTrans with (b := rZComp b); auto.
+ [ intros EqC2; inversion EqC2 | auto with stalmarck ].
+auto with stalmarck.
+apply eqStateContr with (p := i) (q := a); auto with stalmarck.
+apply eqStateContr with (p := a) (q := b); auto with stalmarck.
+apply eqStateRzTrans with (b := rZComp i); auto with stalmarck.
+apply eqStateRzTrans with (b := j); auto with stalmarck.
+apply eqStateContr with (p := j) (q := b); auto with stalmarck.
+rewrite <- (rZCompInv b); auto with stalmarck.
+apply eqStateContr with (p := a) (q := b); auto with stalmarck.
+apply eqStateRzTrans with (b := rZComp j); auto with stalmarck.
+apply eqStateRzTrans with (b := rZComp i); auto with stalmarck.
+apply eqStateRzTrans with (b := rZComp a); auto with stalmarck.
+apply eqStateRzTrans with (b := rZComp b); auto with stalmarck.
 cut (eqConstrState ((a, rZComp b) :: S) i j);
- [ intros EqC2; inversion EqC2 | auto ].
-auto.
-apply eqStateContr with (p := a) (q := b); auto.
-apply eqStateRzTrans with (b := rZComp j); auto.
-apply eqStateRzTrans with (b := i); auto.
-apply eqStateContr with (p := j) (q := a); auto.
-apply eqStateContr with (p := a) (q := b); auto.
-apply eqStateRzTrans with (b := rZComp i); auto.
-apply eqStateRzTrans with (b := rZComp j); auto.
-apply eqStateContr with (p := i) (q := b); auto.
-rewrite <- (rZCompInv b); auto.
-apply eqStateRzTrans with (b := rZComp a); auto.
-apply eqStateRzTrans with (b := rZComp b); auto.
+ [ intros EqC2; inversion EqC2 | auto with stalmarck ].
+auto with stalmarck.
+apply eqStateContr with (p := a) (q := b); auto with stalmarck.
+apply eqStateRzTrans with (b := rZComp j); auto with stalmarck.
+apply eqStateRzTrans with (b := i); auto with stalmarck.
+apply eqStateContr with (p := j) (q := a); auto with stalmarck.
+apply eqStateContr with (p := a) (q := b); auto with stalmarck.
+apply eqStateRzTrans with (b := rZComp i); auto with stalmarck.
+apply eqStateRzTrans with (b := rZComp j); auto with stalmarck.
+apply eqStateContr with (p := i) (q := b); auto with stalmarck.
+rewrite <- (rZCompInv b); auto with stalmarck.
+apply eqStateRzTrans with (b := rZComp a); auto with stalmarck.
+apply eqStateRzTrans with (b := rZComp b); auto with stalmarck.
 cut (eqConstrState ((a, rZComp b) :: S) i j);
- [ intros EqC2; inversion EqC2 | auto ].
-auto.
-apply eqStateRzTrans with (b := a); auto.
-apply eqStateRzTrans with (b := rZComp b); auto.
-apply eqStateRzTrans with (b := rZComp b); auto.
-apply eqStateRzTrans with (b := a); auto.
-apply eqStateRzTrans with (b := rZComp a); auto.
-apply eqStateRzTrans with (b := b); auto.
-rewrite <- (rZCompInv b); auto.
-apply eqStateRzTrans with (b := b); auto.
-rewrite <- (rZCompInv b); auto.
-apply eqStateRzTrans with (b := rZComp a); auto.
-apply eqStateContr with (p := a) (q := b); auto.
-rewrite <- (rZCompInv b); auto.
+ [ intros EqC2; inversion EqC2 | auto with stalmarck ].
+auto with stalmarck.
+apply eqStateRzTrans with (b := a); auto with stalmarck.
+apply eqStateRzTrans with (b := rZComp b); auto with stalmarck.
+apply eqStateRzTrans with (b := rZComp b); auto with stalmarck.
+apply eqStateRzTrans with (b := a); auto with stalmarck.
+apply eqStateRzTrans with (b := rZComp a); auto with stalmarck.
+apply eqStateRzTrans with (b := b); auto with stalmarck.
+rewrite <- (rZCompInv b); auto with stalmarck.
+apply eqStateRzTrans with (b := b); auto with stalmarck.
+rewrite <- (rZCompInv b); auto with stalmarck.
+apply eqStateRzTrans with (b := rZComp a); auto with stalmarck.
+apply eqStateContr with (p := a) (q := b); auto with stalmarck.
+rewrite <- (rZCompInv b); auto with stalmarck.
 Qed.

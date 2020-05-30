@@ -48,24 +48,24 @@ Definition InRz := InEq rZ eqRz.
 
 Theorem InEqInv :
  forall (a : rZ) (L : list rZ), InRz a L -> In a L \/ In (rZComp a) L.
-intros a L H'; Elimc H'; clear a L; auto.
+intros a L H'; Elimc H'; clear a L; auto with stalmarck.
 intros a b L; case a; case b; unfold eqRz in |- *; simpl in |- *;
- intros a' b' Eqt; rewrite Eqt; auto.
-intros a b L H' H'0; elim H'0; auto with datatypes.
+ intros a' b' Eqt; rewrite Eqt; auto with stalmarck.
+intros a b L H' H'0; elim H'0; auto with datatypes stalmarck.
 Qed.
 
 Theorem InRzDec : forall (a : rZ) (L : list rZ), {InRz a L} + {~ InRz a L}.
-intros a L; elim L; auto.
+intros a L; elim L; auto with stalmarck.
 right; red in |- *; intros H'; inversion H'.
 intros a0 l H'; case H'.
-intros H'0; left; auto.
-red in |- *; apply InEqSkip; auto.
+intros H'0; left; auto with stalmarck.
+red in |- *; apply InEqSkip; auto with stalmarck.
 intros H'0; case (rNatDec (valRz a) (valRz a0)); intros H'1.
-left; auto.
-red in |- *; apply InEqHead; auto.
+left; auto with stalmarck.
+red in |- *; apply InEqHead; auto with stalmarck.
 right; red in |- *; intros H'2; inversion_clear H'2.
-case H'1; auto.
-case H'0; auto.
+case H'1; auto with stalmarck.
+case H'0; auto with stalmarck.
 Qed.
 (* A vM is either a reference or an equivalence class *)
 
@@ -81,15 +81,15 @@ intros A eqDec.
 fix listDec 1.
 intros L1; case L1.
 intros L2; case L2.
-left; auto.
+left; auto with stalmarck.
 intros a l; right; red in |- *; intros H'; discriminate.
 intros a l L2; case L2.
 right; red in |- *; intros H'; discriminate.
 intros a0 l0; case (eqDec a a0); intros Eq0.
 case (listDec l l0); intros Eq1.
-left; rewrite Eq0; rewrite Eq1; auto.
-right; Contradict Eq1; inversion Eq1; auto.
-right; Contradict Eq0; inversion Eq0; auto.
+left; rewrite Eq0; rewrite Eq1; auto with stalmarck.
+right; Contradict Eq1; inversion Eq1; auto with stalmarck.
+right; Contradict Eq0; inversion Eq0; auto with stalmarck.
 Defined.
 (* We can decide equality on vM *)
 
@@ -97,11 +97,11 @@ Definition vMDec : forall a b : vM, {a = b} + {a <> b}.
 intros a b; case a; case b;
  try (intros; right; red in |- *; intros; discriminate; fail).
 intros r r0; case (rZDec r r0); intros Eq1.
-rewrite <- Eq1; auto.
-right; red in |- *; intros H'; case Eq1; inversion H'; auto.
+rewrite <- Eq1; auto with stalmarck.
+right; red in |- *; intros H'; case Eq1; inversion H'; auto with stalmarck.
 intros l l0; case (listDec _ rZDec l0 l); intros Eq1.
-rewrite <- Eq1; auto.
-right; red in |- *; intros H'; case Eq1; inversion H'; auto.
+rewrite <- Eq1; auto with stalmarck.
+right; red in |- *; intros H'; case Eq1; inversion H'; auto with stalmarck.
 Defined.
 
 Let get := rArrayGet vM.
@@ -161,23 +161,23 @@ Theorem WarCompEq :
  (forall a : rNat, get Ar1 a = get Ar2 a) ->
  wellFormedArray Ar1 -> wellFormedArray Ar2.
 intros Ar1 Ar2 H' War1; inversion War1.
-apply wellFormedArrayDef; auto.
-apply pointerDecreaseDef; auto.
-intros r s; rewrite <- H'; inversion pD; auto.
-apply pointToClassRefDef; auto.
-intros r s t; repeat rewrite <- H'; auto.
-intros H'0; inversion pR; auto.
-apply H0 with (r := r); auto.
-apply pointToClassClassRef; auto.
-intros r s Lr; repeat rewrite <- H'; auto.
-intros H'0 H'1; inversion pC; auto.
-apply H0 with (Lr := Lr); auto.
-intros r s Ls; repeat rewrite <- H'; auto.
-intros H'0 H'1; inversion pC; auto.
-apply OlistArrayDef; auto.
-intros r Lr; repeat rewrite <- H'; auto.
-intros H'0; inversion oC; auto.
-apply H0 with (r := r); auto.
+apply wellFormedArrayDef; auto with stalmarck.
+apply pointerDecreaseDef; auto with stalmarck.
+intros r s; rewrite <- H'; inversion pD; auto with stalmarck.
+apply pointToClassRefDef; auto with stalmarck.
+intros r s t; repeat rewrite <- H'; auto with stalmarck.
+intros H'0; inversion pR; auto with stalmarck.
+apply H0 with (r := r); auto with stalmarck.
+apply pointToClassClassRef; auto with stalmarck.
+intros r s Lr; repeat rewrite <- H'; auto with stalmarck.
+intros H'0 H'1; inversion pC; auto with stalmarck.
+apply H0 with (Lr := Lr); auto with stalmarck.
+intros r s Ls; repeat rewrite <- H'; auto with stalmarck.
+intros H'0 H'1; inversion pC; auto with stalmarck.
+apply OlistArrayDef; auto with stalmarck.
+intros r Lr; repeat rewrite <- H'; auto with stalmarck.
+intros H'0; inversion oC; auto with stalmarck.
+apply H0 with (r := r); auto with stalmarck.
 Qed.
 Variable Ar : rArray vM.
 Hypothesis War : wellFormedArray Ar.
@@ -188,33 +188,33 @@ Hypothesis War : wellFormedArray Ar.
 Theorem wfPd : forall (r : rNat) (t : rZ), get Ar r = ref t -> rVlt t r.
 intros r t H'; inversion War.
 inversion pD.
-apply H0 with (1 := H'); auto.
+apply H0 with (1 := H'); auto with stalmarck.
 Qed.
 
 Theorem wfPcr :
  forall (r : rNat) (t u : rZ), get Ar r = ref t -> get Ar (valRz t) <> ref u.
 intros r t u H'; inversion War.
-inversion pR; apply H0 with (1 := H'); auto.
+inversion pR; apply H0 with (1 := H'); auto with stalmarck.
 Qed.
 
 Theorem wfPcc1 :
  forall (r : rNat) (s : rZ) (Lr : list rZ),
  get Ar r = class Lr -> In s Lr -> get Ar (valRz s) = ref (samePol s r).
 intros r s Lr H' H'0; inversion War.
-inversion pC; apply H0 with (1 := H'); auto.
+inversion pC; apply H0 with (1 := H'); auto with stalmarck.
 Qed.
 
 Theorem wfPcc2 :
  forall (r : rNat) (s : rZ) (Ls : list rZ),
  get Ar r = ref s -> get Ar (valRz s) = class Ls -> In (samePol s r) Ls.
 intros r s Ls H' H'0; inversion War.
-inversion pC; apply H1 with (1 := H') (2 := H'0); auto.
+inversion pC; apply H1 with (1 := H') (2 := H'0); auto with stalmarck.
 Qed.
 
 Theorem wfOl :
  forall (r : rNat) (Lr : list rZ), get Ar r = class Lr -> OlistRz Lr.
 intros r Lr H'; inversion War.
-inversion oC; apply H0 with (1 := H'); auto.
+inversion oC; apply H0 with (1 := H'); auto with stalmarck.
 Qed.
 (*** Equivalence classes are disjoint *)
 
@@ -222,7 +222,7 @@ Theorem refSameEq :
  forall (a b : rZ) (r s : rNat),
  ref (samePol a s) = ref (samePol b r) -> s = r.
 intros a b r s; case a; case b; simpl in |- *; intros a1 b1 C1; inversion C1;
- auto.
+ auto with stalmarck.
 Qed.
 
 Theorem wfDisjoint :
@@ -234,23 +234,23 @@ case (InEqInv _ _ H'2); intros In1; generalize (wfPcc1 _ _ _ H'0 In1);
  intros get1; case (InEqInv _ _ H'3); intros In2;
  generalize (wfPcc1 _ _ _ H'1 In2); intros get2.
 apply refSameEq with (a := a) (b := a); rewrite <- get1; rewrite <- get2;
- auto.
+ auto with stalmarck.
 apply refSameEq with (a := rZComp a) (b := a); rewrite <- get1;
- rewrite <- get2; auto.
-case a; simpl in |- *; auto.
+ rewrite <- get2; auto with stalmarck.
+case a; simpl in |- *; auto with stalmarck.
 apply refSameEq with (a := a) (b := rZComp a); rewrite <- get1;
- rewrite <- get2; auto.
-case a; simpl in |- *; auto.
+ rewrite <- get2; auto with stalmarck.
+case a; simpl in |- *; auto with stalmarck.
 apply refSameEq with (a := rZComp a) (b := rZComp a); rewrite <- get1;
- rewrite <- get2; auto.
+ rewrite <- get2; auto with stalmarck.
 Qed.
 (*There is no loop in the pointers *)
 
 Theorem getNotIdP : forall r : rZ, get Ar (valRz r) <> ref r.
 intros r; red in |- *; intros H'.
-absurd (rVlt r (valRz r)); auto.
-unfold rVlt in |- *; auto.
-apply wfPd; auto.
+absurd (rVlt r (valRz r)); auto with stalmarck.
+unfold rVlt in |- *; auto with stalmarck.
+apply wfPd; auto with stalmarck.
 Qed.
 (* The element that contains an equivalence classis smaller than all the element 
  of the class *)
@@ -260,8 +260,8 @@ Theorem wellFormedArrayInImpLt :
  get Ar a = class La -> In b La -> rlt a (valRz b).
 intros a b La geta Inb.
 replace a with (valRz (samePol b a)).
-generalize (wfPd _ _ (wfPcc1 _ _ _ geta Inb)); unfold rVlt in |- *; auto.
-case b; case a; simpl in |- *; auto.
+generalize (wfPd _ _ (wfPcc1 _ _ _ geta Inb)); unfold rVlt in |- *; auto with stalmarck.
+case b; case a; simpl in |- *; auto with stalmarck.
 Qed.
 (* An element that contains an equivalence class can't be in a equivalence class *)
 
@@ -269,12 +269,12 @@ Theorem wellFormedArrayInImpNotEq :
  forall (a b : rNat) (La Lb : list rZ),
  get Ar a = class La -> get Ar b = class Lb -> ~ InRz (rZPlus a) Lb.
 intros a b La Lb geta getb; red in |- *; intros H'3.
-case (InEqInv (rZPlus a) Lb H'3); intros H'4; auto.
-absurd (get Ar (valRz (rZPlus a)) = class La); auto.
-rewrite wfPcc1 with (1 := getb); auto.
+case (InEqInv (rZPlus a) Lb H'3); intros H'4; auto with stalmarck.
+absurd (get Ar (valRz (rZPlus a)) = class La); auto with stalmarck.
+rewrite wfPcc1 with (1 := getb); auto with stalmarck.
 red in |- *; intro; discriminate.
-absurd (get Ar (valRz (rZMinus a)) = class La); auto.
-rewrite wfPcc1 with (1 := getb); auto.
+absurd (get Ar (valRz (rZMinus a)) = class La); auto with stalmarck.
+rewrite wfPcc1 with (1 := getb); auto with stalmarck.
 red in |- *; intro; discriminate.
 Qed.
 (*If two elements contains two equivalent classes that are not disjoint these
@@ -286,9 +286,9 @@ Theorem wellFormedArrayInBothImpEq :
  get Ar b = class Lb -> In c La -> In d Lb -> eqRz c d -> a = b.
 intros a b c d La Lb geta getb inc1 inc2 eqRz1.
 apply refSameEq with (a := c) (b := d).
-rewrite <- wfPcc1 with (1 := geta); auto.
-rewrite <- wfPcc1 with (1 := getb); auto.
-rewrite eqRz1; auto.
+rewrite <- wfPcc1 with (1 := geta); auto with stalmarck.
+rewrite <- wfPcc1 with (1 := getb); auto with stalmarck.
+rewrite eqRz1; auto with stalmarck.
 Qed.
 (* Same as before but with no sign distinction *)
 
@@ -300,7 +300,7 @@ intros a b c La Lb H'0 H'1 H'2 H'3.
 case (InEqInv c La H'2); case (InEqInv c Lb H'3); intros H'4 H'5;
  apply
   wellFormedArrayInBothImpEq with (1 := H'0) (2 := H'1) (3 := H'5) (4 := H'4);
- auto.
+ auto with stalmarck.
 Qed.
 (* An element that contains an equivalence class is  not in the class *)
 
@@ -308,7 +308,7 @@ Theorem wellFormedArrayInImpNotEqSimpl :
  forall (a : rNat) (La : list rZ),
  get Ar a = class La -> ~ InRz (rZPlus a) La.
 intros a La H'.
-apply wellFormedArrayInImpNotEq with (1 := H') (2 := H'); auto.
+apply wellFormedArrayInImpNotEq with (1 := H') (2 := H'); auto with stalmarck.
 Qed.
 (*If an element is not in an euqivalent class its value can't be the element
     that contains the equialent class *)
@@ -319,9 +319,9 @@ Theorem wellFormedArrayNInImpNotRef :
 intros a b L H' H'0; Contradict H'0.
 cut (b = samePol (samePol b a) (valRz b)).
 intros H'1; rewrite H'1.
-apply (wfPcc2 (valRz b) (samePol b a) L); auto.
-rewrite <- H'; unfold get in |- *; auto.
-case b; simpl in |- *; auto.
-case b; simpl in |- *; auto.
+apply (wfPcc2 (valRz b) (samePol b a) L); auto with stalmarck.
+rewrite <- H'; unfold get in |- *; auto with stalmarck.
+case b; simpl in |- *; auto with stalmarck.
+case b; simpl in |- *; auto with stalmarck.
 Qed.
 End wfArray.

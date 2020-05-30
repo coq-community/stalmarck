@@ -34,31 +34,31 @@ Definition equalBefore (n : rNat) (f g : rNat -> bool) :=
 Lemma equalBeforeElim :
  forall (n m : rNat) (f g : rNat -> bool),
  equalBefore n f g -> rlt m n -> f m = g m.
-intros n m f g H' H'1; red in H'; auto.
+intros n m f g H' H'1; red in H'; auto with stalmarck.
 Qed.
 
 Lemma equalBeforeTrans :
  forall n : rNat, transitive (rNat -> bool) (equalBefore n).
-intros n; red in |- *; auto.
-intros x y z H' H'0; red in |- *; auto.
-intros m H'1; apply trans_eq with (y := y m); auto.
+intros n; red in |- *; auto with stalmarck.
+intros x y z H' H'0; red in |- *; auto with stalmarck.
+intros m H'1; apply trans_eq with (y := y m); auto with stalmarck.
 Qed.
 
 Lemma equalBeforeLt :
  forall (n m : rNat) (f g : rNat -> bool),
  rlt n (rnext m) -> equalBefore m f g -> equalBefore n f g.
-intros n m f g H' H'0; red in |- *; red in H'0; auto.
-intros m0 H'1; apply H'0; auto.
-apply rltTransRnext2 with (m := n); auto.
+intros n m f g H' H'0; red in |- *; red in H'0; auto with stalmarck.
+intros m0 H'1; apply H'0; auto with stalmarck.
+apply rltTransRnext2 with (m := n); auto with stalmarck.
 Qed.
 
 Lemma equalBeforeSym :
  forall n : rNat, symmetric (rNat -> bool) (equalBefore n).
 intros n; red in |- *.
-intros x y H'; red in H'; red in |- *; auto.
-intros m H'0; apply sym_eq; auto.
+intros x y H'; red in H'; red in |- *; auto with stalmarck.
+intros m H'0; apply sym_eq; auto with stalmarck.
 Qed.
-Hint Resolve equalBeforeSym.
+Hint Resolve equalBeforeSym : stalmarck.
 
 (* same value as f  for element smaller than m, s otherwise *)
 
@@ -71,21 +71,21 @@ Definition extendFun (n : rNat) (g : rNat -> bool)
 Lemma equalBeforeExtend :
  forall (g : rNat -> bool) (n m : rNat) (s : bool),
  rlt n (rnext m) -> equalBefore n g (extendFun m g s).
-intros g n m s H; simpl in |- *; auto.
-red in |- *; auto.
-intros p H'; unfold extendFun in |- *; case (rltDec p m); auto.
-intros s0; case s0; auto.
-intros H'0; absurd (rlt (rnext m) n); auto.
-apply rltAntiSym; auto.
-apply rltTransRnext1 with (m := p); auto.
+intros g n m s H; simpl in |- *; auto with stalmarck.
+red in |- *; auto with stalmarck.
+intros p H'; unfold extendFun in |- *; case (rltDec p m); auto with stalmarck.
+intros s0; case s0; auto with stalmarck.
+intros H'0; absurd (rlt (rnext m) n); auto with stalmarck.
+apply rltAntiSym; auto with stalmarck.
+apply rltTransRnext1 with (m := p); auto with stalmarck.
 intros H'0; rewrite <- H'0 in H.
-case (rNextInv n p); auto.
-intros H'1; absurd (p = n); auto.
-apply rltDef2; auto.
-intros H'1; absurd (rlt n p); auto.
-apply rltAntiSym; auto.
+case (rNextInv n p); auto with stalmarck.
+intros H'1; absurd (p = n); auto with stalmarck.
+apply rltDef2; auto with stalmarck.
+intros H'1; absurd (rlt n p); auto with stalmarck.
+apply rltAntiSym; auto with stalmarck.
 Qed.
-Hint Resolve equalBeforeExtend.
+Hint Resolve equalBeforeExtend : stalmarck.
 
 Lemma extendFunrZEvalExact :
  forall (g : rNat -> bool) (n : rNat) (p : rZ) (s : bool),
@@ -95,110 +95,110 @@ Lemma extendFunrZEvalExact :
  | rZPlus p => s
  | rZMinus _ => negb s
  end.
-intros g n p; case p; unfold extendFun in |- *; simpl in |- *; auto;
- intros r s H; case (rltDec r n); auto; rewrite H; 
- intros; absurd (rlt n n); auto.
+intros g n p; case p; unfold extendFun in |- *; simpl in |- *; auto with stalmarck;
+ intros r s H; case (rltDec r n); auto with stalmarck; rewrite H; 
+ intros; absurd (rlt n n); auto with stalmarck.
 Qed.
 
 Lemma extendFunrZEval :
  forall (g : rNat -> bool) (n : rNat) (p : rZ) (s : bool),
  rVlt p n -> rZEval (extendFun n g s) p = rZEval g p.
-intros g n p; case p; unfold rVlt in |- *; simpl in |- *; auto.
+intros g n p; case p; unfold rVlt in |- *; simpl in |- *; auto with stalmarck.
 intros r s H'.
 unfold extendFun in |- *.
-case (rltDec r n); auto.
-intros s0; case s0; auto.
-intros H'0; absurd (rlt n r); auto.
-apply rltAntiSym; auto.
-intros H'0; absurd (r = n); auto.
-apply rltDef2; auto.
+case (rltDec r n); auto with stalmarck.
+intros s0; case s0; auto with stalmarck.
+intros H'0; absurd (rlt n r); auto with stalmarck.
+apply rltAntiSym; auto with stalmarck.
+intros H'0; absurd (r = n); auto with stalmarck.
+apply rltDef2; auto with stalmarck.
 intros r s H'.
 unfold extendFun in |- *.
-case (rltDec r n); auto.
-intros s0; case s0; auto.
-intros H'0; absurd (rlt n r); auto.
-apply rltAntiSym; auto.
-intros H'0; absurd (r = n); auto.
-apply rltDef2; auto.
+case (rltDec r n); auto with stalmarck.
+intros s0; case s0; auto with stalmarck.
+intros H'0; absurd (rlt n r); auto with stalmarck.
+apply rltAntiSym; auto with stalmarck.
+intros H'0; absurd (r = n); auto with stalmarck.
+apply rltDef2; auto with stalmarck.
 Qed.
 
 Lemma equalBeforerZEval :
  forall (f g : rNat -> bool) (n : rNat) (p : rZ),
  rVlt p n -> equalBefore n f g -> rZEval f p = rZEval g p.
-intros f g n p; case p; unfold rVlt in |- *; simpl in |- *; auto.
-intros r H' H'0; red in H'0; auto.
-rewrite (H'0 r); auto.
+intros f g n p; case p; unfold rVlt in |- *; simpl in |- *; auto with stalmarck.
+intros r H' H'0; red in H'0; auto with stalmarck.
+rewrite (H'0 r); auto with stalmarck.
 Qed.
 
 Theorem equalBeforeNext :
  forall (f g : rNat -> bool) (n : rNat),
  equalBefore n f g -> f n = g n -> equalBefore (rnext n) f g.
-intros f g n H' H'0; red in H'; red in |- *; auto.
-intros m H'1; case (rNextInv m n); auto.
-intros H'2; rewrite H'2; auto.
+intros f g n H' H'0; red in H'; red in |- *; auto with stalmarck.
+intros m H'1; case (rNextInv m n); auto with stalmarck.
+intros H'2; rewrite H'2; auto with stalmarck.
 Qed.
 
 Lemma equalBeforeTEval :
  forall (f g : rNat -> bool) (t : triplet),
  equalBefore (rnext (maxVarTriplet t)) f g -> tEval f t = tEval g t.
-intros f g t; case t; simpl in |- *; auto.
+intros f g t; case t; simpl in |- *; auto with stalmarck.
 intros r r0 r1 r2 H'; red in H'.
-cut (rZEval f r0 = rZEval g r0); [ intros Eq1; rewrite Eq1 | idtac ]; auto.
-cut (rZEval f r1 = rZEval g r1); [ intros Eq2; rewrite Eq2 | idtac ]; auto.
-cut (rZEval f r2 = rZEval g r2); [ intros Eq3; rewrite Eq3 | idtac ]; auto.
-generalize H'; case r2; simpl in |- *; auto; intros r3 H'0; rewrite H'0;
- simpl in |- *; auto.
-generalize H'; case r1; simpl in |- *; auto; intros r3 H'0; rewrite H'0;
- simpl in |- *; auto.
-apply rltTransRnext1 with (m := rmax (valRz r0) r3); auto.
-apply rltTransRnext1 with (m := rmax (valRz r0) r3); auto.
-generalize H'; case r0; simpl in |- *; auto; intros r3 H'0; rewrite H'0;
- simpl in |- *; auto.
-apply rltTransRnext1 with (m := rmax r3 (valRz r1)); auto.
-apply rltTransRnext1 with (m := rmax r3 (valRz r1)); auto.
+cut (rZEval f r0 = rZEval g r0); [ intros Eq1; rewrite Eq1 | idtac ]; auto with stalmarck.
+cut (rZEval f r1 = rZEval g r1); [ intros Eq2; rewrite Eq2 | idtac ]; auto with stalmarck.
+cut (rZEval f r2 = rZEval g r2); [ intros Eq3; rewrite Eq3 | idtac ]; auto with stalmarck.
+generalize H'; case r2; simpl in |- *; auto with stalmarck; intros r3 H'0; rewrite H'0;
+ simpl in |- *; auto with stalmarck.
+generalize H'; case r1; simpl in |- *; auto with stalmarck; intros r3 H'0; rewrite H'0;
+ simpl in |- *; auto with stalmarck.
+apply rltTransRnext1 with (m := rmax (valRz r0) r3); auto with stalmarck.
+apply rltTransRnext1 with (m := rmax (valRz r0) r3); auto with stalmarck.
+generalize H'; case r0; simpl in |- *; auto with stalmarck; intros r3 H'0; rewrite H'0;
+ simpl in |- *; auto with stalmarck.
+apply rltTransRnext1 with (m := rmax r3 (valRz r1)); auto with stalmarck.
+apply rltTransRnext1 with (m := rmax r3 (valRz r1)); auto with stalmarck.
 Qed.
-Hint Resolve equalBeforeTEval.
+Hint Resolve equalBeforeTEval : stalmarck.
 (* Only values under maxVarTriplets are important for realizability *)
 
 Lemma supportTriplets :
  forall (f g : rNat -> bool) (l : list triplet),
  realizeTriplets f l ->
  equalBefore (rnext (maxVarTriplets l)) f g -> realizeTriplets g l.
-intros f g l; elim l; simpl in |- *; auto.
+intros f g l; elim l; simpl in |- *; auto with stalmarck.
 intros a l0 H' H'0 H'1.
-red in |- *; simpl in |- *; auto.
-intros t H'2; Elimc H'2; intros H'2; [ rewrite <- H'2 | idtac ]; auto.
-apply trans_eq with (y := tEval f a); auto.
+red in |- *; simpl in |- *; auto with stalmarck.
+intros t H'2; Elimc H'2; intros H'2; [ rewrite <- H'2 | idtac ]; auto with stalmarck.
+apply trans_eq with (y := tEval f a); auto with stalmarck.
 apply sym_eq.
-apply equalBeforeTEval; auto.
-apply equalBeforeLt with (2 := H'1); auto.
-red in H'0; auto with datatypes.
+apply equalBeforeTEval; auto with stalmarck.
+apply equalBeforeLt with (2 := H'1); auto with stalmarck.
+red in H'0; auto with datatypes stalmarck.
 lapply H'; clear H';
  [ intros H'; lapply H'; clear H'; [ intros H' | idtac ] | idtac ]; 
- auto.
-apply equalBeforeLt with (2 := H'1); auto.
-red in |- *; red in H'0; auto with datatypes.
+ auto with stalmarck.
+apply equalBeforeLt with (2 := H'1); auto with stalmarck.
+red in |- *; red in H'0; auto with datatypes stalmarck.
 Qed.
-Hint Resolve supportTriplets.
+Hint Resolve supportTriplets : stalmarck.
 
 Theorem inLt :
  forall (e : rExpr) (n : rNat), inRExpr n e -> rlt n (rnext (maxVar e)).
 simple induction e; intros.
 inversion H.
 inversion H.
-inversion H; simpl in |- *; auto.
-inversion H0; simpl in |- *; auto.
-inversion H1; simpl in |- *; auto.
-apply rltTransRnext1 with (m := maxVar r0); auto.
-apply rltTransRnext1 with (m := maxVar r1); auto.
+inversion H; simpl in |- *; auto with stalmarck.
+inversion H0; simpl in |- *; auto with stalmarck.
+inversion H1; simpl in |- *; auto with stalmarck.
+apply rltTransRnext1 with (m := maxVar r0); auto with stalmarck.
+apply rltTransRnext1 with (m := maxVar r1); auto with stalmarck.
 Qed.
 
 Theorem equalBeforeREval :
  forall (f g : rNat -> bool) (e : rExpr),
  equalBefore (rnext (maxVar e)) f g -> rEval f e = rEval g e.
 intros f g e H'.
-apply support; auto.
+apply support; auto with stalmarck.
 intros n H'0.
-apply equalBeforeElim with (n := rnext (maxVar e)); auto.
-apply inLt; auto.
+apply equalBeforeElim with (n := rnext (maxVar e)); auto with stalmarck.
+apply inLt; auto with stalmarck.
 Qed.

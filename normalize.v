@@ -103,7 +103,7 @@ Inductive inRExpr (n : rNat) : rExpr -> Prop :=
   | inRNodeRight :
       forall (i : rBoolOp) (e1 e2 : rExpr),
       inRExpr n e2 -> inRExpr n (rNode i e1 e2).
-Hint Resolve inRV inRN inRNodeLeft inRNodeRight.
+Hint Resolve inRV inRN inRNodeLeft inRNodeRight : stalmarck.
 (* Two valuation functions that gives the same value to variables of a formula
    gives the same value to the formula *)
 
@@ -111,9 +111,9 @@ Theorem support :
  forall (f g : rNat -> bool) (e : rExpr),
  (forall n : rNat, inRExpr n e -> f n = g n) -> rEval f e = rEval g e.
 intros f g e.
-elim e; intros; simpl in |- *; auto; rewrite H; auto; rewrite H0; auto.
+elim e; intros; simpl in |- *; auto with stalmarck; rewrite H; auto with stalmarck; rewrite H0; auto with stalmarck.
 Qed.
-Hint Resolve support.
+Hint Resolve support : stalmarck.
 
 (* Normalization from Expr -> rExpr 
    we first define it for each operator, than norm does the dispatching *)
@@ -127,7 +127,7 @@ Definition normNot (p : rExpr) :=
 Lemma normNotEval :
  forall (p : rExpr) (f : rNat -> bool),
  rEval f (normNot p) = negb (rEval f p).
-intros; case p; simpl in |- *; auto; intros; rewrite negb_elim; auto.
+intros; case p; simpl in |- *; auto with stalmarck; intros; rewrite negb_elim; auto with stalmarck.
 Qed.
 
 Definition normOr (p q : rExpr) :=
@@ -141,8 +141,8 @@ Definition normOr (p q : rExpr) :=
 Lemma normOrEval :
  forall (p q : rExpr) (f : rNat -> bool),
  rEval f (normOr p q) = rEval f p || rEval f q.
-intros; case p; case q; intros; simpl in |- *; auto with bool;
- try rewrite de_morgan2; try rewrite negb_elim; auto.
+intros; case p; case q; intros; simpl in |- *; auto with bool stalmarck;
+ try rewrite de_morgan2; try rewrite negb_elim; auto with stalmarck.
 Qed.
 
 Definition normImpl (p q : rExpr) :=
@@ -156,8 +156,8 @@ Definition normImpl (p q : rExpr) :=
 Lemma normImplEval :
  forall (p q : rExpr) (f : rNat -> bool),
  rEval f (normImpl p q) = implb (rEval f p) (rEval f q).
-intros; case p; case q; intros; simpl in |- *; auto; rewrite implb_elim;
- rewrite negb_elim; auto.
+intros; case p; case q; intros; simpl in |- *; auto with stalmarck; rewrite implb_elim;
+ rewrite negb_elim; auto with stalmarck.
 Qed.
 
 Fixpoint norm (e : Expr) : rExpr :=
@@ -176,10 +176,10 @@ Fixpoint norm (e : Expr) : rExpr :=
 
 Theorem normEval :
  forall (f : rNat -> bool) (e : Expr), Eval f e = rEval f (norm e).
-simple induction e; clear e; simpl in |- *; auto.
-intros p H; rewrite normNotEval; rewrite H; auto.
-intros b p Hp q Hq; case b; rewrite Hp; rewrite Hq; auto;
- rewrite normOrEval || rewrite normImplEval; auto.
+simple induction e; clear e; simpl in |- *; auto with stalmarck.
+intros p H; rewrite normNotEval; rewrite H; auto with stalmarck.
+intros b p Hp q Hq; case b; rewrite Hp; rewrite Hq; auto with stalmarck;
+ rewrite normOrEval || rewrite normImplEval; auto with stalmarck.
 Qed.
 
 (* Definition of what it is to be a tautology 
@@ -194,6 +194,6 @@ Definition rTautology (e : rExpr) :=
 
 Theorem TautoRTauto : forall e : Expr, Tautology e <-> rTautology (norm e).
 intros e; unfold Tautology in |- *; unfold rTautology in |- *; split.
-intros H' f; rewrite <- normEval; auto.
-intros H' f; rewrite normEval; auto.
+intros H' f; rewrite <- normEval; auto with stalmarck.
+intros H' f; rewrite normEval; auto with stalmarck.
 Qed.

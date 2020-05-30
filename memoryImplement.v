@@ -59,60 +59,60 @@ Definition evalN (v : rNat) : rZ :=
 Definition evalZ (v : rZ) : rZ := samePolRz v (evalN (valRz v)).
 
 Theorem EqrZComp : forall a b : rZ, a = b -> rZComp a = rZComp b.
-intros a b H'; rewrite H'; auto.
+intros a b H'; rewrite H'; auto with stalmarck.
 Qed.
-Hint Resolve EqrZComp.
+Hint Resolve EqrZComp : stalmarck.
 (* We can't be smaller than zero *)
 
 Theorem notrltzero : forall r : rZ, ~ rVlt r zero.
-intros r; red in |- *; intros H'; absurd (rlt (valRz r) (valRz r)); auto.
-apply rltTransRnext2 with (m := zero); auto.
+intros r; red in |- *; intros H'; absurd (rlt (valRz r) (valRz r)); auto with stalmarck.
+apply rltTransRnext2 with (m := zero); auto with stalmarck.
 Qed.
-Hint Resolve notrltzero.
+Hint Resolve notrltzero : stalmarck.
 (* True evaluate to true *)
 
 Theorem evalZTrue : evalZ rZTrue = rZTrue.
 simpl in |- *; unfold evalN in |- *.
 generalize (fun s : rZ => wfPd _ War zero s); case (rArrayGet vM Ar zero);
- auto.
-intros r H'; absurd (rVlt r zero); auto.
+ auto with stalmarck.
+intros r H'; absurd (rVlt r zero); auto with stalmarck.
 Qed.
 (* False evaluate to false *)
 
 Theorem evalZFalse : evalZ rZFalse = rZFalse.
 simpl in |- *; unfold evalN in |- *.
 generalize (fun s : rZ => wfPd _ War zero s); case (rArrayGet vM Ar zero);
- auto.
-intros r H'; absurd (rVlt r zero); auto.
+ auto with stalmarck.
+intros r H'; absurd (rVlt r zero); auto with stalmarck.
 Qed.
 (* Evaluation is compatible with the complement *)
 
 Theorem evalZComp : forall v : rZ, evalZ (rZComp v) = rZComp (evalZ v).
-intros v; case v; simpl in |- *; auto.
+intros v; case v; simpl in |- *; auto with stalmarck.
 Qed.
 (* Evaluate an element returns something smaller or equal *)
 
 Theorem evalZltOr : forall v : rZ, evalZ v = v \/ rZlt (evalZ v) v.
-intros v; case v; simpl in |- *; auto; intros a; unfold evalN in |- *;
+intros v; case v; simpl in |- *; auto with stalmarck; intros a; unfold evalN in |- *;
  generalize (fun s : rZ => wfPd _ War a s); case (rArrayGet _ Ar a);
- intros r H'; auto; right.
-lapply (H' r); auto.
-apply rZltEqComp with (a := r) (b := rZMinus a); auto.
-lapply (H' r); auto.
+ intros r H'; auto with stalmarck; right.
+lapply (H' r); auto with stalmarck.
+apply rZltEqComp with (a := r) (b := rZMinus a); auto with stalmarck.
+lapply (H' r); auto with stalmarck.
 Qed.
 (* The result of an evaluation evaluates to itself *)
 
 Theorem evalZInv : forall v : rZ, evalZ (evalZ v) = evalZ v.
 intros v; case v; intros a; simpl in |- *; unfold evalN in |- *;
- CaseEq (rArrayGet _ Ar a); simpl in |- *; auto.
+ CaseEq (rArrayGet _ Ar a); simpl in |- *; auto with stalmarck.
 intros r; case r; simpl in |- *; intros r0 H'; unfold evalN in |- *;
- CaseEq (rArrayGet _ Ar r0); auto; intros r1 H'1; Contradict H'1;
- apply wfPcr with (2 := H'); auto.
-intros l H'; unfold evalN in |- *; rewrite H'; auto.
+ CaseEq (rArrayGet _ Ar r0); auto with stalmarck; intros r1 H'1; Contradict H'1;
+ apply wfPcr with (2 := H'); auto with stalmarck.
+intros l H'; unfold evalN in |- *; rewrite H'; auto with stalmarck.
 intros r; case r; simpl in |- *; intros r0 H'; unfold evalN in |- *;
- CaseEq (rArrayGet _ Ar r0); auto; intros r1 H'1; Contradict H'1;
- apply wfPcr with (2 := H'); auto.
-intros l H'; unfold evalN in |- *; rewrite H'; auto.
+ CaseEq (rArrayGet _ Ar r0); auto with stalmarck; intros r1 H'1; Contradict H'1;
+ apply wfPcr with (2 := H'); auto with stalmarck.
+intros l H'; unfold evalN in |- *; rewrite H'; auto with stalmarck.
 Qed.
 (* Every element smaller than the evaluation is not in the same equivalent class *)
 
@@ -120,8 +120,8 @@ Theorem evalZMin :
  forall (a : rNat) (b c : rZ), evalN a = b -> rZlt c b -> evalN a <> evalZ c.
 intros a b c H' H'0; Contradict H'0.
 rewrite <- H'; rewrite H'0.
-case (evalZltOr c); auto.
-intros H'1; rewrite H'1; auto.
+case (evalZltOr c); auto with stalmarck.
+intros H'1; rewrite H'1; auto with stalmarck.
 Qed.
 End Deval.
 (* Relation between Get et evalN *)
@@ -131,7 +131,7 @@ Theorem rArrayGetEvalN :
  (forall e : rNat, rArrayGet vM Ar' e = rArrayGet vM Ar e) ->
  forall e : rNat, evalN Ar e = evalN Ar' e.
 intros Ar Ar' H' e; unfold evalN in |- *.
-rewrite (H' e); auto.
+rewrite (H' e); auto with stalmarck.
 Qed.
 (* relation between evalN et evanZ *)
 
@@ -139,8 +139,8 @@ Theorem evalNEvalZ :
  forall Ar Ar' : rArray vM,
  (forall e : rNat, evalN Ar e = evalN Ar' e) ->
  forall e : rZ, evalZ Ar e = evalZ Ar' e.
-intros Ar Ar' H' e; case e; simpl in |- *; auto.
-intros r; rewrite H'; auto.
+intros Ar Ar' H' e; case e; simpl in |- *; auto with stalmarck.
+intros r; rewrite H'; auto with stalmarck.
 Qed.
 (* relation between get et evalZ *)
 
@@ -148,8 +148,8 @@ Theorem rArrayGetEvalZ :
  forall Ar Ar' : rArray vM,
  (forall e : rNat, rArrayGet vM Ar' e = rArrayGet vM Ar e) ->
  forall e : rZ, evalZ Ar e = evalZ Ar' e.
-intros Ar Ar' H' e; apply evalNEvalZ; auto.
-intros e'; apply rArrayGetEvalN; auto.
+intros Ar Ar' H' e; apply evalNEvalZ; auto with stalmarck.
+intros e'; apply rArrayGetEvalN; auto with stalmarck.
 Qed.
 Section Dprop.
 Variable Ar : rArray vM.
@@ -176,18 +176,18 @@ Theorem updateEvalNb :
 intros c; unfold evalN in |- *.
 CaseEq (rArrayGet vM Ar c); simpl in |- *.
 intros r; case r; simpl in |- *.
-intros r0 H' H'0; replace c with (valRz (rZPlus c)); auto.
-rewrite (updateArrayInb a b pol La Lb Ar) with (c := rZPlus c); auto.
-replace (rZPlus c) with (samePol (rZPlus r0) c); auto.
-apply wfPcc2 with (Ar := Ar); auto.
-rewrite H'0; auto.
-intros r0 H' H'0; replace c with (valRz (rZMinus c)); auto.
-rewrite (updateArrayInb a b pol La Lb Ar) with (c := rZMinus c); auto.
-replace (rZMinus c) with (samePol (rZMinus r0) c); auto.
-apply wfPcc2 with (Ar := Ar); auto.
-rewrite H'0; auto.
+intros r0 H' H'0; replace c with (valRz (rZPlus c)); auto with stalmarck.
+rewrite (updateArrayInb a b pol La Lb Ar) with (c := rZPlus c); auto with stalmarck.
+replace (rZPlus c) with (samePol (rZPlus r0) c); auto with stalmarck.
+apply wfPcc2 with (Ar := Ar); auto with stalmarck.
+rewrite H'0; auto with stalmarck.
+intros r0 H' H'0; replace c with (valRz (rZMinus c)); auto with stalmarck.
+rewrite (updateArrayInb a b pol La Lb Ar) with (c := rZMinus c); auto with stalmarck.
+replace (rZMinus c) with (samePol (rZMinus r0) c); auto with stalmarck.
+apply wfPcc2 with (Ar := Ar); auto with stalmarck.
+rewrite H'0; auto with stalmarck.
 intros l H' H'0; rewrite H'0.
-rewrite (updateArrayb a b pol La Lb Ar); auto.
+rewrite (updateArrayb a b pol La Lb Ar); auto with stalmarck.
 Qed.
 (* If evalN is not b the value is not changed *)
 
@@ -196,24 +196,24 @@ Theorem updateEvalNO :
  valRz (evalN Ar c) <> b ->
  evalN (updateArray a b pol La Lb Ar) c = evalN Ar c.
 intros c; unfold evalN in |- *.
-case (rNatDec c a); intros Eqa; auto.
-rewrite Eqa; auto; rewrite (updateArraya a b pol La Lb Ar); rewrite geta;
- auto.
-case (rNatDec c b); intros Eqb; auto.
-rewrite Eqb; auto; rewrite (updateArrayb a b pol La Lb Ar); auto;
+case (rNatDec c a); intros Eqa; auto with stalmarck.
+rewrite Eqa; auto with stalmarck; rewrite (updateArraya a b pol La Lb Ar); rewrite geta;
+ auto with stalmarck.
+case (rNatDec c b); intros Eqb; auto with stalmarck.
+rewrite Eqb; auto with stalmarck; rewrite (updateArrayb a b pol La Lb Ar); auto with stalmarck;
  rewrite getb; simpl in |- *; intros H'; Contradict H'; 
- auto.
-case (InRzDec (rZPlus c) Lb); intros InRLb; auto.
-case (InEqInv (rZPlus c) Lb); auto; intros InRLb'.
-replace c with (valRz (rZPlus c)); auto;
+ auto with stalmarck.
+case (InRzDec (rZPlus c) Lb); intros InRLb; auto with stalmarck.
+case (InEqInv (rZPlus c) Lb); auto with stalmarck; intros InRLb'.
+replace c with (valRz (rZPlus c)); auto with stalmarck;
  rewrite (wfPcc1 _ War b (rZPlus c) Lb); simpl in |- *; 
- auto.
-intros H'; case H'; auto.
-replace c with (valRz (rZMinus c)); auto;
+ auto with stalmarck.
+intros H'; case H'; auto with stalmarck.
+replace c with (valRz (rZMinus c)); auto with stalmarck;
  rewrite (wfPcc1 _ War b (rZMinus c) Lb); simpl in |- *; 
- auto.
-intros H'; case H'; auto.
-rewrite (updateArrayOtherwise a b pol La Lb Ar c); auto.
+ auto with stalmarck.
+intros H'; case H'; auto with stalmarck.
+rewrite (updateArrayOtherwise a b pol La Lb Ar c); auto with stalmarck.
 Qed.
 (* Equations that were valid before are still valid *)
 
@@ -223,15 +223,15 @@ Theorem updateEvalN2 :
  evalN (updateArray a b pol La Lb Ar) c =
  evalN (updateArray a b pol La Lb Ar) d.
 intros c d; case (rNatDec (valRz (evalN Ar c)) b); intros Eqt.
-rewrite updateEvalNb; auto.
+rewrite updateEvalNb; auto with stalmarck.
 case (rNatDec (valRz (evalN Ar d)) b); intros Eqt'.
-rewrite updateEvalNb; auto.
-intros H'; rewrite H'; auto.
-intros H'; Contradict Eqt'; rewrite <- H'; auto.
-rewrite updateEvalNO; auto.
+rewrite updateEvalNb; auto with stalmarck.
+intros H'; rewrite H'; auto with stalmarck.
+intros H'; Contradict Eqt'; rewrite <- H'; auto with stalmarck.
+rewrite updateEvalNO; auto with stalmarck.
 case (rNatDec (valRz (evalN Ar d)) b); intros Eqt'.
-intros H'; Contradict Eqt; rewrite H'; auto.
-rewrite updateEvalNO; auto.
+intros H'; Contradict Eqt; rewrite H'; auto with stalmarck.
+rewrite updateEvalNO; auto with stalmarck.
 Qed.
 (* Same as before but with complement *)
 
@@ -241,17 +241,17 @@ Theorem updateEvalN2Comp :
  evalN (updateArray a b pol La Lb Ar) c =
  rZComp (evalN (updateArray a b pol La Lb Ar) d).
 intros c d; case (rNatDec (valRz (evalN Ar c)) b); intros Eqt.
-rewrite updateEvalNb; auto.
+rewrite updateEvalNb; auto with stalmarck.
 case (rNatDec (valRz (evalN Ar d)) b); intros Eqt'.
-rewrite updateEvalNb; auto.
-intros H'; rewrite H'; case (evalN Ar d); auto.
+rewrite updateEvalNb; auto with stalmarck.
+intros H'; rewrite H'; case (evalN Ar d); auto with stalmarck.
 intros H'; Contradict Eqt'; rewrite <- Eqt; rewrite H'; case (evalN Ar d);
- auto.
-rewrite updateEvalNO; auto.
+ auto with stalmarck.
+rewrite updateEvalNO; auto with stalmarck.
 case (rNatDec (valRz (evalN Ar d)) b); intros Eqt'.
 intros H'; Contradict Eqt; rewrite <- Eqt'; rewrite H'; case (evalN Ar d);
- auto.
-rewrite updateEvalNO; auto.
+ auto with stalmarck.
+rewrite updateEvalNO; auto with stalmarck.
 Qed.
 (* If evalZ was given b, now it gives a *)
 
@@ -265,10 +265,10 @@ exact updateEvalNb.
 intros r H'.
 cut (forall p q : rZ, rZComp (samePolRz p q) = samePolRz (rZComp p) q);
  [ intros Eq1; rewrite <- Eq1
- | intros p q; case p; case q; simpl in |- *; auto ].
-apply EqrZComp; auto.
-apply updateEvalNb; auto.
-rewrite <- H'; case (evalN Ar r); auto.
+ | intros p q; case p; case q; simpl in |- *; auto with stalmarck ].
+apply EqrZComp; auto with stalmarck.
+apply updateEvalNb; auto with stalmarck.
+rewrite <- H'; case (evalN Ar r); auto with stalmarck.
 Qed.
 (* If evalZ was not giving b, its value is unchanged *)
 
@@ -278,9 +278,9 @@ Theorem updateEvalZO :
  evalZ (updateArray a b pol La Lb Ar) c = evalZ Ar c.
 intros c; case c; simpl in |- *.
 exact updateEvalNO.
-intros r H'; apply EqrZComp; auto.
-apply updateEvalNO; auto.
-Contradict H'; rewrite <- H'; case (evalN Ar r); auto.
+intros r H'; apply EqrZComp; auto with stalmarck.
+apply updateEvalNO; auto with stalmarck.
+Contradict H'; rewrite <- H'; case (evalN Ar r); auto with stalmarck.
 Qed.
 (* Equations for evalZ are still valid *)
 
@@ -291,10 +291,10 @@ Theorem updateEvalZ2 :
  evalZ (updateArray a b pol La Lb Ar) d.
 intros c d; case c; case d; simpl in |- *; intros; try apply EqrZComp;
  try apply updateEvalN2 || apply updateEvalN2Comp; 
- auto.
-apply sym_equal; apply updateEvalN2Comp; auto.
+ auto with stalmarck.
+apply sym_equal; apply updateEvalN2Comp; auto with stalmarck.
 generalize H; case (evalN Ar r0); case (evalN Ar r); simpl in |- *;
- intros r1 r2 H'; inversion H'; auto.
+ intros r1 r2 H'; inversion H'; auto with stalmarck.
 Qed.
 (* Same with complement *)
 
@@ -304,7 +304,7 @@ Theorem updateEvalZ2Comp :
  evalZ (updateArray a b pol La Lb Ar) c =
  rZComp (evalZ (updateArray a b pol La Lb Ar) d).
 intros c d; repeat rewrite <- evalZComp.
-intros H'; apply updateEvalZ2; auto.
+intros H'; apply updateEvalZ2; auto with stalmarck.
 Qed.
 (* evalN a = +/- evalN b  depending of the polarity*)
 
@@ -312,15 +312,15 @@ Theorem updateEvalNab :
  evalN (updateArray a b pol La Lb Ar) a =
  samePolRz pol (evalN (updateArray a b pol La Lb Ar) b).
 unfold evalN in |- *; rewrite (updateArraya a b pol La Lb Ar);
- rewrite (updateArrayb a b pol La Lb Ar); auto.
-case pol; auto.
+ rewrite (updateArrayb a b pol La Lb Ar); auto with stalmarck.
+case pol; auto with stalmarck.
 Qed.
 (* evalZ a = +/- evalZ b depending of the polarity *)
 
 Theorem updateEvalZab :
  evalZ (updateArray a b pol La Lb Ar) (rZPlus a) =
  samePolRz pol (evalZ (updateArray a b pol La Lb Ar) (rZPlus b)).
-simpl in |- *; auto.
+simpl in |- *; auto with stalmarck.
 exact updateEvalNab.
 Qed.
 (* update is correct *)
@@ -333,72 +333,72 @@ Theorem updateCorrect :
 intros c d; split.
 cut (exists S' : _, S' = addEq (rZPlus a, samePol pol b) S).
 intros H'; Elimc H'; intros S' E; rewrite <- E.
-intros H'; generalize E; elim H'; auto.
+intros H'; generalize E; elim H'; auto with stalmarck.
 intros a0 b0 S0 H'0 H'1; rewrite H'1 in H'0.
 simpl in H'0; case H'0.
 intros H'2; inversion H'2.
 rewrite updateEvalZab.
-case pol; auto.
+case pol; auto with stalmarck.
 intros H'2; apply updateEvalZ2.
-case (SisAr a0 b0); auto.
-intros a0 b0 S0 H'0 H'1 H'2; repeat rewrite evalZComp; apply EqrZComp; auto.
-intros a0 b0 S0 H'0 H'1 H'2; apply sym_equal; auto.
-intros a0 b0 c0 S0 H'0 H'1 H'2 H'3 H'4; rewrite H'1; auto.
+case (SisAr a0 b0); auto with stalmarck.
+intros a0 b0 S0 H'0 H'1 H'2; repeat rewrite evalZComp; apply EqrZComp; auto with stalmarck.
+intros a0 b0 S0 H'0 H'1 H'2; apply sym_equal; auto with stalmarck.
+intros a0 b0 c0 S0 H'0 H'1 H'2 H'3 H'4; rewrite H'1; auto with stalmarck.
 intros a0 b0 c0 S0 H'0 H'1 H'2;
  absurd
   (evalZ (updateArray a b pol La Lb Ar) a0 =
    evalZ (updateArray a b pol La Lb Ar) (rZComp a0)); 
- auto.
-rewrite evalZComp; auto.
-exists (addEq (rZPlus a, samePol pol b) S); auto.
+ auto with stalmarck.
+rewrite evalZComp; auto with stalmarck.
+exists (addEq (rZPlus a, samePol pol b) S); auto with stalmarck.
 case (rNatDec (valRz (evalZ Ar c)) b); intros Eqt.
-rewrite updateEvalZb; auto.
+rewrite updateEvalZb; auto with stalmarck.
 case (rNatDec (valRz (evalZ Ar d)) b); intros Eqt'.
-rewrite updateEvalZb; auto.
+rewrite updateEvalZb; auto with stalmarck.
 intros tmp; apply eqStateaddEq2.
-case (SisAr c d); intros H' H'0; apply H'0; auto.
+case (SisAr c d); intros H' H'0; apply H'0; auto with stalmarck.
 generalize Eqt; rewrite <- Eqt'; generalize tmp; case (evalZ Ar c);
- case (evalZ Ar d); case pol; simpl in |- *; auto; 
+ case (evalZ Ar d); case pol; simpl in |- *; auto with stalmarck; 
  intros r0 r1 r2 H0 H1; rewrite H1; try discriminate; 
- auto.
-rewrite updateEvalZO; auto.
+ auto with stalmarck.
+rewrite updateEvalZO; auto with stalmarck.
 intros H0; apply eqStateRzTrans with (b := samePolRz (evalZ Ar c) (rZPlus b)).
 apply eqStateaddEq2.
 case (SisAr c (samePolRz (evalZ Ar c) (rZPlus b))); intros H' H'0; apply H'0;
- auto.
+ auto with stalmarck.
 rewrite <- Eqt; generalize (evalZInv Ar War c); case (evalZ Ar c);
- simpl in |- *; auto.
+ simpl in |- *; auto with stalmarck.
 apply
  eqStateRzTrans with (b := samePolRz (evalZ Ar c) (samePolRz pol (rZPlus a))).
-case (evalZ Ar c); case pol; simpl in |- *; auto; intros r1 r2;
- apply eqStateInvInv; simpl in |- *; auto.
+case (evalZ Ar c); case pol; simpl in |- *; auto with stalmarck; intros r1 r2;
+ apply eqStateInvInv; simpl in |- *; auto with stalmarck.
 apply eqStateaddEq2.
 case (SisAr (samePolRz (evalZ Ar c) (samePolRz pol (rZPlus a))) d);
- intros H' H'0; apply H'0; auto.
+ intros H' H'0; apply H'0; auto with stalmarck.
 rewrite <- H0; case pol; case (evalZ Ar c); simpl in |- *; intros r1 r2;
- unfold evalN in |- *; rewrite geta; auto.
-rewrite updateEvalZO; auto.
+ unfold evalN in |- *; rewrite geta; auto with stalmarck.
+rewrite updateEvalZO; auto with stalmarck.
 case (rNatDec (valRz (evalZ Ar d)) b); intros Eqt'.
-rewrite updateEvalZb; auto.
+rewrite updateEvalZb; auto with stalmarck.
 intros H0;
  apply
   eqStateRzTrans
    with (b := samePolRz (evalZ Ar d) (samePolRz pol (rZPlus a))).
 apply eqStateaddEq2.
 case (SisAr c (samePolRz (evalZ Ar d) (samePolRz pol (rZPlus a))));
- intros H' H'0; apply H'0; auto.
+ intros H' H'0; apply H'0; auto with stalmarck.
 rewrite H0; case pol; case (evalZ Ar d); simpl in |- *; intros r1 r2;
- unfold evalN in |- *; rewrite geta; auto.
+ unfold evalN in |- *; rewrite geta; auto with stalmarck.
 apply eqStateRzTrans with (b := samePolRz (evalZ Ar d) (rZPlus b)).
-case (evalZ Ar d); case pol; simpl in |- *; auto.
+case (evalZ Ar d); case pol; simpl in |- *; auto with stalmarck.
 apply eqStateaddEq2.
 case (SisAr (samePolRz (evalZ Ar d) (rZPlus b)) d); intros H' H'0; apply H'0;
- auto.
+ auto with stalmarck.
 rewrite <- Eqt'; generalize (evalZInv Ar War d); case (evalZ Ar d);
- simpl in |- *; auto.
-rewrite updateEvalZO; auto.
+ simpl in |- *; auto with stalmarck.
+rewrite updateEvalZO; auto with stalmarck.
 intros H'; apply eqStateaddEq2.
-case (SisAr c d); auto.
+case (SisAr c d); auto with stalmarck.
 Qed.
 End Dprop.
 (* To be able to return a triple *)
@@ -437,13 +437,13 @@ Theorem GetClassNProp :
 intros Ar a War; case a; simpl in |- *; unfold evalN, getClassN in |- *;
  intros r; generalize (fun s => wfPcr _ War r s); CaseEq (rArrayGet vM Ar r);
  simpl in |- *.
-intros r0 H' H'0; CaseEq (rArrayGet vM Ar (valRz r0)); auto.
-intros r1 H'1; case (H'0 r0 r1); auto.
-intros l H'; rewrite H'; auto.
+intros r0 H' H'0; CaseEq (rArrayGet vM Ar (valRz r0)); auto with stalmarck.
+intros r1 H'1; case (H'0 r0 r1); auto with stalmarck.
+intros l H'; rewrite H'; auto with stalmarck.
 intros r0 H' H'0; rewrite (valRzComp r0); CaseEq (rArrayGet vM Ar (valRz r0));
- auto.
-intros r1 H'1; case (H'0 r0 r1); auto.
-intros l H'; rewrite H'; auto.
+ auto with stalmarck.
+intros r1 H'1; case (H'0 r0 r1); auto with stalmarck.
+intros l H'; rewrite H'; auto with stalmarck.
 Qed.
 (* To add an equation, we find the minimal elements and
      compare them to build the proper call to update *)
@@ -477,13 +477,13 @@ Definition rArrayState (Ar : rArray vM) (S : State) :=
 Theorem rArrayStateDef1 :
  forall (Ar : rArray vM) (S : State) (c d : rZ),
  rArrayState Ar S -> eqStateRz S c d -> evalZ Ar c = evalZ Ar d.
-intros Ar S c d H' H'0; case (H' c d); auto.
+intros Ar S c d H' H'0; case (H' c d); auto with stalmarck.
 Qed.
 
 Theorem rArrayStateDef2 :
  forall (Ar : rArray vM) (S : State) (c d : rZ),
  rArrayState Ar S -> evalZ Ar c = evalZ Ar d -> eqStateRz S c d.
-intros Ar S c d H' H'0; case (H' c d); auto.
+intros Ar S c d H' H'0; case (H' c d); auto with stalmarck.
 Qed.
 
 Theorem rArrayStateGet :
@@ -492,8 +492,8 @@ Theorem rArrayStateGet :
  (forall e : rNat, rArrayGet vM Ar' e = rArrayGet vM Ar e) ->
  rArrayState Ar' S.
 intros Ar Ar' S H' H'0.
-red in |- *; split; repeat rewrite <- (rArrayGetEvalZ _ _ H'0); auto;
- case (H' c d); auto.
+red in |- *; split; repeat rewrite <- (rArrayGetEvalZ _ _ H'0); auto with stalmarck;
+ case (H' c d); auto with stalmarck.
 Qed.
 (* rArrayState is compatible with equality *)
 
@@ -502,11 +502,11 @@ Theorem rArrayStateEqState :
  rArrayState Ar S -> eqState S S' -> rArrayState Ar S'.
 intros Ar S S' H' H'0; red in |- *; split.
 intros H'1.
-apply rArrayStateDef1 with (S := S); auto.
-apply eqStateEq with (S1 := S'); auto.
+apply rArrayStateDef1 with (S := S); auto with stalmarck.
+apply eqStateEq with (S1 := S'); auto with stalmarck.
 intros H'1.
-apply eqStateEq with (S1 := S); auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
+apply eqStateEq with (S1 := S); auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
 Qed.
 (* The empty array represents the empty state *)
 
@@ -514,13 +514,13 @@ Theorem initCorrect :
  rArrayState (rArrayInit _ (fun n : rNat => class nil)) nil.
 red in |- *; intros c d; split; intros H'.
 cut (eqConstrState nil c d).
-intros H'0; inversion H'0; auto.
-apply eqStateRzPImpeqConstrState; auto.
+intros H'0; inversion H'0; auto with stalmarck.
+apply eqStateRzPImpeqConstrState; auto with stalmarck.
 generalize H'; case c; case d; simpl in |- *; unfold evalN in |- *;
  intros r r0; rewrite (rArrayDef vM r0 (fun _ : rNat => class nil));
  rewrite (rArrayDef vM r (fun _ : rNat => class nil)); 
  simpl in |- *; intros H'0; rewrite H'0 || rewrite <- H'0; 
- auto.
+ auto with stalmarck.
 Qed.
 
 Theorem getClassOlist :
@@ -531,44 +531,44 @@ intros Ar a War; case a; simpl in |- *.
 intros r; unfold evalN, getClassN in |- *.
 CaseEq (rArrayGet vM Ar r); simpl in |- *.
 intros r0; CaseEq (rArrayGet vM Ar (valRz r0)); simpl in |- *.
-intros r1 H' H'0; red in |- *; apply OlistOne; auto.
+intros r1 H' H'0; red in |- *; apply OlistOne; auto with stalmarck.
 intros l; case l.
-intros H' H'0; red in |- *; apply OlistOne; auto.
-intros r1 l0 H' H'0; red in |- *; apply OlistCons; auto.
-apply wfOl with (Ar := Ar) (r := valRz r0); auto.
+intros H' H'0; red in |- *; apply OlistOne; auto with stalmarck.
+intros r1 l0 H' H'0; red in |- *; apply OlistCons; auto with stalmarck.
+apply wfOl with (Ar := Ar) (r := valRz r0); auto with stalmarck.
 cut (rVlt (samePol r1 (valRz r0)) (valRz r1)).
-case r1; simpl in |- *; auto.
-apply wfPd with (Ar := Ar); auto.
-apply wfPcc1 with (Lr := r1 :: l0); simpl in |- *; auto.
+case r1; simpl in |- *; auto with stalmarck.
+apply wfPd with (Ar := Ar); auto with stalmarck.
+apply wfPcc1 with (Lr := r1 :: l0); simpl in |- *; auto with stalmarck.
 intros l; case l.
-intros H'; rewrite H'; red in |- *; apply OlistOne; auto.
-intros r0 l0 H'; rewrite H'; red in |- *; apply OlistCons; auto.
-apply wfOl with (Ar := Ar) (r := r); auto.
+intros H'; rewrite H'; red in |- *; apply OlistOne; auto with stalmarck.
+intros r0 l0 H'; rewrite H'; red in |- *; apply OlistCons; auto with stalmarck.
+apply wfOl with (Ar := Ar) (r := r); auto with stalmarck.
 cut (rVlt (samePol r0 r) (valRz r0)).
-case r0; simpl in |- *; auto.
-apply wfPd with (Ar := Ar); auto.
-apply wfPcc1 with (Lr := r0 :: l0); simpl in |- *; auto.
+case r0; simpl in |- *; auto with stalmarck.
+apply wfPd with (Ar := Ar); auto with stalmarck.
+apply wfPcc1 with (Lr := r0 :: l0); simpl in |- *; auto with stalmarck.
 intros r; unfold evalN, getClassN in |- *.
 CaseEq (rArrayGet vM Ar r); simpl in |- *.
 intros r0; rewrite (valRzComp r0); CaseEq (rArrayGet vM Ar (valRz r0));
  simpl in |- *.
-intros r1 H' H'0; red in |- *; apply OlistOne; auto.
+intros r1 H' H'0; red in |- *; apply OlistOne; auto with stalmarck.
 intros l; case l.
-intros H' H'0; red in |- *; apply OlistOne; auto.
-intros r1 l0 H' H'0; red in |- *; apply OlistCons; auto.
-apply wfOl with (Ar := Ar) (r := valRz r0); auto.
+intros H' H'0; red in |- *; apply OlistOne; auto with stalmarck.
+intros r1 l0 H' H'0; red in |- *; apply OlistCons; auto with stalmarck.
+apply wfOl with (Ar := Ar) (r := valRz r0); auto with stalmarck.
 cut (rVlt (samePol r1 (valRz r0)) (valRz r1)).
-case r0; case r1; simpl in |- *; auto.
-apply wfPd with (Ar := Ar); auto.
-apply wfPcc1 with (Lr := r1 :: l0); simpl in |- *; auto.
+case r0; case r1; simpl in |- *; auto with stalmarck.
+apply wfPd with (Ar := Ar); auto with stalmarck.
+apply wfPcc1 with (Lr := r1 :: l0); simpl in |- *; auto with stalmarck.
 intros l; case l.
-intros H'; rewrite H'; red in |- *; apply OlistOne; auto.
-intros r0 l0 H'; rewrite H'; red in |- *; apply OlistCons; auto.
-apply wfOl with (Ar := Ar) (r := r); auto.
+intros H'; rewrite H'; red in |- *; apply OlistOne; auto with stalmarck.
+intros r0 l0 H'; rewrite H'; red in |- *; apply OlistCons; auto with stalmarck.
+apply wfOl with (Ar := Ar) (r := r); auto with stalmarck.
 cut (rVlt (samePol r0 r) (valRz r0)).
-case r0; simpl in |- *; auto.
-apply wfPd with (Ar := Ar); auto.
-apply wfPcc1 with (Lr := r0 :: l0); simpl in |- *; auto.
+case r0; simpl in |- *; auto with stalmarck.
+apply wfPd with (Ar := Ar); auto with stalmarck.
+apply wfPcc1 with (Lr := r0 :: l0); simpl in |- *; auto with stalmarck.
 Qed.
 (* addMem is correct, ie
    If the boolean is true, we have reached a contradiction 
@@ -593,186 +593,186 @@ intros Ar a b S War H'; unfold addEqMem, letP in |- *.
 case (rZltEDec (evalZ Ar a) (evalZ Ar b)); simpl in |- *.
 intros s; case s; simpl in |- *.
 intros H'0; split.
-apply updateWellFormed; auto.
-apply GetClassNProp; auto.
-apply GetClassNProp; auto.
+apply updateWellFormed; auto with stalmarck.
+apply GetClassNProp; auto with stalmarck.
+apply GetClassNProp; auto with stalmarck.
 split.
 red in |- *; intros c d; repeat split; intros H0.
 case
  (updateCorrect Ar War (valRz (evalZ Ar a)) (valRz (evalZ Ar b))
     (samePolRz (evalZ Ar a) (evalZ Ar b)) (getClassN Ar (valRz (evalZ Ar a)))
     (getClassN Ar (valRz (evalZ Ar b)))) with (S := S) (c := c) (d := d);
- auto; auto.
-apply GetClassNProp; auto.
-apply GetClassNProp; auto.
-intros H'1 H'2; apply H'1; auto.
-apply eqStateIncl with (2 := H0); auto.
-apply inclStateIn; simpl in |- *; auto.
+ auto with stalmarck; auto with stalmarck.
+apply GetClassNProp; auto with stalmarck.
+apply GetClassNProp; auto with stalmarck.
+intros H'1 H'2; apply H'1; auto with stalmarck.
+apply eqStateIncl with (2 := H0); auto with stalmarck.
+apply inclStateIn; simpl in |- *; auto with stalmarck.
 intros a0 b0 H'3; Elimc H'3; intros H'3.
-inversion H'3; auto.
+inversion H'3; auto with stalmarck.
 apply eqStateRzTrans with (b := evalZ Ar a0).
 apply eqStateaddEq2.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-rewrite evalZInv; auto.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+rewrite evalZInv; auto with stalmarck.
 apply eqStateRzTrans with (b := evalZ Ar b0).
-case (evalZ Ar a0); case (evalZ Ar b0); simpl in |- *; auto.
+case (evalZ Ar a0); case (evalZ Ar b0); simpl in |- *; auto with stalmarck.
 apply eqStateaddEq2.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-rewrite evalZInv; auto.
-apply eqStateaddEq2; auto.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+rewrite evalZInv; auto with stalmarck.
+apply eqStateaddEq2; auto with stalmarck.
 apply
  eqStateIncl
   with
     (addEq
        (rZPlus (valRz (evalZ Ar a)),
        samePol (samePolRz (evalZ Ar a) (evalZ Ar b)) (valRz (evalZ Ar b))) S);
- auto.
-apply inclStateIn; simpl in |- *; auto.
-intros a0 b0 H'1; Elimc H'1; intros H'1; auto.
-inversion H'1; auto.
+ auto with stalmarck.
+apply inclStateIn; simpl in |- *; auto with stalmarck.
+intros a0 b0 H'1; Elimc H'1; intros H'1; auto with stalmarck.
+inversion H'1; auto with stalmarck.
 apply eqStateRzTrans with (b := samePolRz (evalZ Ar a) a).
 apply eqStateaddEq2.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-generalize (evalZInv Ar War a); CaseEq (evalZ Ar a); simpl in |- *; auto.
-intros r H'2; rewrite H'2; auto.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+generalize (evalZInv Ar War a); CaseEq (evalZ Ar a); simpl in |- *; auto with stalmarck.
+intros r H'2; rewrite H'2; auto with stalmarck.
 intros r H'2 H'3; rewrite evalZComp; rewrite H'2; rewrite <- H'3;
- case (evalN Ar r); auto.
-apply eqStateRzTrans with (b := samePolRz (evalZ Ar a) b); auto.
-case (evalZ Ar a); simpl in |- *; auto.
+ case (evalN Ar r); auto with stalmarck.
+apply eqStateRzTrans with (b := samePolRz (evalZ Ar a) b); auto with stalmarck.
+case (evalZ Ar a); simpl in |- *; auto with stalmarck.
 apply eqStateaddEq2.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-case (evalZ Ar a); simpl in |- *; auto.
-generalize (evalZInv Ar War b); CaseEq (evalZ Ar b); simpl in |- *; auto.
-generalize (evalZInv Ar War b); CaseEq (evalZ Ar b); simpl in |- *; auto.
-intros r H'2 H'3; rewrite evalZComp; rewrite H'3; rewrite <- H'2; auto.
-intros r H'2 H'3; rewrite evalZComp; rewrite H'2; rewrite <- H'3; auto.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+case (evalZ Ar a); simpl in |- *; auto with stalmarck.
+generalize (evalZInv Ar War b); CaseEq (evalZ Ar b); simpl in |- *; auto with stalmarck.
+generalize (evalZInv Ar War b); CaseEq (evalZ Ar b); simpl in |- *; auto with stalmarck.
+intros r H'2 H'3; rewrite evalZComp; rewrite H'3; rewrite <- H'2; auto with stalmarck.
+intros r H'2 H'3; rewrite evalZComp; rewrite H'2; rewrite <- H'3; auto with stalmarck.
 case
  (updateCorrect Ar War (valRz (evalZ Ar a)) (valRz (evalZ Ar b))
     (samePolRz (evalZ Ar a) (evalZ Ar b)) (getClassN Ar (valRz (evalZ Ar a)))
     (getClassN Ar (valRz (evalZ Ar b)))) with (S := S) (c := c) (d := d);
- auto; auto.
-apply GetClassNProp; auto.
-apply GetClassNProp; auto.
+ auto with stalmarck; auto with stalmarck.
+apply GetClassNProp; auto with stalmarck.
+apply GetClassNProp; auto with stalmarck.
 split.
-red in |- *; apply OlistCons; auto.
-apply getClassOlist; auto.
+red in |- *; apply OlistCons; auto with stalmarck.
+apply getClassOlist; auto with stalmarck.
 intros c H'1.
-apply updateArrayOtherwise; auto.
-Contradict H'1; simpl in |- *; auto.
-red in |- *; repeat apply InEqSkip; auto.
-Contradict H'1; rewrite H'1; simpl in |- *; auto.
-red in |- *; apply InEqHead; auto.
-Contradict H'1; rewrite H'1; auto.
-red in |- *; apply InEqSkip; apply InEqHead; auto.
+apply updateArrayOtherwise; auto with stalmarck.
+Contradict H'1; simpl in |- *; auto with stalmarck.
+red in |- *; repeat apply InEqSkip; auto with stalmarck.
+Contradict H'1; rewrite H'1; simpl in |- *; auto with stalmarck.
+red in |- *; apply InEqHead; auto with stalmarck.
+Contradict H'1; rewrite H'1; auto with stalmarck.
+red in |- *; apply InEqSkip; apply InEqHead; auto with stalmarck.
 intros H'0; split.
-apply updateWellFormed; auto.
-apply GetClassNProp; auto.
-apply GetClassNProp; auto.
+apply updateWellFormed; auto with stalmarck.
+apply GetClassNProp; auto with stalmarck.
+apply GetClassNProp; auto with stalmarck.
 split.
 red in |- *; intros c d; split; intros H0.
 case
  (updateCorrect Ar War (valRz (evalZ Ar b)) (valRz (evalZ Ar a))
     (samePolRz (evalZ Ar b) (evalZ Ar a)) (getClassN Ar (valRz (evalZ Ar b)))
     (getClassN Ar (valRz (evalZ Ar a)))) with (S := S) (c := c) (d := d);
- auto.
-apply GetClassNProp; auto.
-apply GetClassNProp; auto.
-intros H'1 H'2; apply H'1; auto.
-apply eqStateIncl with (2 := H0); auto.
-apply inclStateIn; simpl in |- *; auto.
+ auto with stalmarck.
+apply GetClassNProp; auto with stalmarck.
+apply GetClassNProp; auto with stalmarck.
+intros H'1 H'2; apply H'1; auto with stalmarck.
+apply eqStateIncl with (2 := H0); auto with stalmarck.
+apply inclStateIn; simpl in |- *; auto with stalmarck.
 intros a0 b0 H'3; Elimc H'3; intros H'3.
-inversion H'3; auto.
+inversion H'3; auto with stalmarck.
 apply eqStateRzTrans with (b := evalZ Ar a0).
 apply eqStateaddEq2.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-rewrite evalZInv; auto.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+rewrite evalZInv; auto with stalmarck.
 apply eqStateRzTrans with (b := evalZ Ar b0).
-case (evalZ Ar a0); case (evalZ Ar b0); simpl in |- *; auto; intros r1 r2;
- apply eqStateInvInv; auto.
+case (evalZ Ar a0); case (evalZ Ar b0); simpl in |- *; auto with stalmarck; intros r1 r2;
+ apply eqStateInvInv; auto with stalmarck.
 apply eqStateaddEq2.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-rewrite evalZInv; auto.
-apply eqStateaddEq2; auto.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+rewrite evalZInv; auto with stalmarck.
+apply eqStateaddEq2; auto with stalmarck.
 apply
  eqStateIncl
   with
     (addEq
        (rZPlus (valRz (evalZ Ar a)),
        samePol (samePolRz (evalZ Ar a) (evalZ Ar b)) (valRz (evalZ Ar b))) S);
- auto.
-apply inclStateIn; simpl in |- *; auto.
+ auto with stalmarck.
+apply inclStateIn; simpl in |- *; auto with stalmarck.
 intros a0 b0 H'1; Elimc H'1; intros H'1.
-inversion H'1; auto.
+inversion H'1; auto with stalmarck.
 apply eqStateRzTrans with (b := samePolRz (evalZ Ar a) a).
 apply eqStateaddEq2.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-generalize (evalZInv Ar War a); CaseEq (evalZ Ar a); simpl in |- *; auto.
-intros r H'2; rewrite H'2; auto.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+generalize (evalZInv Ar War a); CaseEq (evalZ Ar a); simpl in |- *; auto with stalmarck.
+intros r H'2; rewrite H'2; auto with stalmarck.
 intros r H'2 H'3; rewrite evalZComp; rewrite H'2; rewrite <- H'3;
- case (evalN Ar r); auto.
-apply eqStateRzTrans with (b := samePolRz (evalZ Ar a) b); auto.
-case (evalZ Ar a); simpl in |- *; auto.
+ case (evalN Ar r); auto with stalmarck.
+apply eqStateRzTrans with (b := samePolRz (evalZ Ar a) b); auto with stalmarck.
+case (evalZ Ar a); simpl in |- *; auto with stalmarck.
 apply eqStateaddEq2.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-case (evalZ Ar a); simpl in |- *; auto.
-generalize (evalZInv Ar War b); CaseEq (evalZ Ar b); simpl in |- *; auto.
-generalize (evalZInv Ar War b); CaseEq (evalZ Ar b); simpl in |- *; auto.
-intros r H'2 H'3; rewrite evalZComp; rewrite H'3; rewrite <- H'2; auto.
-intros r H'2 H'3; rewrite evalZComp; rewrite H'2; rewrite <- H'3; auto.
-apply eqStateRzIn; unfold addEq in |- *; auto with datatypes.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+case (evalZ Ar a); simpl in |- *; auto with stalmarck.
+generalize (evalZInv Ar War b); CaseEq (evalZ Ar b); simpl in |- *; auto with stalmarck.
+generalize (evalZInv Ar War b); CaseEq (evalZ Ar b); simpl in |- *; auto with stalmarck.
+intros r H'2 H'3; rewrite evalZComp; rewrite H'3; rewrite <- H'2; auto with stalmarck.
+intros r H'2 H'3; rewrite evalZComp; rewrite H'2; rewrite <- H'3; auto with stalmarck.
+apply eqStateRzIn; unfold addEq in |- *; auto with datatypes stalmarck.
 apply
  eqStateIncl
   with
     (addEq
        (rZPlus (valRz (evalZ Ar b)),
        samePol (samePolRz (evalZ Ar b) (evalZ Ar a)) (valRz (evalZ Ar a))) S);
- auto.
-apply inclStateIn; simpl in |- *; auto.
-intros a0 b0 H'1; Elimc H'1; intros H'1; auto.
-inversion H'1; auto.
-case (evalZ Ar a); case (evalZ Ar b); simpl in |- *; auto; intros r1 r2;
- apply eqStateInvInv; auto.
+ auto with stalmarck.
+apply inclStateIn; simpl in |- *; auto with stalmarck.
+intros a0 b0 H'1; Elimc H'1; intros H'1; auto with stalmarck.
+inversion H'1; auto with stalmarck.
+case (evalZ Ar a); case (evalZ Ar b); simpl in |- *; auto with stalmarck; intros r1 r2;
+ apply eqStateInvInv; auto with stalmarck.
 case
  (updateCorrect Ar War (valRz (evalZ Ar b)) (valRz (evalZ Ar a))
     (samePolRz (evalZ Ar b) (evalZ Ar a)) (getClassN Ar (valRz (evalZ Ar b)))
     (getClassN Ar (valRz (evalZ Ar a)))) with (S := S) (c := c) (d := d);
- auto; auto.
-apply GetClassNProp; auto.
-apply GetClassNProp; auto.
-split; auto.
-red in |- *; apply OlistCons; auto.
-apply getClassOlist; auto.
+ auto with stalmarck; auto with stalmarck.
+apply GetClassNProp; auto with stalmarck.
+apply GetClassNProp; auto with stalmarck.
+split; auto with stalmarck.
+red in |- *; apply OlistCons; auto with stalmarck.
+apply getClassOlist; auto with stalmarck.
 intros c H'1.
-apply updateArrayOtherwise; auto.
-Contradict H'1; simpl in |- *; auto.
-red in |- *; repeat apply InEqSkip; auto.
-Contradict H'1; rewrite H'1; simpl in |- *; auto.
-red in |- *; apply InEqHead; auto.
-Contradict H'1; rewrite H'1; auto.
-red in |- *; apply InEqSkip; apply InEqHead; auto.
-case (rZDec (evalZ Ar a) (evalZ Ar b)); simpl in |- *; auto.
-intros H'0 H'1; split; auto.
-split; auto.
+apply updateArrayOtherwise; auto with stalmarck.
+Contradict H'1; simpl in |- *; auto with stalmarck.
+red in |- *; repeat apply InEqSkip; auto with stalmarck.
+Contradict H'1; rewrite H'1; simpl in |- *; auto with stalmarck.
+red in |- *; apply InEqHead; auto with stalmarck.
+Contradict H'1; rewrite H'1; auto with stalmarck.
+red in |- *; apply InEqSkip; apply InEqHead; auto with stalmarck.
+case (rZDec (evalZ Ar a) (evalZ Ar b)); simpl in |- *; auto with stalmarck.
+intros H'0 H'1; split; auto with stalmarck.
+split; auto with stalmarck.
 red in |- *; intros c d; split; intros H'2.
-apply rArrayStateDef1 with (S := S); auto.
-apply eqStateIncl with (2 := H'2); auto.
-apply inclStateIn; simpl in |- *; auto.
-intros a0 b0 H'3; Elimc H'3; intros H'3; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-inversion H'3; auto.
-rewrite <- H1; rewrite <- H0; auto.
+apply rArrayStateDef1 with (S := S); auto with stalmarck.
+apply eqStateIncl with (2 := H'2); auto with stalmarck.
+apply inclStateIn; simpl in |- *; auto with stalmarck.
+intros a0 b0 H'3; Elimc H'3; intros H'3; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+inversion H'3; auto with stalmarck.
+rewrite <- H1; rewrite <- H0; auto with stalmarck.
 apply eqStateaddEq2.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-split; auto.
-red in |- *; apply OlistNil; auto.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+split; auto with stalmarck.
+red in |- *; apply OlistNil; auto with stalmarck.
 intros H'0 H'1; red in |- *; exists a.
-apply eqStateRzTrans with (b := b); auto.
-apply eqStateaddEq2; auto.
-apply rArrayStateDef2 with (Ar := Ar); auto.
-rewrite evalZComp; auto.
+apply eqStateRzTrans with (b := b); auto with stalmarck.
+apply eqStateaddEq2; auto with stalmarck.
+apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
+rewrite evalZComp; auto with stalmarck.
 generalize H'0 H'1; case (evalZ Ar a); case (evalZ Ar b); unfold eqRz in |- *;
- simpl in |- *; intros r r0 H'4 H'5; rewrite H'5; auto; 
- case H'4; rewrite H'5; auto.
+ simpl in |- *; intros r r0 H'4 H'5; rewrite H'5; auto with stalmarck; 
+ case H'4; rewrite H'5; auto with stalmarck.
 Qed.
 (* Same but adding a=b and c=d *)
 
@@ -804,25 +804,25 @@ generalize (addEqMemCorrect Ar a b S War H').
 case (addEqMem Ar a b); simpl in |- *.
 intros Ar' b' L'; case b'; simpl in |- *.
 intros H'0; red in |- *; inversion H'0.
-exists x; auto.
+exists x; auto with stalmarck.
 intros H'0; Elimc H'0; intros H'0 H'1; Elimc H'1; intros H'1 H'2; Elimc H'2;
  intros H'2 H'3.
 generalize (addEqMemCorrect Ar' c d (addEq (pair a b) S) H'0 H'1);
  case (addEqMem Ar' c d); simpl in |- *.
-intros Ar'' b'' L''; case b''; simpl in |- *; auto.
+intros Ar'' b'' L''; case b''; simpl in |- *; auto with stalmarck.
 intros H'4; Elimc H'4; intros H'4 H'5; Elimc H'5; intros H'5 H'6; Elimc H'6;
- intros H'6 H'7; repeat (split; auto).
-red in |- *; unfold appendRz in |- *; apply appendfOlist; auto.
+ intros H'6 H'7; repeat (split; auto with stalmarck).
+red in |- *; unfold appendRz in |- *; apply appendfOlist; auto with stalmarck.
 exact rZltEqComp.
 intros e H'8.
-rewrite H'7; auto.
-apply H'3; auto.
-Contradict H'8; auto.
+rewrite H'7; auto with stalmarck.
+apply H'3; auto with stalmarck.
+Contradict H'8; auto with stalmarck.
 cut (InclEq _ eqRz L' (appendf _ rZlt eqRz rZltEDec L' L'')).
-intros H'9; inversion H'9; red in |- *; auto.
-apply appendfInclEq1; auto.
-Contradict H'8; auto.
+intros H'9; inversion H'9; red in |- *; auto with stalmarck.
+apply appendfInclEq1; auto with stalmarck.
+Contradict H'8; auto with stalmarck.
 cut (InclEq _ eqRz L'' (appendf _ rZlt eqRz rZltEDec L' L'')).
-intros H'9; inversion H'9; red in |- *; auto.
-apply appendfInclEq2; auto.
+intros H'9; inversion H'9; red in |- *; auto with stalmarck.
+apply appendfInclEq2; auto with stalmarck.
 Qed.
