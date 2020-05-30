@@ -108,6 +108,8 @@ Definition dilemma1 (f : list rZ -> rArray vM -> mbDT)
 (* To speedup Coq *)
 Opaque addEqMem.
 
+Hint Resolve f_equal : core.
+
 Theorem dilemma1Correct :
  forall (f : list rZ -> rArray vM -> mbDT) (Ar : rArray vM) 
    (a b : rZ) (S : State),
@@ -299,7 +301,7 @@ elim H'15; intros S' E; elim E; intros H'0 H'1; elim H'1; intros H'2 H'18;
 elim H'21; intros S'0 E; elim E; intros H'1 H'15; elim H'15; intros H'22 H'25;
  clear H'15 E H'21.
 generalize
- (interMemProp Ar1' Ar2' Ar H'10 H'7 H'5 (appendRz L1 L1') 
+ (interImplement2.interMemProp Ar1' Ar2' Ar H'10 H'7 H'5 (appendRz L1 L1')
     (appendRz L2 L2') O1 O2 _ _ _ H'22 H'2 H'6).
 case (interMem Ar1' Ar2' Ar (appendRz L1 L1') (appendRz L2 L2')).
 intros Ar' L' H'15; elim H'15;
