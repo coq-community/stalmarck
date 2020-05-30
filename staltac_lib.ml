@@ -972,7 +972,6 @@ open Termops
 open Names
 open Tacmach
 open Tactics
-open Constrintern
 
 (*i*)
 
@@ -981,6 +980,8 @@ open Constrintern
   the constants are loaded in the environment
 *)
 
+let global_reference_in_absolute_module dir id =
+  Nametab.global_of_path (Libnames.make_path dir id)
 
 let constant dir s =
   let dir = DirPath.make (List.map Id.of_string (List.rev ("Coq"::dir))) in
