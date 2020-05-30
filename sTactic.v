@@ -59,3 +59,5 @@ Ltac Casec name := case name; clear name.
 (* Same as Elim but cleans the elim variable  *)
 
 Ltac Elimc name := elim name; clear name.
+
+Create HintDb stalmarck.
