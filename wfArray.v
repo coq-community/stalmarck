@@ -29,7 +29,6 @@ Require Export Relation_Definitions.
 Require Export LetP.
 Require Export PolyListAux.
 Require Export List.
-Require Export Option.
 Require Export sTactic.
 
 (*Definition of well formed array and some properties *)

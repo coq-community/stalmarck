@@ -4,7 +4,6 @@
 BoolAux.v
 Extract.v
 LetP.v
-Option.v
 OrderedListEq.v
 OrderedListEq_ex.v
 PolyListAux.v

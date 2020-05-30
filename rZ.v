@@ -512,19 +512,18 @@ Qed.
 *********************************************************************)
 Section rA.
 Variable A : Set.
-Require Import Option.
 (* Usual binary tree *)
 
 Inductive rTree : Set :=
   | rEmpty : rTree
-  | rSplit : Option A -> rTree -> rTree -> rTree.
+  | rSplit : option A -> rTree -> rTree -> rTree.
 (* We use the positive number as a path in the tree to retrieve
    a value *)
 
 Fixpoint rTreeGet (t : rTree) (r : rNat) {struct r} : 
- Option A :=
+ option A :=
   match r, t with
-  | _, rEmpty => None _
+  | _, rEmpty => None
   | xH, rSplit a _ _ => a
   | xO p, rSplit _ t' _ => rTreeGet t' p
   | xI p, rSplit _ _ t' => rTreeGet t' p
@@ -535,10 +534,10 @@ Fixpoint rTreeSet (t : rTree) (r : rNat) {struct r} :
  A -> rTree :=
   fun a : A =>
   match r, t with
-  | xH, rEmpty => rSplit (Some _ a) rEmpty rEmpty
-  | xO p, rEmpty => rSplit (None _) (rTreeSet rEmpty p a) rEmpty
-  | xI p, rEmpty => rSplit (None _) rEmpty (rTreeSet rEmpty p a)
-  | xH, rSplit _ t'1 t'2 => rSplit (Some _ a) t'1 t'2
+  | xH, rEmpty => rSplit (Some a) rEmpty rEmpty
+  | xO p, rEmpty => rSplit (None) (rTreeSet rEmpty p a) rEmpty
+  | xI p, rEmpty => rSplit (None) rEmpty (rTreeSet rEmpty p a)
+  | xH, rSplit _ t'1 t'2 => rSplit (Some a) t'1 t'2
   | xO p, rSplit b t'1 t'2 => rSplit b (rTreeSet t'1 p a) t'2
   | xI p, rSplit b t'1 t'2 => rSplit b t'1 (rTreeSet t'2 p a)
   end.
@@ -546,7 +545,7 @@ Fixpoint rTreeSet (t : rTree) (r : rNat) {struct r} :
 
 Theorem rTreeDef1 :
  forall (t : rTree) (m : rNat) (v : A),
- rTreeGet (rTreeSet t m v) m = Some _ v.
+ rTreeGet (rTreeSet t m v) m = Some v.
 intros t m; generalize t; Elimc m; simpl in |- *; clear t.
 intros p H' t v; case t; auto.
 intros p H' t v; case t; auto.

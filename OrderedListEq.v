@@ -30,7 +30,6 @@ Require Export List.
 Require Import Lexicographic_Exponentiation.
 Require Export Relation_Definitions.
 Require Export Relation_Operators.
-Require Export Option.
 Require Export sTactic.
 Section OrderedList.
 
@@ -330,20 +329,20 @@ apply OlistSupEq with (L := l0); auto.
 Qed.
 (* Try to find an element in the first list that is not in the second *)
 
-Fixpoint diffElem (L1 : list A) : list A -> Option A :=
+Fixpoint diffElem (L1 : list A) : list A -> option A :=
   fun L2 : list A =>
   match L1 with
-  | nil => None _
+  | nil => None
   | a :: L'1 =>
       match InEqDec a L2 with
       | left _ => diffElem L'1 L2
-      | right _ => Some _ a
+      | right _ => Some a
       end
   end.
 (* If we can't find such element there is inclusion *)
 
 Theorem diffElemNone :
- forall L1 L2 : list A, diffElem L1 L2 = None _ -> InclEq L1 L2.
+ forall L1 L2 : list A, diffElem L1 L2 = None -> InclEq L1 L2.
 intros L1; elim L1; simpl in |- *; auto.
 intros a l H' L2.
 case (InEqDec a L2); auto.
@@ -352,7 +351,7 @@ Qed.
 (* If there is an element it belongs to the first *)
 
 Theorem diffElemSomeIn :
- forall (L1 L2 : list A) (a : A), diffElem L1 L2 = Some _ a -> InEq a L1.
+ forall (L1 L2 : list A) (a : A), diffElem L1 L2 = Some a -> InEq a L1.
 intros L1; elim L1; simpl in |- *; auto.
 intros H' a H'0; discriminate.
 intros a l H' L2 a0.
@@ -364,7 +363,7 @@ Qed.
 (* and does not belong to the other *)
 
 Theorem diffElemSomeNIn :
- forall (L1 L2 : list A) (a : A), diffElem L1 L2 = Some _ a -> ~ InEq a L2.
+ forall (L1 L2 : list A) (a : A), diffElem L1 L2 = Some a -> ~ InEq a L2.
 intros L1; elim L1; simpl in |- *; auto.
 intros H' a H'0; discriminate.
 intros a l H' L2 a0.
@@ -919,13 +918,13 @@ Variable testEq : forall a b : A, test a b -> eqA a b.
 (* Finding the minimum element that verifies test *)
 
 Definition getMin :=
-  (fix aux1 (l1 l2 : list A) {struct l1} : Option A :=
+  (fix aux1 (l1 l2 : list A) {struct l1} : option A :=
      match l1, l2 with
      | a :: t1, b :: t2 =>
          match ltADec a b with
          | inleft (left _) => aux1 t1 (b :: t2)
          | inleft (right _) =>
-             (fix aux2 (l3 : list A) : Option A :=
+             (fix aux2 (l3 : list A) : option A :=
                 match l3 with
                 | c :: t3 =>
                     match ltADec a c with
@@ -933,26 +932,26 @@ Definition getMin :=
                     | inleft (right _) => aux2 t3
                     | inright H =>
                         match testDec a c H with
-                        | left _ => Some A a
+                        | left _ => Some a
                         | right __ => aux2 t3
                         end
                     end
-                | nil => None A
+                | nil => None
                 end) (b :: t2)
          | inright H =>
              match testDec a b H with
-             | left _ => Some A a
+             | left _ => Some a
              | right _ => aux1 t1 t2
              end
          end
-     | nil, _ => None A
-     | _, nil => None A
+     | nil, _ => None
+     | _, nil => None
      end).
 (* If there is such elemnt it belongs to the first list *)
 
 Theorem geMinIn :
  forall (L1 L2 : list A) (a : A),
- Olist L1 -> Olist L2 -> getMin L1 L2 = Some _ a -> In a L1.
+ Olist L1 -> Olist L2 -> getMin L1 L2 = Some a -> In a L1.
 intros L1; elim L1; simpl in |- *.
 intros L2; case L2; simpl in |- *; auto with datatypes.
 intros a H' H'0 H'1; discriminate.
@@ -992,7 +991,7 @@ Qed.
 Theorem getMinComp :
  forall (L1 L2 : list A) (a : A),
  Olist L1 ->
- Olist L2 -> getMin L1 L2 = Some _ a -> exists b : A, test a b /\ In b L2.
+ Olist L2 -> getMin L1 L2 = Some a -> exists b : A, test a b /\ In b L2.
 intros L1; elim L1; simpl in |- *.
 intros L2; case L2; simpl in |- *; auto with datatypes.
 intros a H' H'0 H'1; discriminate.
@@ -1040,7 +1039,7 @@ Theorem getMinMin :
  forall (L1 L2 : list A) (a : A),
  Olist L1 ->
  Olist L2 ->
- getMin L1 L2 = Some _ a ->
+ getMin L1 L2 = Some a ->
  forall b c : A, ltA b a -> In b L1 -> In c L2 -> ~ test b c.
 intros L1; elim L1; simpl in |- *.
 intros L2; case L2; simpl in |- *; auto with datatypes.
@@ -1134,7 +1133,7 @@ Theorem getMinNone :
  forall L1 L2 : list A,
  Olist L1 ->
  Olist L2 ->
- getMin L1 L2 = None _ -> forall a b : A, In a L1 -> In b L2 -> ~ test a b.
+ getMin L1 L2 = None -> forall a b : A, In a L1 -> In b L2 -> ~ test a b.
 intros L1; elim L1; simpl in |- *.
 intros L2; case L2; simpl in |- *; auto with datatypes.
 intros a l H' L2; case L2; simpl in |- *; auto with datatypes.

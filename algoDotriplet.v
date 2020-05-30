@@ -29,7 +29,7 @@ Section algo.
 (* We simply check the applicability of each rule sequentially,
     the test is made with the miniaml element *)
 
-Definition doTripletF : forall (Ar : rArray vM) (t : triplet), Option mbD.
+Definition doTripletF : forall (Ar : rArray vM) (t : triplet), option mbD.
 intros Ar t.
 case t; intros b p q r.
 apply letP with (1 := evalZ Ar p); intros p'.
@@ -37,49 +37,49 @@ apply letP with (1 := evalZ Ar q); intros q'.
 apply letP with (1 := evalZ Ar r); intros r'.
 case b.
 case (rZDec p' (rZComp q')); intros Eq1.
-exact (Some _ (addEqMem2 Ar r' rZFalse q' rZTrue)).
+exact (Some (addEqMem2 Ar r' rZFalse q' rZTrue)).
 case (rZDec p' (rZComp r')); intros Eq2.
-exact (Some _ (addEqMem2 Ar r' rZTrue q' rZFalse)).
+exact (Some (addEqMem2 Ar r' rZTrue q' rZFalse)).
 case (rZDec q' r'); intros Eq3.
-exact (Some _ (addEqMem Ar p' r')).
+exact (Some (addEqMem Ar p' r')).
 case (rZDec q' (rZComp r')); intros Eq4.
-exact (Some _ (addEqMem Ar p' rZFalse)).
+exact (Some (addEqMem Ar p' rZFalse)).
 case (rZDec p' rZTrue); intros Eq5.
-exact (Some _ (addEqMem2 Ar r' rZTrue q' rZTrue)).
+exact (Some (addEqMem2 Ar r' rZTrue q' rZTrue)).
 case (rZDec q' rZTrue); intros Eq6.
-exact (Some _ (addEqMem Ar p' r')).
+exact (Some (addEqMem Ar p' r')).
 case (rZDec q' rZFalse); intros Eq7.
-exact (Some _ (addEqMem Ar p' rZFalse)).
+exact (Some (addEqMem Ar p' rZFalse)).
 case (rZDec r' rZTrue); intros Eq8.
-exact (Some _ (addEqMem Ar p' q')).
+exact (Some (addEqMem Ar p' q')).
 case (rZDec r' rZFalse); intros Eq9.
-exact (Some _ (addEqMem Ar p' rZFalse)).
-exact (None mbD).
+exact (Some (addEqMem Ar p' rZFalse)).
+exact None.
 case (rZDec p' q'); intros Eq1.
-exact (Some _ (addEqMem Ar r' rZTrue)).
+exact (Some (addEqMem Ar r' rZTrue)).
 case (rZDec p' (rZComp q')); intros Eq2.
-exact (Some _ (addEqMem Ar r' rZFalse)).
+exact (Some (addEqMem Ar r' rZFalse)).
 case (rZDec p' r'); intros Eq3.
-exact (Some _ (addEqMem Ar q' rZTrue)).
+exact (Some (addEqMem Ar q' rZTrue)).
 case (rZDec p' (rZComp r')); intros Eq4.
-exact (Some _ (addEqMem Ar q' rZFalse)).
+exact (Some (addEqMem Ar q' rZFalse)).
 case (rZDec q' r'); intros Eq5.
-exact (Some _ (addEqMem Ar p' rZTrue)).
+exact (Some (addEqMem Ar p' rZTrue)).
 case (rZDec q' (rZComp r')); intros Eq6.
-exact (Some _ (addEqMem Ar p' rZFalse)).
+exact (Some (addEqMem Ar p' rZFalse)).
 case (rZDec p' rZTrue); intros Eq7.
-exact (Some _ (addEqMem Ar q' r')).
+exact (Some (addEqMem Ar q' r')).
 case (rZDec p' rZFalse); intros Eq8.
-exact (Some _ (addEqMem Ar q' (rZComp r'))).
+exact (Some (addEqMem Ar q' (rZComp r'))).
 case (rZDec q' rZTrue); intros Eq9.
-exact (Some _ (addEqMem Ar p' r')).
+exact (Some (addEqMem Ar p' r')).
 case (rZDec q' rZFalse); intros Eq10.
-exact (Some _ (addEqMem Ar p' (rZComp r'))).
+exact (Some (addEqMem Ar p' (rZComp r'))).
 case (rZDec r' rZTrue); intros Eq11.
-exact (Some _ (addEqMem Ar p' q')).
+exact (Some (addEqMem Ar p' q')).
 case (rZDec r' rZFalse); intros Eq12.
-exact (Some _ (addEqMem Ar p' (rZComp q'))).
-exact (None mbD).
+exact (Some (addEqMem Ar p' (rZComp q'))).
+exact None.
 Defined.
 Require Import doTriplet.
 

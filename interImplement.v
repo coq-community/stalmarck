@@ -384,8 +384,8 @@ Theorem getMinInvSym :
  OlistRz L1 ->
  OlistRz L2 ->
  match getMinInv L1 L2 with
- | None => getMinInv L2 L1 = None _
- | Some a => getMinInv L2 L1 = Some _ (rZComp a)
+ | None => getMinInv L2 L1 = None
+ | Some a => getMinInv L2 L1 = Some (rZComp a)
  end.
 intros L1 L2 H' H'0; CaseEq (getMinInv L1 L2).
 CaseEq (getMinInv L2 L1).
@@ -410,7 +410,7 @@ intros x1 H'5; elim H'5; intros H'6 H'7; rewrite H'6; rewrite rZCompInv; auto.
 unfold getMinInv in H'1; apply geMinIn with (4 := H'1); auto.
 intros H'3;
  rewrite (OlistIn _ rZlt eqRz) with (L := L1) (a := x0) (b := rZComp x); 
- auto.
+ auto using f_equal.
 unfold getMinInv in H'2; apply geMinIn with (4 := H'2); auto.
 unfold getMinInv in H'1; case getMinComp with (4 := H'1); auto.
 intros x1 H'5; elim H'5; intros H'6 H'7; rewrite H'6; rewrite rZCompInv; auto.

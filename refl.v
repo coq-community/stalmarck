@@ -26,7 +26,6 @@ construct a function from Expr -> Prop*)
 Require Import ZArith.
 Require Import normalize.
 Require Import Classical.
-Require Import Option.
 Require Import sTactic.
 Section refl.
 Variable fmap : rNat -> Prop.
