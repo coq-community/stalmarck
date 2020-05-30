@@ -64,19 +64,13 @@ Eval compute in (internat l1 l2).
 
 (* For Z *)
 Require Import ZArith.
-Require Import Omega.
 
 Definition CZ : forall a b : Z, {(a < b)%Z} + {(b < a)%Z} + {a = b}.
 intros a b; CaseEq (a - b)%Z.
 intros H'; right; auto with zarith.
 left; right; auto with zarith.
-apply Zlt_O_minus_lt; auto.
-rewrite H; auto with zarith.
 intros p H'; left; left.
 apply Zlt_O_minus_lt; auto with zarith.
-rewrite <- (Z.opp_involutive (b - a)); auto with zarith.
-replace (- (b - a))%Z with (a - b)%Z; auto with zarith.
-rewrite H'; red in |- *; simpl in |- *; auto.
 Defined.
 
 Local Definition appZ := appendf _ Z.lt (fun x y : Z => x = y) CZ.
