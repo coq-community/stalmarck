@@ -26,11 +26,11 @@
 Require Export Bool.
 
 Lemma de_morgan1 : forall b1 b2 : bool, negb (b1 || b2) = negb b1 && negb b2.
-simple destruct b1; simple destruct b2; simpl in |- *; auto.
+exact negb_orb.
 Qed.
 
 Lemma de_morgan2 : forall b1 b2 : bool, negb (b1 && b2) = negb b1 || negb b2.
-simple destruct b1; simple destruct b2; simpl in |- *; auto.
+exact negb_andb.
 Qed.
 
 Lemma de_morgan3 : forall b1 b2 : bool, b1 && b2 = negb (negb b1 || negb b2).
@@ -42,19 +42,19 @@ simple destruct b1; simple destruct b2; simpl in |- *; reflexivity.
 Qed.
 
 Lemma implb_b_true : forall b : bool, implb b true = true.
-simple destruct b; simpl in |- *; auto.
+exact implb_true_r.
 Qed.
 
 Lemma implb_b_false : forall b : bool, implb b false = negb b.
-simple destruct b; simpl in |- *; auto.
+exact implb_false_r.
 Qed.
 
 Lemma implb_true_b : forall b : bool, implb true b = b.
-simple destruct b; simpl in |- *; auto.
+exact implb_true_l.
 Qed.
 
 Lemma implb_false_b : forall b : bool, implb false b = true.
-simple destruct b; simpl in |- *; auto.
+exact implb_false_l.
 Qed.
 
 Lemma implb_elim : forall b1 b2 : bool, implb b1 b2 = negb (b1 && negb b2).
