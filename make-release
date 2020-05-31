@@ -1,0 +1,46 @@
+#!/bin/sh
+
+if [ $# != 2 ]; then printf "Usage: make-release opamrootdir major.median.minor\n"; exit 1; fi
+opamarchivedir=$1
+version=$2
+case $version in
+    [89].[0123456789].[0123456789] | [89].[0123456789][0123456789].[0123456789])
+        major=`echo $version | cut -d. -f 1`
+        median=`echo $version | cut -d. -f 2`
+        minor=`echo $version | cut -d. -f 3`
+        ;;
+    *)
+        printf "Ill-formed version number %s\n" $version
+        exit 1
+esac
+branch=v$major.$median
+versiontag=v$version
+
+shatag=`git rev-parse --verify -q $versiontag`
+a=$?
+if [ $a = 0 ]; then
+   printf "Pushing tag $versiontag\n"
+   git push origin $versiontag
+else
+   printf "No tag $versiontag\n"
+   printf "Do first \"git tag -a %s %s\" and rerun\n" $versiontag $branch
+fi
+
+opamdir=$opamarchivedir/released/packages/coq-stalmarck/coq-stalmarck.$version
+mkdir -p $opamdir
+
+# Find repository
+url=https://github.com/coq-community/stalmarck/archive/$versiontag.tar.gz
+badsha512v1=`printf "404: Not Found" | openssl dgst -sha512`
+badsha512v2=`printf "Not Found" | openssl dgst -sha512`
+sha512=`curl -s -L $url | openssl dgst -sha512`
+if [ "$sha512" = "$badsha512v1" -o "$sha512" = "$badsha512v2" ]; then
+  echo WARNING: RELEASE NOT FOUND
+else
+  git show $branch:coq-stalmarck.opam > $opamdir/opam
+  printf "\n" >> $opamdir/opam
+  printf "url {\n" >> $opamdir/opam
+  printf "  src: \"https://github.com/coq-community/stalmarck/archive/v%s.tar.gz\"\n" $version >> $opamdir/opam
+  printf "  checksum: \"sha512=%s\"\n" $sha512 >> $opamdir/opam
+  printf "}\n" >> $opamdir/opam
+fi
