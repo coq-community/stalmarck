@@ -1,0 +1,5 @@
+(coq.theory
+ (name Stalmarck)
+ (package coq-stalmarck)
+ (synopsis "Proof of Stålmarck's algorithm in Coq")
+ (libraries coq-stalmarck.plugin))

@@ -17,4 +17,5 @@ Makefile.coq.conf
 run.ml
 run.mli
 result
-staltac.ml
+src/staltac.ml
+_build

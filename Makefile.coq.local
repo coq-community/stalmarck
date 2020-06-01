@@ -1,6 +1,6 @@
 post-all:: extraction/stalmarck
 
-extraction/stalmarck: Extract.vo
+extraction/stalmarck: src/Extract.vo
 	+$(MAKE) -C extraction all
 
 test: extraction/stalmarck

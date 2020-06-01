@@ -14,7 +14,7 @@
 (* 02110-1301 USA                                                     *)
 
 
-Require Import algoRun.
+Require Import Stalmarck.algoRun.
 Require Import ZArith.
 Require Import Extraction.
 
