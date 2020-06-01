@@ -10,5 +10,6 @@ test: extraction/stalmarck
 
 clean::
 	+$(MAKE) -C extraction clean
+	$(HIDE)rm -f run.ml run.mli
 
 .PHONY: test
