@@ -20,3 +20,4 @@ result
 src/staltac.ml
 _build
 src/.merlin
+*.install
