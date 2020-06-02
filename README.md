@@ -31,7 +31,7 @@ A two-level approach to prove tautologies using Stålmarck's algorithm in Coq.
   - Pierre Letouzey (initial)
   - Laurent Théry (initial)
 - Coq-community maintainer(s):
-  - Hugo Herbelin ([**@herbelin**](https://github.com/herbelin))
+  - Karl Palmskog ([**@palmskog**](https://github.com/palmskog))
 - License: [GNU Lesser General Public License v2.1 or later](LICENSE)
 - Compatible Coq versions: Coq master (use the corresponding branch or release for other Coq versions)
 - Additional dependencies: none

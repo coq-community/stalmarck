@@ -24,8 +24,8 @@ authors:
   initial: true
 
 maintainers:
-- name: Hugo Herbelin
-  nickname: herbelin
+- name: Karl Palmskog
+  nickname: palmskog
 
 license:
   fullname: GNU Lesser General Public License v2.1 or later
