@@ -3,7 +3,7 @@
 [![Travis][travis-shield]][travis-link]
 [![Contributing][contributing-shield]][contributing-link]
 [![Code of Conduct][conduct-shield]][conduct-link]
-[![Gitter][gitter-shield]][gitter-link]
+[![Zulip][zulip-shield]][zulip-link]
 [![DOI][doi-shield]][doi-link]
 
 [travis-shield]: https://travis-ci.com/coq-community/stalmarck.svg?branch=master
@@ -15,17 +15,15 @@
 [conduct-shield]: https://img.shields.io/badge/%E2%9D%A4-code%20of%20conduct-%23f15a24.svg
 [conduct-link]: https://github.com/coq-community/manifesto/blob/master/CODE_OF_CONDUCT.md
 
-[gitter-shield]: https://img.shields.io/badge/chat-on%20gitter-%23c1272d.svg
-[gitter-link]: https://gitter.im/coq-community/Lobby
+[zulip-shield]: https://img.shields.io/badge/chat-on%20zulip-%23c1272d.svg
+[zulip-link]: https://coq.zulipchat.com/#narrow/stream/237663-coq-community-devs.20.26.20users
+
 
 [doi-shield]: https://zenodo.org/badge/DOI/10.1007/3-540-44659-1_24.svg
 [doi-link]: https://doi.org/10.1007/3-540-44659-1_24
 
 A two-level approach to prove tautologies using Stålmarck's algorithm in Coq.
 
-
-More details about the project can be found in the paper
-[Formalizing Stålmarck's Algorithm in Coq](https://www.irif.fr/~letouzey/download/stalmarck.ps.gz).
 
 ## Meta
 
@@ -35,9 +33,11 @@ More details about the project can be found in the paper
 - Coq-community maintainer(s):
   - Hugo Herbelin ([**@herbelin**](https://github.com/herbelin))
 - License: [GNU Lesser General Public License v2.1 or later](LICENSE)
-- Compatible Coq versions: 8.11 (use the corresponding branch or release for other Coq versions)
-- Compatible OCaml versions: all versions supported by Coq
-- Additional Coq dependencies: none
+- Compatible Coq versions: Coq master (use the corresponding branch or release for other Coq versions)
+- Additional dependencies: none
+- Coq namespace: `Stalmarck`
+- Related publication(s):
+  - [Formalizing Stålmarck's Algorithm in Coq](https://www.irif.fr/~letouzey/download/stalmarck.ps.gz) doi:[10.1007/3-540-44659-1_24](https://doi.org/10.1007/3-540-44659-1_24)
 
 ## Building and installation instructions
 
@@ -52,14 +52,11 @@ opam install coq-stalmarck
 To instead build and install manually, do:
 
 ``` shell
-git clone https://github.com/coq-community/stalmarck
+git clone https://github.com/coq-community/stalmarck.git
 cd stalmarck
-make   # or make -j <number-of-cores-on-your-machine>
+make   # or make -j <number-of-cores-on-your-machine> 
 make install
 ```
-
-After installation, the included modules are available under
-the `Stalmarck` namespace.
 
 
 ## Documentation

@@ -3,16 +3,19 @@ fullname: Stalmarck
 shortname: stalmarck
 organization: coq-community
 community: true
+travis: true
 
 synopsis: Proof of Stålmarck's algorithm in Coq
 
 description: |
   A two-level approach to prove tautologies using Stålmarck's algorithm in Coq.
 
-paper:
-  doi: 10.1007/3-540-44659-1_24
-  url: https://www.irif.fr/~letouzey/download/stalmarck.ps.gz
-  title: Formalizing Stålmarck's Algorithm in Coq
+doi: 10.1007/3-540-44659-1_24
+
+publications:
+- pub_doi: 10.1007/3-540-44659-1_24
+  pub_url: https://www.irif.fr/~letouzey/download/stalmarck.ps.gz
+  pub_title: Formalizing Stålmarck's Algorithm in Coq
 
 authors:
 - name: Pierre Letouzey
@@ -31,13 +34,14 @@ license:
 plugin: true
 
 supported_coq_versions:
-  text: 8.10 (use the corresponding branch or release for other Coq versions)
-  opam: '{>= "8.10" & < "8.11~"}'
+  text: Coq master (use the corresponding branch or release for other Coq versions)
+  opam: '{= "dev" }'
 
 tested_coq_nix_versions:
-- version_or_url: https://github.com/coq/coq-on-cachix/tarball/v8.10
+- version_or_url: https://github.com/coq/coq-on-cachix/tarball/master
 
 tested_coq_opam_versions:
+- version: 'dev'
 
 namespace: Stalmarck
 
