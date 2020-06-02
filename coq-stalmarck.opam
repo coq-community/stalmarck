@@ -22,7 +22,7 @@ tags: [
   "category:Computer Science/Decision Procedures and Certified Algorithms/Decision procedures"
   "keyword:boolean formula"
   "keyword:tautology checker"
-  "logpath:Stalmarck"
+  "logpath:Stalmarck.Algorithm"
 ]
 authors: [
   "Pierre Letouzey"

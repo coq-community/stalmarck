@@ -3,4 +3,4 @@
  (package coq-stalmarck-tactic)
  (synopsis "Coq tactic based on Stålmarck's algorithm")
  (libraries coq-stalmarck-tactic.plugin)
- (theories Stalmarck))
+ (theories Stalmarck.Algorithm))

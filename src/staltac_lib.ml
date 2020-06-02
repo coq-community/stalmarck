@@ -62,7 +62,7 @@ let stal_constant dir s =
   let id = Id.of_string s in
   try
     EConstr.of_constr (UnivGen.constr_of_monomorphic_global (global_reference_in_absolute_module
-      (DirPath.make (List.map Id.of_string (List.rev ("Stalmarck":: dir)))) id))
+      (DirPath.make (List.map Id.of_string (List.rev ("Stalmarck" :: "Algorithm" :: dir)))) id))
   with _ ->
   try
     EConstr.of_constr (UnivGen.constr_of_monomorphic_global (global_reference_in_absolute_module

@@ -1,4 +1,4 @@
--R theories Stalmarck
+-R theories Stalmarck.Algorithm
 
 theories/BoolAux.v
 theories/LetP.v
