@@ -24,9 +24,9 @@
 A wrapper for the stalmarck tactic *)
 
 Require Export ZArith.
-Require Export normalize.
-Require Export algoTrace.
-Require Export refl.
+From Stalmarck Require Export normalize.
+From Stalmarck Require Export algoTrace.
+From Stalmarck Require Export refl.
 
 Declare ML Module "stal".
 Declare ML Module "staltac_plugin".

@@ -1,0 +1,6 @@
+(coq.theory
+ (name Stalmarck.Tactic)
+ (package coq-stalmarck-tactic)
+ (synopsis "Coq tactic based on Stålmarck's algorithm")
+ (libraries coq-stalmarck-tactic.plugin)
+ (theories Stalmarck))

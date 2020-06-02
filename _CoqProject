@@ -1,4 +1,3 @@
--I src
 -R theories Stalmarck
 
 theories/BoolAux.v
@@ -6,8 +5,6 @@ theories/LetP.v
 theories/OrderedListEq.v
 theories/OrderedListEq_ex.v
 theories/PolyListAux.v
-theories/StalTac.v
-theories/StalTac_ex.v
 theories/addArray.v
 theories/algoDilemma1.v
 theories/algoDotriplet.v
@@ -39,8 +36,3 @@ theories/trace.v
 theories/triplet.v
 theories/unionState.v
 theories/wfArray.v
-
-src/Extract.v
-src/staltac.mlg
-src/staltac_plugin.mlpack
-src/staltac_lib.ml

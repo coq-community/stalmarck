@@ -14,8 +14,8 @@ Makefile.coq.conf
 *.cmxs
 *.cmxa
 *.o
-run.ml
-run.mli
+stal.ml
+stal.mli
 result
 src/staltac.ml
 _build

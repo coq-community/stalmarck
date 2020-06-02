@@ -7,22 +7,20 @@ dev-repo: "git+https://github.com/coq-community/stalmarck.git"
 bug-reports: "https://github.com/coq-community/stalmarck/issues"
 license: "LGPL-2.1-or-later"
 
-synopsis: "Proof of Stålmarck's algorithm in Coq"
-description: """
-A two-level approach to prove tautologies using Stålmarck's algorithm in Coq.
-"""
+synopsis: "Coq tactic based on Stålmarck's algorithm"
 
 build: ["dune" "build" "-p" name "-j" jobs]
 depends: [
   "dune" {>= "2.5"}
   "coq" {>= "8.11" & < "8.12~"}
+  "coq-stalmarck" {= "dev"}
 ]
 
 tags: [
-  "category:Computer Science/Decision Procedures and Certified Algorithms/Decision procedures"
+  "category:Miscellaneous/Extracted Programs/Decision procedures"
   "keyword:boolean formula"
   "keyword:tautology checker"
-  "logpath:Stalmarck"
+  "logpath:Stalmarck.Tactic"
 ]
 authors: [
   "Pierre Letouzey"

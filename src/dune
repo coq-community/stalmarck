@@ -1,6 +1,6 @@
 (library
  (name staltac_plugin)
- (public_name coq-stalmarck.plugin)
+ (public_name coq-stalmarck-tactic.plugin)
  (flags :standard -rectypes -w -3-27-32)
  (modules :standard \ stal)
  (libraries coq.plugins.ltac stal))
@@ -9,7 +9,7 @@
 
 (library
  (name stal)
- (public_name coq-stalmarck.stal)
+ (public_name coq-stalmarck-tactic.stal)
  (modules stal))
 
 (coq.extraction
