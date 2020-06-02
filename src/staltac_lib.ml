@@ -9,7 +9,7 @@ Implementation of the Stalt tactic *)
 
 (* The `Stalt' tactic inspired by the Ring tactic *)
 
-open Run
+open Stal
 open Pp
 open CErrors
 open Util

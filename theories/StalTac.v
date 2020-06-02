@@ -28,6 +28,7 @@ Require Export normalize.
 Require Export algoTrace.
 Require Export refl.
 
+Declare ML Module "stal".
 Declare ML Module "staltac_plugin".
 
 Ltac staltac := intros; repeat pop_prop; stalt.

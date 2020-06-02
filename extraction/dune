@@ -1,0 +1,9 @@
+(ocamllex lexer)
+
+(ocamlyacc parser)
+
+(executable
+ (name main)
+ (public_name stalmarck)
+ (libraries coq-stalmarck.stal unix)
+ (package coq-stalmarck))

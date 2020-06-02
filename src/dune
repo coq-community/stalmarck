@@ -2,11 +2,17 @@
  (name staltac_plugin)
  (public_name coq-stalmarck.plugin)
  (flags :standard -rectypes -w -3-27-32)
- (libraries coq.plugins.ltac))
+ (modules :standard \ stal)
+ (libraries coq.plugins.ltac stal))
 
 (coq.pp (modules staltac))
 
+(library
+ (name stal)
+ (public_name coq-stalmarck.stal)
+ (modules stal))
+
 (coq.extraction
  (prelude Extract)
- (extracted_modules run)
+ (extracted_modules stal)
  (theories Stalmarck))

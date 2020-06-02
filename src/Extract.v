@@ -18,6 +18,4 @@ Require Import Stalmarck.algoRun.
 Require Import ZArith.
 Require Import Extraction.
 
-Definition eqOp := normalize.Eq. (* To circumvent the clash with Datatypes.Eq *)
-
-Extraction "run.ml" run checkTracef zero Pos.of_succ_nat eqOp.
+Extraction "stal.ml" run checkTracef zero Pos.of_succ_nat.

@@ -19,5 +19,5 @@ run.mli
 result
 src/staltac.ml
 _build
-src/.merlin
+.merlin
 *.install
