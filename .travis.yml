@@ -45,6 +45,9 @@ jobs:
   include:
 
   # Test supported versions of Coq via Nix
+  - env:
+    - COQ=8.11
+    <<: *NIX
 
   # Test supported versions of Coq via OPAM
   - env:
