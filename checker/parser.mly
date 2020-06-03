@@ -35,8 +35,6 @@ expression :
   | expression AND expression 	{ Node (ANd,$1,$3) }
   | expression OR expression    { Node (Or,$1,$3) }
   | expression IMPL expression  { Node (Impl,$1,$3) }
-  | expression EQ expression	{ Node (eqOp,$1,$3) }
+  | expression EQ expression	{ Node (Eq0,$1,$3) }
   | NOT expression              { N $2 }
 ;
-
-
