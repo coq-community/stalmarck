@@ -15,4 +15,5 @@
 (coq.extraction
  (prelude Extract)
  (extracted_modules stal)
- (theories Stalmarck.Algorithm))
+; (theories Stalmarck.Algorithm)
+)
