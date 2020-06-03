@@ -14,10 +14,21 @@
 (* 02110-1301 USA                                                     *)
 
 
-Require Import algoRun.
-Require Import ZArith.
-Require Import Extraction.
+(*****************************************************************************)
+(*                                                                           *)
+(*          Stalmarck  : StalTac                                             *)
+(*                                                                           *)
+(*          Pierre Letouzey & Laurent Thery                                  *)
+(*                                                                           *)
+(*****************************************************************************
+A wrapper for the stalmarck tactic *)
 
-Definition eqOp := normalize.Eq. (* To circumvent the clash with Datatypes.Eq *)
+Require Export ZArith.
+From Stalmarck Require Export normalize.
+From Stalmarck Require Export algoTrace.
+From Stalmarck Require Export refl.
 
-Extraction "run.ml" run checkTracef zero Pos.of_succ_nat eqOp.
+Declare ML Module "stal".
+Declare ML Module "staltac_plugin".
+
+Ltac staltac := intros; repeat pop_prop; stalt.
