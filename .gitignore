@@ -8,16 +8,6 @@ Makefile.coq.conf
 *.vio
 *.vos
 *.vok
-*.a
-*.cmi
-*.cmx
-*.cmxs
-*.cmxa
-*.o
-stal.ml
-stal.mli
-result
-src/staltac.ml
 _build
 .merlin
 *.install
