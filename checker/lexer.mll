@@ -3,7 +3,6 @@
 {
 
 open Parser       (* The type token is defined in parser.mli *)
-open Stal
 exception Erreur_parsage of int * int
 let nb_var = ref 0
 let h = Hashtbl.create 103

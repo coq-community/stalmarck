@@ -14,20 +14,8 @@
 (* 02110-1301 USA                                                     *)
 
 
-(*****************************************************************************)
-(*                                                                           *)
-(*          Stalmarck  : StalTac                                             *)
-(*                                                                           *)
-(*          Pierre Letouzey & Laurent Thery                                  *)
-(*                                                                           *)
-(*****************************************************************************
-A wrapper for the stalmarck tactic *)
+From Stalmarck Require Import algoRun.
+Require Import ZArith.
+Require Import Extraction.
 
-Require Export ZArith.
-Require Export normalize.
-Require Export algoTrace.
-Require Export refl.
-
-Declare ML Module "staltac_plugin".
-
-Ltac staltac := intros; repeat pop_prop; stalt.
+Extraction "stal.ml" run checkTracef zero Pos.of_succ_nat.
