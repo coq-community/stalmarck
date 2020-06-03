@@ -14,7 +14,9 @@ language: shell
       echo \"Build triggered by ${TRAVIS_EVENT_TYPE}\"
       export PS4='+ \e[33;1m(\$0 @ line \$LINENO) \$\e[0m '
       set -ex  # -e = exit on failure; -x = trace for debug
+      opam pin remove dune
       opam update -y
+      for DEP in ${LOCAL_DEPS}; do opam pin add ${DEP} . -y -n -k path; done
       opam pin add ${PACKAGE} . -y -n -k path
       opam install ${PACKAGE} -y -j ${NJOBS} --deps-only
       opam config list
@@ -54,3 +56,9 @@ jobs:
     - NJOBS=2
     <<: *OPAM
 
+  - env:
+    - COQ_IMAGE=coqorg/coq:dev
+    - PACKAGE=coq-stalmarck-tactic.dev
+    - LOCAL_DEPS=coq-stalmarck.dev
+    - NJOBS=2
+    <<: *OPAM
