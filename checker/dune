@@ -1,0 +1,14 @@
+(ocamllex lexer)
+
+(ocamlyacc parser)
+
+(executable
+ (name main)
+ (public_name stalmarck)
+ (libraries coq-stalmarck-tactic.stal unix)
+ (package coq-stalmarck-tactic))
+
+(rule
+ (alias runtest)
+ (deps (:input ztwaalf1_be))
+ (action (run %{bin:stalmarck} 1 %{input})))

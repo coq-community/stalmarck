@@ -3,16 +3,19 @@ fullname: Stalmarck
 shortname: stalmarck
 organization: coq-community
 community: true
+travis: true
 
 synopsis: Proof of Stålmarck's algorithm in Coq
 
 description: |
   A two-level approach to prove tautologies using Stålmarck's algorithm in Coq.
 
-paper:
-  doi: 10.1007/3-540-44659-1_24
-  url: https://www.irif.fr/~letouzey/download/stalmarck.ps.gz
-  title: Formalizing Stålmarck's Algorithm in Coq
+doi: 10.1007/3-540-44659-1_24
+
+publications:
+- pub_doi: 10.1007/3-540-44659-1_24
+  pub_url: https://www.irif.fr/~letouzey/download/stalmarck.ps.gz
+  pub_title: Formalizing Stålmarck's Algorithm in Coq
 
 authors:
 - name: Pierre Letouzey
@@ -21,8 +24,8 @@ authors:
   initial: true
 
 maintainers:
-- name: Hugo Herbelin
-  nickname: herbelin
+- name: Karl Palmskog
+  nickname: palmskog
 
 license:
   fullname: GNU Lesser General Public License v2.1 or later
@@ -31,13 +34,14 @@ license:
 plugin: true
 
 supported_coq_versions:
-  text: 8.10 (use the corresponding branch or release for other Coq versions)
-  opam: '{>= "8.10" & < "8.11~"}'
+  text: 8.11 (use the corresponding branch or release for other Coq versions)
+  opam: '{>= "8.11" & < "8.12~"}'
 
 tested_coq_nix_versions:
-- version_or_url: https://github.com/coq/coq-on-cachix/tarball/v8.10
+- version_or_url: '8.11'
 
 tested_coq_opam_versions:
+- version: '8.11'
 
 namespace: Stalmarck
 
@@ -54,20 +58,18 @@ documentation: |
 
   This project is composed of:
 
-  - a proof of correctness of the algorithm as described in 
-    "A Formalization of Stålmarck's Algorithm in Coq", TPHOLs2000.
-
-  - an implementation of the algorithm. With respect to the paper,
-    this implementation is completely functional and can be used inside
-    Coq.
-
-  - a reflected tactic `staltac`, that uses the extracted code to compute
+  - a Coq proof of correctness of the algorithm, as described in the paper
+    [A Formalization of Stålmarck's Algorithm in Coq][paper-link], published
+    in the proceedings of TPHOLs 2000.
+  - an implementation of the algorithm. With respect to the paper, this
+    implementation is completely functional and can be used inside Coq.
+  - a reflected Coq tactic `staltac` that uses the extracted code to compute
     an execution trace; the trace checker is then called inside Coq.
+  - a standalone checker program `stalmarck` which takes as input a formula in
+    textual format and reports whether it could be certifed as a tautology.
 
-  See `algoRun.v` for examples how to use the algorithm inside Coq.
+  See `algoRun.v` for examples how to use the algorithm inside Coq, and
+  see `StalTac_ex.v` for examples how to use the reflected tactic.
 
-  See `StalTac_ex.v` for examples how to use the reflected tactic.
-
-  WARNING: Stålmarck's method is patented and should not be used for commercial
-  applications without the agreement of Prover Technology.
+  [paper-link]: https://www.irif.fr/~letouzey/download/stalmarck.ps.gz
 ---
