@@ -15,7 +15,7 @@ A two-level approach to prove tautologies using Stålmarck's algorithm in Coq.
 build: ["dune" "build" "-p" name "-j" jobs]
 depends: [
   "dune" {>= "2.5"}
-  "coq" {>= "8.12"}
+  "coq" {>= "8.12" & < "8.13"}
 ]
 
 tags: [
