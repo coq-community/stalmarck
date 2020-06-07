@@ -7,7 +7,7 @@ dev-repo: "git+https://github.com/coq-community/stalmarck.git"
 bug-reports: "https://github.com/coq-community/stalmarck/issues"
 license: "LGPL-2.1-or-later"
 
-synopsis: "Coq tactic based on Stålmarck's algorithm"
+synopsis: "Coq tactic for proving tautologies based on Stålmarck's algorithm"
 
 build: ["dune" "build" "-p" name "-j" jobs]
 depends: [
@@ -21,6 +21,7 @@ tags: [
   "category:Miscellaneous/Extracted Programs/Decision procedures"
   "keyword:boolean formula"
   "keyword:tautology checker"
+  "keyword:tactics"
   "logpath:Stalmarck.Tactic"
 ]
 authors: [
