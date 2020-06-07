@@ -35,7 +35,7 @@ A two-level approach to prove tautologies using Stålmarck's algorithm in Coq.
 - License: [GNU Lesser General Public License v2.1 or later](LICENSE)
 - Compatible Coq versions: Coq master (use the corresponding branch or release for other Coq versions)
 - Additional dependencies: none
-- Coq namespace: `Stalmarck`
+- Coq namespace: `Stalmarck.Algorithm`
 - Related publication(s):
   - [Formalizing Stålmarck's Algorithm in Coq](https://www.irif.fr/~letouzey/download/stalmarck.ps.gz) doi:[10.1007/3-540-44659-1_24](https://doi.org/10.1007/3-540-44659-1_24)
 
@@ -63,15 +63,15 @@ make install
 
 This project is composed of:
 
-- a Coq proof of correctness of the algorithm, as described in the paper
+- A Coq proof of correctness of the algorithm, as described in the paper
   [A Formalization of Stålmarck's Algorithm in Coq][paper-link], published
   in the proceedings of TPHOLs 2000.
 - an implementation of the algorithm. With respect to the paper, this
   implementation is completely functional and can be used inside Coq.
-- a reflected Coq tactic `staltac` that uses the extracted code to compute
+- A reflected Coq tactic `staltac` that uses the extracted code to compute
   an execution trace; the trace checker is then called inside Coq.
-- a standalone checker program `stalmarck` which takes as input a formula in
-  textual format and reports whether it could be certifed as a tautology.
+- A standalone checker program `stalmarck` which takes as input a formula in
+  textual format and reports whether it can be certified as a tautology.
 
 See `algoRun.v` for examples how to use the algorithm inside Coq, and
 see `StalTac_ex.v` for examples how to use the reflected tactic.
