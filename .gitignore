@@ -11,3 +11,4 @@ Makefile.coq.conf
 _build
 .merlin
 *.install
+.lia.cache
