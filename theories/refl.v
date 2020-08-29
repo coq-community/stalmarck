@@ -30,7 +30,6 @@ Require Import sTactic.
 Section refl.
 Variable fmap : rNat -> Prop.
 Hypothesis fmapO : fmap zero.
-Require Import Classical.
 (* Standard translation of boolean expression to Propositions, f is the function
  that gives meaning to boolean variables *)
 

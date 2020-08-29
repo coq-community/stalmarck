@@ -25,6 +25,7 @@
 Implement the one step propagation*)
 Require Export memoryImplement.
 Require Export triplet.
+Require Import doTriplet.
 Section algo.
 (* We simply check the applicability of each rule sequentially,
     the test is made with the miniaml element *)
@@ -81,7 +82,6 @@ case (rZDec r' rZFalse); intros Eq12.
 exact (Some (addEqMem Ar p' (rZComp q'))).
 exact None.
 Defined.
-Require Import doTriplet.
 
 Theorem contradictoryEq :
  forall S1 S2 : State, contradictory S1 -> eqState S1 S2 -> contradictory S2.
