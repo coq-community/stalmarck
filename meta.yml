@@ -3,14 +3,14 @@ fullname: Stalmarck
 shortname: stalmarck
 organization: coq-community
 community: true
-travis: true
+action: true
+doi: 10.1007/3-540-44659-1_24
+plugin: true
 
 synopsis: Proof of Stålmarck's algorithm in Coq
 
 description: |
   A two-level approach to prove tautologies using Stålmarck's algorithm in Coq.
-
-doi: 10.1007/3-540-44659-1_24
 
 publications:
 - pub_doi: 10.1007/3-540-44659-1_24
@@ -30,8 +30,6 @@ maintainers:
 license:
   fullname: GNU Lesser General Public License v2.1 or later
   identifier: LGPL-2.1-or-later
-
-plugin: true
 
 supported_coq_versions:
   text: Coq master (use the corresponding branch or release for other Coq versions)
