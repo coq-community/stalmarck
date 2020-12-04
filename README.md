@@ -6,7 +6,7 @@
 [![Zulip][zulip-shield]][zulip-link]
 [![DOI][doi-shield]][doi-link]
 
-[action-shield]: https://github.com/coq-community/stalmarck/workflows/CI/badge.svg?branch=master
+[action-shield]: https://github.com/coq-community/stalmarck/workflows/CI/badge.svg?branch=v8.13
 [action-link]: https://github.com/coq-community/stalmarck/actions?query=workflow%3ACI
 
 [contributing-shield]: https://img.shields.io/badge/contributions-welcome-%23f7931e.svg
@@ -22,8 +22,8 @@
 [doi-shield]: https://zenodo.org/badge/DOI/10.1007/3-540-44659-1_24.svg
 [doi-link]: https://doi.org/10.1007/3-540-44659-1_24
 
-A two-level approach to prove tautologies using Stålmarck's algorithm in Coq.
-
+A two-level approach to prove tautologies using Stålmarck's
+algorithm in Coq.
 
 ## Meta
 
@@ -33,7 +33,7 @@ A two-level approach to prove tautologies using Stålmarck's algorithm in Coq.
 - Coq-community maintainer(s):
   - Karl Palmskog ([**@palmskog**](https://github.com/palmskog))
 - License: [GNU Lesser General Public License v2.1 or later](LICENSE)
-- Compatible Coq versions: Coq master (use the corresponding branch or release for other Coq versions)
+- Compatible Coq versions: Coq 8.13 (use the corresponding branch or release for other Coq versions)
 - Additional dependencies: none
 - Coq namespace: `Stalmarck.Algorithm`
 - Related publication(s):
