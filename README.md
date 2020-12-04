@@ -22,8 +22,8 @@
 [doi-shield]: https://zenodo.org/badge/DOI/10.1007/3-540-44659-1_24.svg
 [doi-link]: https://doi.org/10.1007/3-540-44659-1_24
 
-A two-level approach to prove tautologies using Stålmarck's algorithm in Coq.
-
+A two-level approach to prove tautologies using Stålmarck's
+algorithm in Coq.
 
 ## Meta
 

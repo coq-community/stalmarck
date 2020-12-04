@@ -7,10 +7,10 @@ dev-repo: "git+https://github.com/coq-community/stalmarck.git"
 bug-reports: "https://github.com/coq-community/stalmarck/issues"
 license: "LGPL-2.1-or-later"
 
-synopsis: "Proof of Stålmarck's algorithm in Coq"
+synopsis: "Correctness proof of Stålmarck's algorithm in Coq"
 description: """
-A two-level approach to prove tautologies using Stålmarck's algorithm in Coq.
-"""
+A two-level approach to prove tautologies using Stålmarck's
+algorithm in Coq."""
 
 build: ["dune" "build" "-p" name "-j" jobs]
 depends: [
