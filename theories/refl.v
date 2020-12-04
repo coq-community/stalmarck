@@ -53,7 +53,7 @@ Inductive inExpr (n : rNat) : Expr -> Prop :=
   | inNodeRight :
       forall (i : boolOp) (e1 e2 : Expr),
       inExpr n e2 -> inExpr n (Node i e1 e2).
-Hint Resolve inV inN inNodeLeft inNodeRight : stalmarck.
+Local Hint Resolve inV inN inNodeLeft inNodeRight : stalmarck.
 (* This is of course decidable *)
 
 Definition inExprDec :

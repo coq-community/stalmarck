@@ -53,13 +53,13 @@ Inductive eqConstrState : State -> rZ -> rZ -> Prop :=
   | eqConstrStateContr :
       forall (a b c d : rZ) (S : State),
       eqConstrState S a (rZComp b) -> eqConstrState ((a, b) :: S) c d.
-Hint Resolve eqConstrStateNil eqConstrStateTail eqConstrStateComp1
+Global Hint Resolve eqConstrStateNil eqConstrStateTail eqConstrStateComp1
   eqConstrStateComp2 eqConstrStateComp3 eqConstrStateComp4 eqConstrStateContr : stalmarck.
 
 Theorem eqConstrStateRef : forall (a : rZ) (S : State), eqConstrState S a a.
 intros a L; elim L; auto with stalmarck.
 Qed.
-Hint Resolve eqConstrStateRef : stalmarck.
+Global Hint Resolve eqConstrStateRef : stalmarck.
 
 Theorem eqConstrStateIn :
  forall (a b : rZ) (S : State), In (a, b) S -> eqConstrState S a b.
@@ -67,7 +67,7 @@ intros a b L; elim L; simpl in |- *; auto with stalmarck.
 intros H'; elim H'; auto with stalmarck.
 intros a0 l H' H'0; Elimc H'0; intros H'0; [ rewrite H'0 | idtac ]; auto with stalmarck.
 Qed.
-Hint Resolve eqConstrStateIn : stalmarck.
+Global Hint Resolve eqConstrStateIn : stalmarck.
 
 Theorem eqConstrStateInv :
  forall (a b : rZ) (S : State),
@@ -76,13 +76,13 @@ intros a b S H'; elim H'; auto with stalmarck.
 intros a0 b0 S0; repeat rewrite rZCompInv; auto with stalmarck.
 intros a0 b0 S0; repeat rewrite rZCompInv; auto with stalmarck.
 Qed.
-Hint Resolve eqConstrStateInv : stalmarck.
+Global Hint Resolve eqConstrStateInv : stalmarck.
 
 Theorem eqConstrStateSym :
  forall (a b : rZ) (S : State), eqConstrState S a b -> eqConstrState S b a.
 intros a b S H'; elim H'; auto with stalmarck.
 Qed.
-Hint Immediate eqConstrStateSym : stalmarck.
+Global Hint Immediate eqConstrStateSym : stalmarck.
 
 Theorem eqConstrStateSimpl :
  forall (a b : rZ) (S : State),
@@ -90,7 +90,7 @@ Theorem eqConstrStateSimpl :
 intros a b S H'; auto with stalmarck.
 rewrite <- (rZCompInv a); auto with stalmarck.
 Qed.
-Hint Resolve eqConstrStateSimpl : stalmarck.
+Global Hint Resolve eqConstrStateSimpl : stalmarck.
 
 Theorem eqConstrStateTransConstr :
  forall S : State,
@@ -166,13 +166,13 @@ apply eqStateRzTrans with (b := b0); auto with stalmarck.
 intros a0 b0 c S0 H'0 H'1.
 apply eqStateRzContr with (a := a0); auto with stalmarck.
 Qed.
-Hint Resolve eqStateRzTail : stalmarck.
+Global Hint Resolve eqStateRzTail : stalmarck.
 
 Theorem eqConstrStateCons :
  forall (S : State) (a b : rZ), eqStateRz ((a, b) :: S) a b.
 auto with datatypes stalmarck.
 Qed.
-Hint Resolve eqConstrStateCons : stalmarck.
+Global Hint Resolve eqConstrStateCons : stalmarck.
 
 Theorem eqConstrStateImpeqStateRz :
  forall (S : State) (a b : rZ), eqConstrState S a b -> eqStateRz S a b.
@@ -193,7 +193,7 @@ intros a0 b0 c d S0 H'0 H'1.
 apply eqStateRzContr with (a := b0); auto with stalmarck.
 apply eqStateRzTrans with (b := a0); auto with stalmarck.
 Qed.
-Hint Immediate eqStateRzPImpeqConstrState eqConstrStateImpeqStateRz : stalmarck.
+Global Hint Immediate eqStateRzPImpeqConstrState eqConstrStateImpeqStateRz : stalmarck.
 (* To check equality for eqConstrState is quite direct *)
 
 Definition eqConstrStateDec :

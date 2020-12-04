@@ -114,7 +114,7 @@ Inductive doTripletP (S : State) : triplet -> State -> Prop :=
       forall p q r : rZ,
       eqStateRz S r rZFalse ->
       doTripletP S (Triplet rEq p q r) (addEq (p, rZComp q) S).
-Hint Resolve doTripletAndPpmq doTripletAndPpmr doTripletAndPqr
+Global Hint Resolve doTripletAndPpmq doTripletAndPpmr doTripletAndPqr
   doTripletAndPqmr doTripletAndPpT doTripletAndPqT doTripletAndPqF
   doTripletAndPrT doTripletAndPrF doTripletEqPpq doTripletEqPpmq
   doTripletEqPpr doTripletEqPpmr doTripletEqPqr doTripletEqPqmr
