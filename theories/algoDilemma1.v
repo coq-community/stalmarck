@@ -108,7 +108,7 @@ Definition dilemma1 (f : list rZ -> rArray vM -> mbDT)
 (* To speedup Coq *)
 Opaque addEqMem.
 
-Hint Resolve f_equal : core.
+Local Hint Resolve f_equal : core.
 
 Theorem dilemma1Correct :
  forall (f : list rZ -> rArray vM -> mbDT) (Ar : rArray vM) 

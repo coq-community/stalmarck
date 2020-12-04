@@ -61,14 +61,14 @@ Definition evalZ (v : rZ) : rZ := samePolRz v (evalN (valRz v)).
 Theorem EqrZComp : forall a b : rZ, a = b -> rZComp a = rZComp b.
 intros a b H'; rewrite H'; auto with stalmarck.
 Qed.
-Hint Resolve EqrZComp : stalmarck.
+Local Hint Resolve EqrZComp : stalmarck.
 (* We can't be smaller than zero *)
 
 Theorem notrltzero : forall r : rZ, ~ rVlt r zero.
 intros r; red in |- *; intros H'; absurd (rlt (valRz r) (valRz r)); auto with stalmarck.
 apply rltTransRnext2 with (m := zero); auto with stalmarck.
 Qed.
-Hint Resolve notrltzero : stalmarck.
+Local Hint Resolve notrltzero : stalmarck.
 (* True evaluate to true *)
 
 Theorem evalZTrue : evalZ rZTrue = rZTrue.
