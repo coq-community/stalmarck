@@ -781,7 +781,7 @@ Theorem eqNotltRz : forall a b : rZ, rZlt a b -> a <> b.
 intros a b H'; red in |- *; intros H'0; absurd (rZlt a b); auto with stalmarck.
 rewrite H'0; auto with stalmarck.
 Qed.
-Hint Resolve eqNotltRz : stalmarck.
+Local Hint Resolve eqNotltRz : stalmarck.
 
 Theorem evalZMin :
  forall (Ar : rArray vM) (War : wellFormedArray Ar) (S : State),

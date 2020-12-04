@@ -40,7 +40,7 @@ Inductive stalmarckP : State -> list triplet -> State -> Prop :=
   | stalmarckTrans :
       forall (S1 S2 S3 : State) (L : list triplet),
       stalmarckP S1 L S2 -> stalmarckP S2 L S3 -> stalmarckP S1 L S3.
-Hint Resolve stalmarckPref : stalmarck.
+Global Hint Resolve stalmarckPref : stalmarck.
 
 Definition boolDec : forall a b : bool, {a = b} + {a <> b}.
 intros a b; case a; case b; auto with stalmarck; right; red in |- *; intros; discriminate.

@@ -65,7 +65,7 @@ Inductive Olist : list A -> Prop :=
   | OlistCons :
       forall (a b : A) (L : list A),
       Olist (b :: L) -> ltA a b -> Olist (a :: b :: L).
-Hint Resolve OlistNil OlistOne OlistCons : core.
+Local Hint Resolve OlistNil OlistOne OlistCons : core.
 (* Inversion lemma *)
 
 Theorem OlistInv : forall (a : A) (L : list A), Olist (a :: L) -> Olist L.
@@ -134,7 +134,7 @@ Qed.
 Inductive InEq : A -> list A -> Prop :=
   | InEqHead : forall (a b : A) (L : list A), eqA a b -> InEq a (b :: L)
   | InEqSkip : forall (a b : A) (L : list A), InEq a L -> InEq a (b :: L).
-Hint Resolve InEqHead InEqSkip : core.
+Local Hint Resolve InEqHead InEqSkip : core.
 (* Is it decidable *)
 
 Definition InEqDec :
@@ -198,7 +198,7 @@ Inductive InclEq : list A -> list A -> Prop :=
     InclEqDef :
       forall L1 L2 : list A,
       (forall a : A, InEq a L1 -> InEq a L2) -> InclEq L1 L2.
-Hint Resolve InclEqDef : core.
+Local Hint Resolve InclEqDef : core.
 (*  Weakening *)
 
 Theorem inclImpImplEq : forall L1 L2 : list A, incl L1 L2 -> InclEq L1 L2.
@@ -218,14 +218,14 @@ intros L.
 apply InclEqDef; auto.
 intros a H'; inversion H'.
 Qed.
-Hint Resolve InclEqNil : core.
+Local Hint Resolve InclEqNil : core.
 (* Reflexivity *)
 
 Theorem InclEqRef : forall L : list A, InclEq L L.
 intros L.
 apply InclEqDef; auto.
 Qed.
-Hint Resolve InclEqRef : core.
+Local Hint Resolve InclEqRef : core.
 (* Transitivity *)
 
 Theorem InclEqTrans : transitive (list A) InclEq.
@@ -242,7 +242,7 @@ apply InclEqDef; auto.
 intros a0 H'1; inversion H'1; auto.
 apply InEqComp with (a := a); auto.
 Qed.
-Hint Resolve InclEqCons : core.
+Local Hint Resolve InclEqCons : core.
 (* Equality with respect to eqA *)
 
 Inductive EqL : list A -> list A -> Prop :=
@@ -250,7 +250,7 @@ Inductive EqL : list A -> list A -> Prop :=
   | EqLCons :
       forall (a b : A) (L1 L2 : list A),
       eqA a b -> EqL L1 L2 -> EqL (a :: L1) (b :: L2).
-Hint Resolve EqLNil EqLCons : core.
+Local Hint Resolve EqLNil EqLCons : core.
 (* InEq is compatible with eqL *)
 
 Theorem EqLInv :
@@ -265,7 +265,7 @@ Qed.
 Theorem EqLRef : forall L : list A, EqL L L.
 intros L; elim L; auto.
 Qed.
-Hint Resolve EqLRef : core.
+Local Hint Resolve EqLRef : core.
 (* Transitivity *)
 
 Theorem EqLTrans : forall L : list A, transitive (list A) EqL.
@@ -491,7 +491,7 @@ Inductive append : list A -> list A -> list A -> Prop :=
       forall (a b : A) (L1 L2 L3 : list A),
       ltA b a ->
       append (a :: L1) L2 L3 -> append (a :: L1) (b :: L2) (b :: L3).
-Hint Resolve appendNil1 appendNil2 appendEqA appendLtA1 appendLtA2 : core.
+Local Hint Resolve appendNil1 appendNil2 appendEqA appendLtA1 appendLtA2 : core.
 (* If the two list are disjoint it does not matter how we do the append *)
 
 Theorem appendCom :
@@ -712,7 +712,7 @@ intros a1 l1 H'0.
 case (ltADec a a1); intros s1; auto.
 Casec s1; intros s1; auto.
 Qed.
-Hint Resolve appendfAppend : core.
+Local Hint Resolve appendfAppend : core.
 (* and now we simply lift of the propertiers of append to append f *)
 
 Theorem appendfIncl1 :
@@ -850,7 +850,7 @@ apply eqATrans with a1; auto.
 apply appendEqA; auto.
 apply eqATrans with a0; auto.
 Qed.
-Hint Resolve fappendfAppend : core.
+Local Hint Resolve fappendfAppend : core.
 (* We lift the properties as usual *)
 
 Theorem fappendfIncl1 :
@@ -1477,7 +1477,7 @@ apply interLtA2; auto.
 apply interEqA; auto.
 apply interEqA; auto.
 Qed.
-Hint Resolve interfProp1 : core.
+Local Hint Resolve interfProp1 : core.
 (* Now we can lift the properties *)
 
 Theorem interfIncl1 : forall L1 L2 : list A, InclEq (interf L1 L2) L1.

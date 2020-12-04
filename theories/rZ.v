@@ -131,7 +131,7 @@ Theorem rltNotRefl : forall a : rNat, ~ rlt a a.
 intros a; unfold rlt in |- *; rewrite Pcompare_refl; red in |- *; intros;
  discriminate.
 Qed.
-Hint Resolve rltNotRefl : stalmarck.
+Global Hint Resolve rltNotRefl : stalmarck.
 
 Theorem rnextRlt : forall m : rNat, rlt m (rnext m).
 intros m; unfold rlt, rnext in |- *.
@@ -140,12 +140,12 @@ rewrite Pplus_one_succ_r; rewrite nat_of_P_plus_morphism;
  unfold nat_of_P in |- *; simpl in |- *; rewrite plus_comm; 
  simpl in |- *; auto with arith stalmarck.
 Qed.
-Hint Resolve rnextRlt : stalmarck.
+Global Hint Resolve rnextRlt : stalmarck.
 
 Theorem rnextNotZero : forall m : rNat, rlt zero (rnext m).
 intros m; unfold nat_of_P, rnext, rlt in |- *; elim m; simpl in |- *; auto with stalmarck.
 Qed.
-Hint Resolve rnextNotZero : stalmarck.
+Global Hint Resolve rnextNotZero : stalmarck.
 (* Maximun of two rNat *)
 
 Definition rmax : rNat -> rNat -> rNat.
@@ -217,7 +217,7 @@ rewrite Rlt2 in H'; auto with stalmarck.
 apply rltTrans with (y := n); auto with stalmarck.
 rewrite <- Rlt1; auto with stalmarck.
 Qed.
-Hint Resolve rnextMono : stalmarck.
+Global Hint Resolve rnextMono : stalmarck.
 
 Lemma rltRmaxLeft : forall n m : rNat, rlt n (rnext (rmax n m)).
 intros n m; unfold rmax in |- *; case (rltDec n m); auto with stalmarck; intros Rlt0.
@@ -230,7 +230,7 @@ Casec Rlt0; intros Rlt0; auto with stalmarck.
 apply rltTrans with (y := n); auto with stalmarck.
 rewrite <- Rlt0; auto with stalmarck.
 Qed.
-Hint Resolve rltRmaxLeft rltRmaxRight : stalmarck.
+Global Hint Resolve rltRmaxLeft rltRmaxRight : stalmarck.
 
 Theorem rltAntiSym : forall a b : rNat, rlt a b -> ~ rlt b a.
 intros a b H'; red in |- *; intros H'0; absurd (rlt a a); auto with stalmarck.
@@ -262,24 +262,24 @@ Definition rZlt (a b : rZ) := rlt (valRz a) (valRz b).
 (* Equality on rZ, two elements sont eqRz if they have same rNat *)
 
 Definition eqRz (a b : rZ) := valRz a = valRz b.
-Hint Unfold eqRz rZlt : stalmarck.
+Global Hint Unfold eqRz rZlt : stalmarck.
 (* Basic properties of eqRz and rZlt *)
 
 Theorem eqrZRefl : reflexive rZ eqRz.
 red in |- *; intros a; case a; simpl in |- *; auto with stalmarck.
 Qed.
-Hint Resolve eqrZRefl : stalmarck.
+Global Hint Resolve eqrZRefl : stalmarck.
 
 Theorem eqrZSym : symmetric rZ eqRz.
 red in |- *; intros a b; case a; case b; simpl in |- *; auto with stalmarck.
 Qed.
-Hint Resolve eqrZSym : stalmarck.
+Global Hint Resolve eqrZSym : stalmarck.
 
 Theorem eqrZTrans : transitive rZ eqRz.
 red in |- *; auto with stalmarck.
 unfold eqRz in |- *; intros x y z H'; rewrite H'; auto with stalmarck.
 Qed.
-Hint Resolve eqrZTrans : stalmarck.
+Global Hint Resolve eqrZTrans : stalmarck.
 
 Definition rZltDec : forall a b : rZ, {rZlt a b} + {rZlt b a \/ eqRz a b}.
 intros a b; exact (rltDec (valRz a) (valRz b)).
@@ -299,34 +299,34 @@ Qed.
 Theorem rZltDef2 : forall a b : rZ, rZlt a b -> ~ eqRz a b.
 intros a b H; unfold eqRz in |- *; apply rltDef2; auto with stalmarck.
 Qed.
-Hint Resolve rZltDef2 : stalmarck.
+Global Hint Resolve rZltDef2 : stalmarck.
 
 Theorem rZltTrans : transitive rZ rZlt.
 red in |- *.
 intros x y z H' H'0; red in |- *; apply rltTrans with (y := valRz y); auto with stalmarck.
 Qed.
-Hint Resolve rZltTrans : stalmarck.
+Global Hint Resolve rZltTrans : stalmarck.
 
 Theorem rZltNotRefl : forall a : rZ, ~ rZlt a a.
 intros a; unfold rZlt in |- *; auto with stalmarck.
 Qed.
-Hint Resolve rZltNotRefl : stalmarck.
+Global Hint Resolve rZltNotRefl : stalmarck.
 
 Theorem rZltAntiSym : forall a b : rZ, rZlt a b -> ~ rZlt b a.
 intros a b H'; red in |- *; intros H'0; absurd (rZlt a a); auto with stalmarck.
 apply rZltTrans with (y := b); auto with stalmarck.
 Qed.
-Hint Resolve rZltAntiSym : stalmarck.
+Global Hint Resolve rZltAntiSym : stalmarck.
 
 Theorem NotEqComp : forall a : rZ, a <> rZComp a.
 intros a; case a; red in |- *; intros H'; discriminate.
 Qed.
-Hint Resolve NotEqComp : stalmarck.
+Global Hint Resolve NotEqComp : stalmarck.
 
 Theorem eqRzComp : forall a : rZ, eqRz a (rZComp a).
 intros a; case a; auto with stalmarck.
 Qed.
-Hint Resolve eqRzComp : stalmarck.
+Global Hint Resolve eqRzComp : stalmarck.
 
 Theorem valRzComp : forall a : rZ, valRz (rZComp a) = valRz a.
 intros a; case a; auto with stalmarck.
@@ -335,7 +335,7 @@ Qed.
 Theorem rZCompInvol : forall a : rZ, a = rZComp (rZComp a).
 intros a; case a; simpl in |- *; auto with stalmarck.
 Qed.
-Hint Resolve rZCompInvol : stalmarck.
+Global Hint Resolve rZCompInvol : stalmarck.
 
 Theorem rZCompEq : forall a b : rZ, rZComp a = rZComp b -> a = b.
 intros a b; case a; case b; simpl in |- *; auto with stalmarck; intros a' b' H; inversion H;
@@ -461,7 +461,7 @@ Theorem rVltrZComp :
  forall (a : rZ) (b : rNat), rVlt a b -> rVlt (rZComp a) b.
 intros a b; case a; simpl in |- *; auto with stalmarck.
 Qed.
-Hint Resolve rVltrZComp : stalmarck.
+Global Hint Resolve rVltrZComp : stalmarck.
 
 (* Given a:rZ and b:rZ produces an rZ that has the same sign than
    sign(a)*sign(b) but the same rNat than b *)

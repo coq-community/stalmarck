@@ -35,7 +35,7 @@ Inductive unionStateP : State -> State -> State -> Prop :=
       (forall S4 : State,
        inclState S1 S4 -> inclState S2 S4 -> inclState S3 S4) ->
       unionStateP S1 S2 S3.
-Hint Resolve unionStatePDef : stalmarck.
+Global Hint Resolve unionStatePDef : stalmarck.
 
 Theorem unionStatePRef : forall S1 : State, unionStateP S1 S1 S1.
 auto with stalmarck.
@@ -173,14 +173,14 @@ Theorem unionStateInclL :
 intros S1 S2.
 destruct (unionStatePunionState S1 S2); auto with stalmarck.
 Qed.
-Hint Resolve unionStateInclL : stalmarck.
+Global Hint Resolve unionStateInclL : stalmarck.
 
 Theorem unionStateInclR :
  forall S1 S2 : State, inclState S2 (unionState S1 S2).
 intros S1 S2.
 destruct (unionStatePunionState S1 S2); auto with stalmarck.
 Qed.
-Hint Resolve unionStateInclR : stalmarck.
+Global Hint Resolve unionStateInclR : stalmarck.
 
 Theorem unionStateMin :
  forall S1 S2 S3 : State,
@@ -188,13 +188,13 @@ Theorem unionStateMin :
 intros S1 S2 S3 H' H'0.
 destruct (unionStatePunionState S1 S2); auto with stalmarck.
 Qed.
-Hint Resolve unionStateMin : stalmarck.
+Global Hint Resolve unionStateMin : stalmarck.
 
 Theorem unionStateSym :
  forall S1 S2 : State, eqState (unionState S1 S2) (unionState S2 S1).
 intros S1 S2; red in |- *; split; auto with stalmarck.
 Qed.
-Hint Immediate unionStateSym : stalmarck.
+Global Hint Immediate unionStateSym : stalmarck.
 
 Theorem unionStateEq :
  forall S1 S2 S3 S4 : State,
@@ -208,7 +208,7 @@ apply unionStateMin; auto with stalmarck.
 apply inclStateEqStateComp with (S1 := S1) (S3 := unionState S1 S2); auto with stalmarck.
 apply inclStateEqStateComp with (S1 := S2) (S3 := unionState S1 S2); auto with stalmarck.
 Qed.
-Hint Resolve unionStateEq : stalmarck.
+Global Hint Resolve unionStateEq : stalmarck.
 
 Theorem unionStateAssoc :
  forall S1 S2 S3 : State,
@@ -224,4 +224,4 @@ apply unionStateMin; auto with stalmarck.
 apply inclStateTrans with (S2 := unionState S2 S3); auto with stalmarck.
 apply inclStateTrans with (S2 := unionState S2 S3); auto with stalmarck.
 Qed.
-Hint Resolve unionStateMin : stalmarck.
+Global Hint Resolve unionStateMin : stalmarck.
