@@ -43,7 +43,7 @@ supported_coq_versions:
   opam: '{>= "8.13" & < "8.14~"}'
 
 tested_coq_nix_versions:
-- version_or_url: https://github.com/coq/coq-on-cachix/tarball/v8.13
+- version_or_url: '8.13'
 
 tested_coq_opam_versions:
 - version: '8.13'
