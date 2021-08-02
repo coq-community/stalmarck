@@ -39,7 +39,7 @@ Elimc H'; intros a0 E.
 apply eqStateRzPImpeqConstrState.
 apply eqStateRzContr with (a := a0); auto with stalmarck.
 Qed.
-Global Hint Resolve contradictoryAddEq : stalmarck.
+#[export] Hint Resolve contradictoryAddEq : stalmarck.
 
 Theorem prodRzInL :
  forall (a b : rZ) (L1 L2 : list rZ), In (a, b) (prodRz L1 L2) -> In a L1.
@@ -585,7 +585,7 @@ Fixpoint ResTriplets (L : list triplet) : list rNat :=
 Theorem zeroInL : forall L : list triplet, In zero (ResTriplets L).
 intros L; elim L; simpl in |- *; auto with datatypes stalmarck.
 Qed.
-Global Hint Resolve zeroInL : stalmarck.
+#[export] Hint Resolve zeroInL : stalmarck.
 
 Theorem ResTripletInResTriplets :
  forall (t : triplet) (L : list triplet),

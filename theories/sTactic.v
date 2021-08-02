@@ -24,7 +24,7 @@
 *****************************************************************************
 *)
 
-Global Set Asymmetric Patterns.
+#[export] Set Asymmetric Patterns.
 
 (* Some simple tactics *)
 

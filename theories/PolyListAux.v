@@ -84,4 +84,4 @@ intros H'1; case H'0; auto with arith.
 intros H'2; case H'1; auto.
 Qed.
 End Auxrem.
-Global Hint Resolve remSizeLess remEq remIn remNotIn : core.
+#[export] Hint Resolve remSizeLess remEq remIn remNotIn : core.

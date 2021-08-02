@@ -82,7 +82,7 @@ Theorem realizeTripletNil : forall f : rNat -> bool, realizeTriplets f nil.
 intros f; red in |- *.
 intros t H'; inversion H'.
 Qed.
-Global Hint Resolve realizeTripletNil : stalmarck.
+#[export] Hint Resolve realizeTripletNil : stalmarck.
 
 Theorem realizeTripletCons :
  forall (f : rNat -> bool) (t : triplet) (L : list triplet),
@@ -90,14 +90,14 @@ Theorem realizeTripletCons :
 intros f t L H' H'0; red in |- *; simpl in |- *.
 intros t0 H'1; elim H'1; intros H'2; auto with stalmarck; rewrite <- H'2; auto with stalmarck.
 Qed.
-Global Hint Resolve realizeTripletCons : stalmarck.
+#[export] Hint Resolve realizeTripletCons : stalmarck.
 
 Theorem realizeTripletIncl :
  forall (f : rNat -> bool) (L1 L2 : list triplet),
  realizeTriplets f L1 -> incl L2 L1 -> realizeTriplets f L2.
 intros f L1 L2 H'0 H'1; red in |- *; auto with stalmarck.
 Qed.
-Global Hint Resolve realizeTripletIncl : stalmarck.
+#[export] Hint Resolve realizeTripletIncl : stalmarck.
 
 (* An equation is valid if every f that realizes f and f(rZrue)=true
    then f(a)=f(b) *)

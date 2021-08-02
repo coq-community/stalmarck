@@ -48,7 +48,7 @@ Inductive evalTrace : State -> Trace -> State -> Prop :=
       evalTrace (addEq (a, rZComp b) S1) t2 S3 ->
       eqState (interState S2 S3) S4 ->
       evalTrace S1 (dilemmaTrace a b t1 t2) S4.
-Global Hint Resolve emptyTraceEval tripletTraceEval : stalmarck.
+#[export] Hint Resolve emptyTraceEval tripletTraceEval : stalmarck.
 
 Theorem evalTraceEq :
  forall (S1 S2 : State) (t : Trace),
