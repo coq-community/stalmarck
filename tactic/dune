@@ -3,7 +3,7 @@
  (public_name coq-stalmarck-tactic.plugin)
  (flags :standard -rectypes -w -3-27-32)
  (modules :standard \ stal)
- (libraries coq.plugins.ltac stal))
+ (libraries coq-core.plugins.ltac stal))
 
 (coq.pp (modules staltac))
 
