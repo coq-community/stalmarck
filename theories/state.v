@@ -43,7 +43,7 @@ Inductive eqStateRz : State -> rZ -> rZ -> Prop :=
   | eqStateRzContr :
       forall (a b c : rZ) (S : State),
       eqStateRz S a (rZComp a) -> eqStateRz S b c.
-Global Hint Resolve eqStateRzRef eqStateRzIn eqStateRzInv : stalmarck.
+#[export] Hint Resolve eqStateRzRef eqStateRzIn eqStateRzInv : stalmarck.
 (* equality is compatible with the complement *)
 
 Theorem eqStateInvInv :
@@ -69,13 +69,13 @@ Lemma eqStateContrSimpl1 :
 intros S p q H'.
 apply eqStateInvInv; rewrite rZCompInv; auto with stalmarck.
 Qed.
-Global Hint Resolve eqStateContrSimpl1 : stalmarck.
-Global Hint Immediate eqStateRzSym eqStateInvInv : stalmarck.
+#[export] Hint Resolve eqStateContrSimpl1 : stalmarck.
+#[export] Hint Immediate eqStateRzSym eqStateInvInv : stalmarck.
 
 (* Adding an equation to a state *)
 
 Definition addEq (p : rZ * rZ) (S : State) : State := p :: S.
-Global Hint Unfold addEq : stalmarck.
+#[export] Hint Unfold addEq : stalmarck.
 (* The added equation is valid *)
 
 Lemma eqStateaddEq1 :
@@ -95,7 +95,7 @@ apply eqStateRzTrans with (b := b); auto with stalmarck.
 intros a b c S H' H'0 a0 b0.
 apply eqStateRzContr with (a := a); auto with stalmarck.
 Qed.
-Global Hint Resolve eqStateaddEq1 eqStateaddEq2 : stalmarck.
+#[export] Hint Resolve eqStateaddEq1 eqStateaddEq2 : stalmarck.
 
 (* We define the fact of being included *)
 
@@ -105,7 +105,7 @@ Definition inclState (S1 S2 : State) : Prop :=
 Theorem inclStateRef : forall S : State, inclState S S.
 red in |- *; auto with stalmarck.
 Qed.
-Global Hint Resolve inclStateRef : stalmarck.
+#[export] Hint Resolve inclStateRef : stalmarck.
 (*Simpler version *)
 
 Theorem inclStateIn :
@@ -127,12 +127,12 @@ Definition eqState (S1 S2 : State) : Prop :=
 Theorem eqStateRef : forall S : State, eqState S S.
 intros; red in |- *; split; auto with stalmarck.
 Qed.
-Global Hint Resolve eqStateRef : stalmarck.
+#[export] Hint Resolve eqStateRef : stalmarck.
 
 Theorem eqStateSym : forall S1 S2 : State, eqState S1 S2 -> eqState S2 S1.
 intros S1 S2 H'; elim H'; red in |- *; auto with stalmarck.
 Qed.
-Global Hint Immediate eqStateSym : stalmarck.
+#[export] Hint Immediate eqStateSym : stalmarck.
 
 Theorem eqStateInv :
  forall (S1 S2 : State) (a b : rZ),
@@ -144,7 +144,7 @@ Theorem addEqInclState :
  forall (S : State) (a b : rZ), inclState S (addEq (a, b) S).
 intros S a b; red in |- *; auto with stalmarck.
 Qed.
-Global Hint Resolve addEqInclState : stalmarck.
+#[export] Hint Resolve addEqInclState : stalmarck.
 
 Theorem inclStateTrans :
  forall S1 S2 S3 : State,
@@ -172,7 +172,7 @@ Theorem addEqInclState2 :
 intros S a b c d.
 apply inclStateTrans with (S2 := addEq (c, d) S); auto with stalmarck.
 Qed.
-Global Hint Resolve addEqInclState2 : stalmarck.
+#[export] Hint Resolve addEqInclState2 : stalmarck.
 
 Theorem inclStateAddEqInv :
  forall (p q : rZ) (S1 S2 : State),
@@ -192,7 +192,7 @@ intros a b c S H'2 H'3 H'4 H'5 H'6.
 apply eqStateRzContr with (a := a); auto with stalmarck.
 exists (addEq (p0, q0) S1); auto with stalmarck.
 Qed.
-Global Hint Resolve inclStateAddEqInv : stalmarck.
+#[export] Hint Resolve inclStateAddEqInv : stalmarck.
 
 Theorem inclStateAddEq :
  forall (S1 S2 : State) (a b : rZ),
@@ -204,14 +204,14 @@ apply eqStateRzIn; auto with stalmarck.
 simpl in |- *.
 auto with stalmarck.
 Qed.
-Global Hint Resolve inclStateAddEq : stalmarck.
+#[export] Hint Resolve inclStateAddEq : stalmarck.
 
 Theorem eqStateAddEq :
  forall (S1 S2 : State) (a b : rZ),
  eqState S1 S2 -> eqState (addEq (a, b) S1) (addEq (a, b) S2).
 intros S1 S2 a b H'; inversion H'; red in |- *; auto with stalmarck.
 Qed.
-Global Hint Resolve eqStateAddEq : stalmarck.
+#[export] Hint Resolve eqStateAddEq : stalmarck.
 
 Theorem inclStateEqStateComp :
  forall S1 S2 S3 S4 : State,
@@ -240,7 +240,7 @@ apply eqStateRzTrans with (b := b'); auto with stalmarck.
 apply eqStateRzTrans with (b := a); auto with stalmarck.
 apply eqStateRzTrans with (b := b); auto with stalmarck.
 Qed.
-Global Hint Resolve addEqComp : stalmarck.
+#[export] Hint Resolve addEqComp : stalmarck.
 
 (* A valuation function realizes a state if all its basic equations are true *)
 
@@ -251,7 +251,7 @@ Theorem realizeStateNil : forall f : rNat -> bool, realizeState f nil.
 intros f; red in |- *; simpl in |- *.
 intros i j H'; elim H'.
 Qed.
-Global Hint Resolve realizeStateNil : stalmarck.
+#[export] Hint Resolve realizeStateNil : stalmarck.
 
 Theorem rZEvalCompInv :
  forall (a : rZ) (f : rNat -> bool), rZEval f (rZComp a) = negb (rZEval f a).
@@ -297,7 +297,7 @@ intros i0 j0 H'1; elim H'1; intros H'2; clear H'1; [ inversion H'2 | idtac ];
 rewrite <- H1; auto with stalmarck.
 rewrite <- H0; auto with stalmarck.
 Qed.
-Global Hint Resolve realizeStateAddEq : stalmarck.
+#[export] Hint Resolve realizeStateAddEq : stalmarck.
 
 Theorem realizeStateIncl :
  forall (f : rNat -> bool) (S1 S2 : State),
@@ -339,7 +339,7 @@ rewrite rZEvalCompInv; case (rZEval f x); auto with stalmarck; red in |- *; intr
  discriminate.
 apply realizeStateInv with (S := S); auto with stalmarck.
 Qed.
-Global Hint Resolve contradictoryNotRealize : stalmarck.
+#[export] Hint Resolve contradictoryNotRealize : stalmarck.
 
 Theorem ContrIncl :
  forall S : State, inclState S ((rZPlus zero, rZMinus zero) :: nil).
@@ -347,4 +347,4 @@ intros S; red in |- *; auto with stalmarck.
 intros i j H'.
 apply eqStateRzContr with (a := rZPlus zero); auto with datatypes stalmarck.
 Qed.
-Global Hint Resolve ContrIncl : stalmarck.
+#[export] Hint Resolve ContrIncl : stalmarck.

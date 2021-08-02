@@ -58,7 +58,7 @@ intros n; red in |- *.
 intros x y H'; red in H'; red in |- *; auto with stalmarck.
 intros m H'0; apply sym_eq; auto with stalmarck.
 Qed.
-Global Hint Resolve equalBeforeSym : stalmarck.
+#[export] Hint Resolve equalBeforeSym : stalmarck.
 
 (* same value as f  for element smaller than m, s otherwise *)
 
@@ -85,7 +85,7 @@ apply rltDef2; auto with stalmarck.
 intros H'1; absurd (rlt n p); auto with stalmarck.
 apply rltAntiSym; auto with stalmarck.
 Qed.
-Global Hint Resolve equalBeforeExtend : stalmarck.
+#[export] Hint Resolve equalBeforeExtend : stalmarck.
 
 Lemma extendFunrZEvalExact :
  forall (g : rNat -> bool) (n : rNat) (p : rZ) (s : bool),
@@ -157,7 +157,7 @@ generalize H'; case r0; simpl in |- *; auto with stalmarck; intros r3 H'0; rewri
 apply rltTransRnext1 with (m := rmax r3 (valRz r1)); auto with stalmarck.
 apply rltTransRnext1 with (m := rmax r3 (valRz r1)); auto with stalmarck.
 Qed.
-Global Hint Resolve equalBeforeTEval : stalmarck.
+#[export] Hint Resolve equalBeforeTEval : stalmarck.
 (* Only values under maxVarTriplets are important for realizability *)
 
 Lemma supportTriplets :
@@ -179,7 +179,7 @@ lapply H'; clear H';
 apply equalBeforeLt with (2 := H'1); auto with stalmarck.
 red in |- *; red in H'0; auto with datatypes stalmarck.
 Qed.
-Global Hint Resolve supportTriplets : stalmarck.
+#[export] Hint Resolve supportTriplets : stalmarck.
 
 Theorem inLt :
  forall (e : rExpr) (n : rNat), inRExpr n e -> rlt n (rnext (maxVar e)).

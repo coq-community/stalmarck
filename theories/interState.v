@@ -232,7 +232,7 @@ apply eqConstrStateImpeqStateRz.
 apply stripRzDecProp2 with (S2 := prodRz (stripRz S1) (stripRz S1)); auto with stalmarck.
 apply stripRzDecProp1 with (S1 := S2); auto with stalmarck.
 Qed.
-Global Hint Resolve interMemInL : stalmarck.
+#[export] Hint Resolve interMemInL : stalmarck.
 
 Theorem interMemInR : forall S1 S2 : State, inclState (interState S1 S2) S2.
 intros S1 S2; unfold interState in |- *.
@@ -245,7 +245,7 @@ apply
   with (S2 := stripRzDec S1 (prodRz (stripRz S1) (stripRz S1))); 
  auto with stalmarck.
 Qed.
-Global Hint Resolve interMemInR : stalmarck.
+#[export] Hint Resolve interMemInR : stalmarck.
 
 Theorem interMemEqStateRz :
  forall (S1 S2 : State) (a b : rZ),
@@ -273,7 +273,7 @@ intros S1 S2 S3 H' H'0.
 assert (H'2 := interMemProp S1 S2).
 apply (interStatePIncl S1 S2); auto with stalmarck.
 Qed.
-Global Hint Resolve interMemMin : stalmarck.
+#[export] Hint Resolve interMemMin : stalmarck.
 
 Theorem interStateEq :
  forall S1 S2 S3 S4 : State,
@@ -285,13 +285,13 @@ apply inclStateEqStateComp with (S1 := interState S1 S2) (S3 := S2); auto with s
 apply inclStateEqStateComp with (S1 := interState S3 S4) (S3 := S3); auto with stalmarck.
 apply inclStateEqStateComp with (S1 := interState S3 S4) (S3 := S4); auto with stalmarck.
 Qed.
-Global Hint Resolve interStateEq : stalmarck.
+#[export] Hint Resolve interStateEq : stalmarck.
 
 Theorem interStateSym :
  forall S1 S2 : State, eqState (interState S1 S2) (interState S2 S1).
 red in |- *; split; auto with stalmarck.
 Qed.
-Global Hint Immediate interStateSym : stalmarck.
+#[export] Hint Immediate interStateSym : stalmarck.
 
 Theorem interAssoc :
  forall S1 S2 S3 : State,
@@ -307,22 +307,22 @@ apply inclStateTrans with (S2 := interState S1 S2); auto with stalmarck.
 apply interMemMin; auto with stalmarck.
 apply inclStateTrans with (S2 := interState S1 S2); auto with stalmarck.
 Qed.
-Global Hint Resolve interAssoc : stalmarck.
+#[export] Hint Resolve interAssoc : stalmarck.
 
 Theorem ContrInterL :
  forall S : State,
  eqState S (interState S ((rZPlus zero, rZMinus zero) :: nil)).
 red in |- *; split; auto with stalmarck.
 Qed.
-Global Hint Resolve ContrInterL : stalmarck.
+#[export] Hint Resolve ContrInterL : stalmarck.
 
 Theorem ContrInterR :
  forall S : State,
  eqState S (interState ((rZPlus zero, rZMinus zero) :: nil) S).
 red in |- *; split; auto with stalmarck.
 Qed.
-Global Hint Resolve ContrInterR : stalmarck.
-Global Hint Resolve eqConstrStateImpeqStateRz : stalmarck.
+#[export] Hint Resolve ContrInterR : stalmarck.
+#[export] Hint Resolve eqConstrStateImpeqStateRz : stalmarck.
 
 Theorem CompInterR :
  forall (S : State) (a b : rZ),

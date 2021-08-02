@@ -65,7 +65,7 @@ Qed.
 Lemma negbElim : forall b b' : bool, negb b = negb b' -> b = b'.
 simple destruct b; simple destruct b'; simpl in |- *; auto with stalmarck.
 Qed.
-Global Hint Immediate negbElim : stalmarck.
+#[export] Hint Immediate negbElim : stalmarck.
 (* Realizability does not change using fnAux *)
 
 Lemma RealizableAux3 :
@@ -135,7 +135,7 @@ unfold realizeState in |- *; intros S f Hf i j Hij; generalize (Hf i j Hij);
  case i; case j; simpl in |- *; intros n m Hnm; rewrite Hnm; 
  auto with stalmarck.
 Qed.
-Global Hint Resolve RealizeNegb : stalmarck.
+#[export] Hint Resolve RealizeNegb : stalmarck.
 (* Same as Realizable but with the constrain that (f zero)=true *)
 
 Theorem Realizable2 :

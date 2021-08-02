@@ -89,7 +89,7 @@ lapply (H' l l0 n r3 r2); [ intros H'9 | auto with stalmarck ].
 lapply (A l0 l2 r3 r5 r4); [ intros H'10 | auto with stalmarck ].
 apply rltTrans with (y := rnext r3); auto with stalmarck.
 Qed.
-Global Hint Resolve makeTripletsFunIncr : stalmarck.
+#[export] Hint Resolve makeTripletsFunIncr : stalmarck.
 
 Lemma makeTripletsFunIncl :
  forall (e : rExpr) (l l' : list triplet) (n n' : rNat) (s' : rZ),
@@ -102,7 +102,7 @@ lapply (A l0 l2 r3 r5 r4); [ intros H'10 | idtac ]; auto with stalmarck.
 apply incl_tran with l0; auto with stalmarck.
 apply incl_tran with l2; auto with datatypes stalmarck.
 Qed.
-Global Hint Resolve makeTripletsFunIncr : stalmarck.
+#[export] Hint Resolve makeTripletsFunIncr : stalmarck.
 
 Lemma maxVarTripletsRlt :
  forall (e : rExpr) (l l' : list triplet) (n n' : rNat) (s' : rZ),

@@ -13,8 +13,6 @@
 (* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
 (* 02110-1301 USA                                                     *)
 
-
-
 (****************************************************************************
                                                                            
           Stalmarck  :   algoDotriplet                                        
@@ -23,12 +21,15 @@
                                                                            
 ***************************************************************************
 Implement the one step propagation*)
+
 Require Export memoryImplement.
 Require Export triplet.
-Require Import doTriplet.
+Require Import interState doTriplet.
+
 Section algo.
+
 (* We simply check the applicability of each rule sequentially,
-    the test is made with the miniaml element *)
+   the test is made with the miniaml element *)
 
 Definition doTripletF : forall (Ar : rArray vM) (t : triplet), option mbD.
 intros Ar t.
@@ -709,4 +710,5 @@ Contradict Eq10; rewrite <- (evalZTrue Ar H');
 Contradict Eq11; rewrite <- (evalZFalse Ar H');
  apply rArrayStateDef1 with (S := S); auto with stalmarck.
 Qed.
+
 End algo.

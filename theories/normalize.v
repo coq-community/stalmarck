@@ -103,7 +103,7 @@ Inductive inRExpr (n : rNat) : rExpr -> Prop :=
   | inRNodeRight :
       forall (i : rBoolOp) (e1 e2 : rExpr),
       inRExpr n e2 -> inRExpr n (rNode i e1 e2).
-Global Hint Resolve inRV inRN inRNodeLeft inRNodeRight : stalmarck.
+#[export] Hint Resolve inRV inRN inRNodeLeft inRNodeRight : stalmarck.
 (* Two valuation functions that gives the same value to variables of a formula
    gives the same value to the formula *)
 
@@ -113,7 +113,7 @@ Theorem support :
 intros f g e.
 elim e; intros; simpl in |- *; auto with stalmarck; rewrite H; auto with stalmarck; rewrite H0; auto with stalmarck.
 Qed.
-Global Hint Resolve support : stalmarck.
+#[export] Hint Resolve support : stalmarck.
 
 (* Normalization from Expr -> rExpr 
    we first define it for each operator, than norm does the dispatching *)

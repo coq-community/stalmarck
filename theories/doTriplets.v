@@ -35,7 +35,7 @@ Inductive doTripletsP : State -> list triplet -> State -> Prop :=
       forall (S1 S2 S3 : State) (L : list triplet) (t : triplet),
       In t L ->
       doTripletP S1 t S2 -> doTripletsP S2 L S3 -> doTripletsP S1 L S3.
-Global Hint Resolve doTripletsRef : stalmarck.
+#[export] Hint Resolve doTripletsRef : stalmarck.
 (* It is compatible *)
 
 Theorem doTripletsComp :
