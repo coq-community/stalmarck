@@ -4,6 +4,7 @@ shortname: stalmarck
 organization: coq-community
 community: true
 action: true
+nix: true
 doi: 10.1007/3-540-44659-1_24
 plugin: true
 branch: master
@@ -43,7 +44,7 @@ supported_coq_versions:
   opam: '{= "dev"}'
 
 tested_coq_nix_versions:
-- version_or_url: https://github.com/coq/coq-on-cachix/tarball/master
+- coq_version: 'master'
 
 tested_coq_opam_versions:
 - version: 'dev'
