@@ -3,7 +3,7 @@ name: Docker CI
 on:
   push:
     branches:
-      - master
+      - v8.14
   pull_request:
     branches:
       - '**'
