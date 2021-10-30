@@ -10,7 +10,7 @@ dev-repo: "git+https://github.com/coq-community/stalmarck.git"
 bug-reports: "https://github.com/coq-community/stalmarck/issues"
 license: "LGPL-2.1-or-later"
 
-synopsis: "Correctness proof of Stålmarck's algorithm in Coq"
+synopsis: "Verified implementation of Stålmarck's algorithm for proving tautologies in Coq"
 description: """
 A two-level approach to prove tautologies using Stålmarck's
 algorithm in Coq."""
