@@ -34,7 +34,7 @@ let constant dir s =
   let dir = DirPath.make (List.map Id.of_string (List.rev ("Coq"::dir))) in
   let id = Id.of_string s in
   try
-    EConstr.of_constr (UnivGen.constr_of_monomorphic_global (global_reference_in_absolute_module dir id))
+    EConstr.of_constr (UnivGen.constr_of_monomorphic_global (Global.env ()) (global_reference_in_absolute_module dir id))
   with Not_found ->
     anomaly (Pp.str ("cannot find "^
 	     (Libnames.string_of_qualid (Libnames.make_qualid dir id))))
@@ -61,11 +61,11 @@ let coq_xH = lazy (constant binnums "xH");;
 let stal_constant dir s =
   let id = Id.of_string s in
   try
-    EConstr.of_constr (UnivGen.constr_of_monomorphic_global (global_reference_in_absolute_module
+    EConstr.of_constr (UnivGen.constr_of_monomorphic_global (Global.env ()) (global_reference_in_absolute_module
       (DirPath.make (List.map Id.of_string (List.rev ("Stalmarck" :: "Algorithm" :: dir)))) id))
   with _ ->
   try
-    EConstr.of_constr (UnivGen.constr_of_monomorphic_global (global_reference_in_absolute_module
+    EConstr.of_constr (UnivGen.constr_of_monomorphic_global (Global.env ()) (global_reference_in_absolute_module
       (DirPath.make (List.map Id.of_string (List.rev dir))) id))
   with _ ->
     anomaly (Pp.str ("cannot find "^
@@ -252,7 +252,7 @@ let buildEnv hash =
 
 let pop_prop_run gl =
   let rec get_hyps shyp = match shyp with
-      [] -> user_err ~hdr:"popProp" (str "No proposition to generalize");
+      [] -> user_err (str "popProp: No proposition to generalize");
     | (is,cst)::shyp' ->
          let env = pf_env gl in
          let sigma = project gl in

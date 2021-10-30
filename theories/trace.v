@@ -13,9 +13,7 @@
 (* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
 (* 02110-1301 USA                                                     *)
 
-
-
-(*`***************************************************************************
+(**************************************************************************
                                                                            
           Stalmarck  :  trace                                              
                                                                            
@@ -24,6 +22,7 @@
 ***************************************************************************
  Definition of trace to represent stalmarck's computation
 *)
+
 Require Export stalmarck.
 
 Inductive Trace : Set :=
@@ -65,7 +64,7 @@ apply eqStateTrans with (S2 := S6); auto with stalmarck.
 apply doTripletEqComp with (t := t) (S1 := S1) (S2 := S4); auto with stalmarck.
 intros t1 t2 S1 S2 S3 H' H'0 H'1 H'2 S0 S4 H'3; inversion H'3; auto with stalmarck.
 intros H'4.
-apply H'2 with (S4 := S6); auto with stalmarck.
+apply (H'2 S6); auto with stalmarck.
 apply H'0 with (S3 := S0); auto with stalmarck.
 intros t1 t2 a b S1 S2 S3 S4 H' H'0 H'1 H'2 H'3 S0 S5 H'4; inversion H'4;
  auto with stalmarck.
@@ -74,7 +73,7 @@ apply eqStateTrans with (S2 := interState S7 S8); auto with stalmarck.
 apply eqStateTrans with (S2 := interState S2 S3); auto with stalmarck.
 apply interStateEq; auto with stalmarck.
 apply H'0 with (S3 := addEq (a, b) S0); auto with stalmarck.
-apply H'2 with (S4 := addEq (a, rZComp b) S0); auto with stalmarck.
+apply (H'2 (addEq (a, rZComp b) S0)); auto with stalmarck.
 Qed.
 
 Theorem evalTraceComp :
