@@ -13,8 +13,6 @@
 (* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
 (* 02110-1301 USA                                                     *)
 
-
-
 (****************************************************************************
                                                                            
           Stalmarck  :    restrictState                                    
@@ -24,8 +22,10 @@
 ***************************************************************************
 Definition of state restriction and we show that only the variables of the triplets
 matter*)
+
 Require Import stalmarck.
 Require Import ltState.
+
 (* Inversion theorem for contradictory state *)
 
 Theorem contradictoryAddEq :
@@ -637,13 +637,14 @@ intros S1 S2 S3 L t H' H'0 H'1 H'2 S0 H'3.
 elim (doTripletEqCompEx S1 S2 (restrictState S0 (ResTriplets L)) t);
  [ intros S4 E; Elimc E; intros H'10 H'11 | idtac | idtac ]; 
  auto with stalmarck.
-apply H'2 with (S4 := S2); auto with stalmarck.
+apply (H'2 S2); auto with stalmarck.
 apply eqStateTrans with (S2 := S4); auto with stalmarck.
 apply eqStateTrans with (S2 := restrictState S4 (ResTriplets L)); auto with stalmarck.
 apply restrictDoTripletComp with (S1 := S0) (t := t); auto with stalmarck.
 apply ResTripletInResTriplets; auto with stalmarck.
 apply restrictEqComp; auto with stalmarck.
 Qed.
+
 (* A restricted state gives a restricted state by doTripletsP *)
 
 Theorem restrictDoTripletsComp :
@@ -656,6 +657,7 @@ apply
   with (S1 := restrictState S1 (ResTriplets L)) (S3 := S1); 
  auto with stalmarck.
 Qed.
+
 (* what can be done by a restricted state can be done by the full state *)
 
 Theorem doTripletsRestrictInv :
