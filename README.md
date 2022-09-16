@@ -41,7 +41,7 @@ algorithm in Coq.
 - Coq-community maintainer(s):
   - Karl Palmskog ([**@palmskog**](https://github.com/palmskog))
 - License: [GNU Lesser General Public License v2.1 or later](LICENSE)
-- Compatible Coq versions: Coq master (use the corresponding branch or release for other Coq versions)
+- Compatible Coq versions: Coq 8.15 (use the corresponding branch or release for other Coq versions)
 - Additional dependencies: none
 - Coq namespace: `Stalmarck.Algorithm`
 - Related publication(s):
