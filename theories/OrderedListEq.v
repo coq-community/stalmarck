@@ -1015,7 +1015,7 @@ apply OlistInv with (a := a0); auto.
 intros x H'5; elim H'5; intros H'6 H'7; exists x; auto.
 intros H'4; case H'2; auto.
 apply OlistSkip with (b := a2); auto.
-intros x H'5; elim H'5; intros H'6 H'7; exists x; intuition.
+intros x H'5; elim H'5; intros H'6 H'7; exists x; intuition auto with datatypes.
 case (testDec a a2 s1); auto.
 intros H'4 H'5; inversion H'5; auto.
 exists a2; split; auto with datatypes core.
