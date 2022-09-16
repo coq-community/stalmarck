@@ -250,35 +250,38 @@ let buildEnv hash =
 
 (* Pop Proposition *)
 
-let pop_prop_run gl =
-  let rec get_hyps shyp = match shyp with
-      [] -> user_err (str "popProp: No proposition to generalize");
-    | (is,cst)::shyp' ->
+let pop_prop_run =
+  Proofview.Goal.enter begin fun gl ->
+    let rec get_hyps shyp = match shyp with
+        [] -> user_err (str "popProp: No proposition to generalize");
+      | (is,cst)::shyp' ->
          let env = pf_env gl in
          let sigma = project gl in
          match kind sigma (Retyping.get_type_of env sigma cst) with
            Sort s when (match ESorts.kind sigma s with Sorts.Prop -> true | _ -> false) -> is
          | _            -> get_hyps shyp'
-  in
-  let v = Context.binder_name (get_hyps (pf_hyps_types gl)) in
-  Proofview.V82.of_tactic (Tacticals.New.tclTHEN (generalize [mkVar v]) (clear [v])) gl
+    in
+    let v = get_hyps (pf_hyps_types gl) in
+    Tacticals.tclTHEN (generalize [mkVar v]) (clear [v])
+  end
 
 (* Main function *)
 
-let stalt_run gl =
-  let concl = pf_concl gl in
-(* We get the expression and the hastable *)
-  let (res,hash) = convertConcl (project gl) concl in
-(* we run stalmarck *)
-  let  Quatuor (_, b, _, tr) = run (S (S O)) res in
-  match b with
-   | True ->
-(* we have reached a contradiction *)
-(* we first convert the trace *)
+let stalt_run =
+  Proofview.Goal.enter begin fun gl ->
+    let concl = pf_concl gl in
+    (* We get the expression and the hastable *)
+    let (res,hash) = convertConcl (project gl) concl in
+    (* we run stalmarck *)
+    let  Quatuor (_, b, _, tr) = run (S (S O)) res in
+    match b with
+    | True ->
+       (* we have reached a contradiction *)
+       (* we first convert the trace *)
        let vv = mkTrace tr in
-(* then Expr representing the Propositon *)
+       (* then Expr representing the Propositon *)
        let vres = mkExpr res in
-(* then we make use of the theorem ExprToPropTautology to give the proof *)
+       (* then we make use of the theorem ExprToPropTautology to give the proof *)
        let term = 
 	 (mkApp ((Lazy.force coq_ExprToPropTautology)
 		,[| buildEnv hash;
@@ -288,5 +291,6 @@ let stalt_run gl =
 			   [| vres;vv |])
 		 |]))
        in
-	 (Proofview.V82.of_tactic (exact_check term)) gl
-   | False -> CErrors.user_err (str "StalT can't conclude")
+       (exact_check term)
+    | False -> CErrors.user_err (str "StalT can't conclude")
+  end
