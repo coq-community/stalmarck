@@ -3,7 +3,7 @@
 
 opam-version: "2.0"
 maintainer: "palmskog@gmail.com"
-version: "dev"
+version: "8.15.dev"
 
 homepage: "https://github.com/coq-community/stalmarck"
 dev-repo: "git+https://github.com/coq-community/stalmarck.git"
@@ -18,7 +18,7 @@ algorithm in Coq."""
 build: ["dune" "build" "-p" name "-j" jobs]
 depends: [
   "dune" {>= "2.5"}
-  "coq" {= "dev"}
+  "coq" {>= "8.15" & < "8.16~"}
 ]
 
 tags: [

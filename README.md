@@ -11,10 +11,10 @@ Follow the instructions on https://github.com/coq-community/templates to regener
 [![Zulip][zulip-shield]][zulip-link]
 [![DOI][doi-shield]][doi-link]
 
-[docker-action-shield]: https://github.com/coq-community/stalmarck/workflows/Docker%20CI/badge.svg?branch=master
+[docker-action-shield]: https://github.com/coq-community/stalmarck/workflows/Docker%20CI/badge.svg?branch=v8.15
 [docker-action-link]: https://github.com/coq-community/stalmarck/actions?query=workflow:"Docker%20CI"
 
-[nix-action-shield]: https://github.com/coq-community/stalmarck/workflows/Nix%20CI/badge.svg?branch=master
+[nix-action-shield]: https://github.com/coq-community/stalmarck/workflows/Nix%20CI/badge.svg?branch=v8.15
 [nix-action-link]: https://github.com/coq-community/stalmarck/actions?query=workflow:"Nix%20CI"
 
 [contributing-shield]: https://img.shields.io/badge/contributions-welcome-%23f7931e.svg
