@@ -61,8 +61,8 @@ Fixpoint doTripletFs (L : list triplet) : rArray vM -> mbDT :=
       | None => doTripletFs L1 Ar
       | Some (triple Ar' true L') =>
           quatuor _ _ _ _ Ar' true L' (tripletTrace a)
-      | Some (triple Ar' b' nil) => doTripletFs L1 Ar'
-      | Some (triple Ar' b' L') =>
+      | Some (triple Ar' _b' nil) => doTripletFs L1 Ar'
+      | Some (triple Ar' _b' L') =>
           match doTripletFs L1 Ar' with
           | quatuor Ar'' b'' L'' T'' =>
               quatuor _ _ _ _ Ar'' b'' (appendRz L' L'')
@@ -255,7 +255,7 @@ Fixpoint doTripletsR (L : list rZ) : rArray vM -> mbDT :=
   | a :: L1 =>
       match doTripletFs (getT a) Ar with
       | quatuor Ar' true L' T' => quatuor _ _ _ _ Ar' true L' T'
-      | quatuor Ar' b' L' T' =>
+      | quatuor Ar' _b' L' T' =>
           match doTripletsR L1 Ar' with
           | quatuor Ar'' b'' L'' T'' =>
               quatuor _ _ _ _ Ar'' b'' (appendRz L' L'') (appTrace T' T'')

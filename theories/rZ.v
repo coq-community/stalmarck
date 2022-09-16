@@ -124,7 +124,7 @@ Qed.
 Theorem rltTrans : transitive rNat rlt.
 red in |- *; unfold rlt in |- *; intros x y z H1 H2.
 apply nat_of_P_lt_Lt_compare_complement_morphism.
-apply lt_trans with (nat_of_P y); apply nat_of_P_lt_Lt_compare_morphism; auto with stalmarck.
+apply Nat.lt_trans with (nat_of_P y); apply nat_of_P_lt_Lt_compare_morphism; auto with stalmarck.
 Qed.
 
 Theorem rltNotRefl : forall a : rNat, ~ rlt a a.
@@ -137,7 +137,7 @@ Theorem rnextRlt : forall m : rNat, rlt m (rnext m).
 intros m; unfold rlt, rnext in |- *.
 apply nat_of_P_lt_Lt_compare_complement_morphism.
 rewrite Pplus_one_succ_r; rewrite nat_of_P_plus_morphism;
- unfold nat_of_P in |- *; simpl in |- *; rewrite plus_comm; 
+ unfold nat_of_P in |- *; simpl in |- *; rewrite Nat.add_comm; 
  simpl in |- *; auto with arith stalmarck.
 Qed.
 #[export] Hint Resolve rnextRlt : stalmarck.
@@ -180,7 +180,7 @@ Theorem rNextInv : forall n m : rNat, rlt n (rnext m) -> n = m \/ rlt n m.
 intros n m H'.
 generalize (nat_of_P_lt_Lt_compare_morphism _ _ H').
 rewrite rNextS.
-intros H'0; case (le_lt_or_eq _ _ (lt_n_Sm_le _ _ H'0)).
+intros H'0; case (proj1 (Nat.lt_eq_cases _ _) (proj1 (Nat.lt_succ_r _ _) H'0)).
 intros H'1; right; red in |- *;
  apply nat_of_P_lt_Lt_compare_complement_morphism; 
  auto with stalmarck.

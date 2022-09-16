@@ -72,9 +72,9 @@ Definition oneStateAll (S : State) (a b : rNat) :=
 
 Theorem lePlusComp : forall a b c d : nat, a <= b -> c <= d -> a + c <= b + d.
 intros a b c d H' H'0.
-apply le_trans with (m := a + d); auto with stalmarck.
-apply plus_le_compat_l; auto with stalmarck.
-apply plus_le_compat_r; auto with stalmarck.
+apply Nat.le_trans with (m := a + d); auto with stalmarck.
+apply Nat.add_le_mono_l; auto with stalmarck.
+apply Nat.add_le_mono_r; auto with stalmarck.
 Qed.
 Local Hint Resolve lePlusComp : stalmarck.
 (* Monotonicity *)
@@ -89,15 +89,15 @@ Local Hint Resolve oneStateAllLe : stalmarck.
 
 Theorem ltlePlusCompL :
  forall a b c d : nat, a < b -> c <= d -> a + c < b + d.
-intros a b c d H' H'0; apply lt_le_trans with (m := b + c); auto with stalmarck.
-apply plus_lt_compat_r; auto with stalmarck.
+intros a b c d H' H'0; apply Nat.lt_le_trans with (m := b + c); auto with stalmarck.
+apply Nat.add_lt_mono_r; auto with stalmarck.
 Qed.
 Local Hint Resolve ltlePlusCompL : stalmarck.
 
 Theorem ltlePlusCompR :
  forall a b c d : nat, a <= b -> c < d -> a + c < b + d.
-intros a b c d H' H'0; apply le_lt_trans with (m := b + c); auto with stalmarck.
-apply plus_lt_compat_l; auto with stalmarck.
+intros a b c d H' H'0; apply Nat.le_lt_trans with (m := b + c); auto with stalmarck.
+apply Nat.add_lt_mono_l; auto with stalmarck.
 Qed.
 Local Hint Resolve ltlePlusCompR : stalmarck.
 (* Strict monotony *)
@@ -217,7 +217,7 @@ Definition ltState (S1 S2 : State) := valState S1 < valState S2.
 Theorem ltStateTrans : transitive State ltState.
 red in |- *; unfold ltState in |- *; auto with stalmarck.
 intros S1 S2 S3 H' H'0.
-apply lt_trans with (m := valState S2); auto with stalmarck.
+apply Nat.lt_trans with (m := valState S2); auto with stalmarck.
 Qed.
 
 Theorem ltStateEqComp :
@@ -227,8 +227,8 @@ unfold eqState, ltState in |- *.
 intros S1 S2 S3 S4 H' H'0 H'1.
 Elimc H'0; intros H'0 H'2.
 Elimc H'; intros H' H'3.
-apply lt_le_trans with (m := valState S2); auto with stalmarck.
-apply le_lt_trans with (m := valState S1); auto with stalmarck.
+apply Nat.lt_le_trans with (m := valState S2); auto with stalmarck.
+apply Nat.le_lt_trans with (m := valState S1); auto with stalmarck.
 Qed.
 
 Theorem ltStateLt :

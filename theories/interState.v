@@ -52,7 +52,7 @@ Qed.
 
 Theorem interStatePInclSelf :
  forall S1 S2 : State, inclState S1 S2 -> interStateP S1 S2 S1.
-unfold interStateP in |- *. intuition.
+unfold interStateP in |- *. intuition auto using inclStateRef.
 Qed.
 
 Theorem interStatePEq :
@@ -65,11 +65,11 @@ intros S1 S2 S'1 S'2 S3 S'3 H H1 H2 H3; split.
 
 generalize (interStatePIncl S'1 S'2) (inclStateEqStateComp S3 S3 S1 S'1)
  (inclStateEqStateComp S3 S3 S2 S'2).
-intuition.
+intuition auto using eqStateRef.
 
 generalize (interStatePIncl S1 S2) (inclStateEqStateComp S'3 S'3 S'1 S1)
  (inclStateEqStateComp S'3 S'3 S'2 S2).
-intuition.
+intuition auto using eqStateRef,eqStateSym.
 Qed.
 (* Given a state, gives the variables that could have non trivial equality *)
 

@@ -1,4 +1,4 @@
-DECLARE PLUGIN "staltac_plugin"
+DECLARE PLUGIN "coq-stalmarck-tactic.plugin"
 
 {
 
@@ -7,5 +7,5 @@ open Staltac_lib
 
 }
 
-TACTIC EXTEND _stalt_ | [ "stalt" ] -> { Proofview.V82.tactic stalt_run } END
-TACTIC EXTEND _pop_prop_ | [ "pop_prop" ] -> { Proofview.V82.tactic pop_prop_run } END
+TACTIC EXTEND _stalt_ | [ "stalt" ] -> { stalt_run } END
+TACTIC EXTEND _pop_prop_ | [ "pop_prop" ] -> { pop_prop_run } END
