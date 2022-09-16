@@ -230,7 +230,7 @@ simpl in |- *; intros S L a b V Eq H;
  elim (stateAssignContrad S L H a b V Eq); intros S' HS'.
 elim HS'; intros HS'1 HS'2; exists S'; auto with stalmarck.
 intros n' HR S L a b V Eq H.
-elim (le_or_lt (length (varTriplets L)) n'); intros Hn'.
+elim (Nat.le_gt_cases (length (varTriplets L)) n'); intros Hn'.
 apply (HR S L a b); auto with stalmarck.
 rewrite (nthTailProp3 n' (varTriplets L)); auto with stalmarck.
 elim (HR (addEq (myNth n' (varTriplets L) rZTrue, rZTrue) S) L a b); auto with stalmarck.
