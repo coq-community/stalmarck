@@ -1,4 +1,4 @@
-DECLARE PLUGIN "staltac_plugin"
+DECLARE PLUGIN "coq-stalmarck-tactic.plugin"
 
 {
 
