@@ -13,26 +13,24 @@
 (* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
 (* 02110-1301 USA                                                     *)
 
+(** * interImplement2
 
+Pierre Letouzey & Laurent Thery
 
-(****************************************************************************
-                                                                           
-          Stalmarck  :  interImplement2                                    
-                                                                           
-          Pierre Letouzey & Laurent Thery                                  
-                                                                           
-***************************************************************************
-Implement the intersection (2 files )*)
-Require Import rZ.
-Require Import OrderedListEq.
-Require Import LetP.
-Require Import Relation_Definitions.
-Require Import state.
-Require Import restrictState.
-Require Import ltState.
-Require Export memoryImplement.
-Require Export addArray.
-Require Export interImplement.
+Implement the intersection (2 files)
+*)
+
+From Stalmarck Require Import rZ.
+From Stalmarck Require Import OrderedListEq.
+From Stalmarck Require Import LetP.
+From Coq Require Import Relation_Definitions.
+From Stalmarck Require Import state.
+From Stalmarck Require Import restrictState.
+From Stalmarck Require Import ltState.
+From Stalmarck Require Export memoryImplement.
+From Stalmarck Require Export addArray.
+From Stalmarck Require Export interImplement.
+
 Section inter.
 (* We simply add to an array  all the equation formed from an element of L
     and the minimal element b that are in both equivalent classes *)

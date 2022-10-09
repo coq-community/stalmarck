@@ -13,21 +13,18 @@
 (* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
 (* 02110-1301 USA                                                     *)
 
+(** * memoryImplement
 
+Pierre Letouzey & Laurent Thery
 
-(****************************************************************************
-                                                                           
-          Stalmarck  :   memoryImplement                                   
-                                                                           
-          Pierre Letouzey & Laurent Thery                                  
-                                                                           
-***************************************************************************
-Define how to perform the addition of an equation*)
-Require Export state.
-Require Export restrictState.
-Require Export ltState.
-Require Export wfArray.
-Require Export addArray.
+Define how to perform the addition of an equation
+*)
+
+From Stalmarck Require Export state.
+From Stalmarck Require Export restrictState.
+From Stalmarck Require Export ltState.
+From Stalmarck Require Export wfArray.
+From Stalmarck Require Export addArray.
 
 (*Definition of well formed array and some properties *)
 Section Deval.
@@ -467,7 +464,8 @@ case (rZDec a' b'); intros eqa'b'.
 exact (mbDOp Ar false nil).
 exact (mbDOp Ar true nil).
 Defined.
-Require Import stateDec.
+
+From Stalmarck Require Import stateDec.
 
 (* The property for an array to represent a state *)
 

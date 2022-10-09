@@ -13,18 +13,16 @@
 (* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
 (* 02110-1301 USA                                                     *)
 
+(** * doTriplet
 
+Pierre Letouzey & Laurent Thery
 
-(*`***************************************************************************
-                                                                           
-          Stalmarck  :  doTriplet                                            
-                                                                           
-          Pierre Letouzey & Laurent Thery                                  
-                                                                           
-***************************************************************************
- One step propagation *)
-Require Export unionState.
-Require Export stateExtra.
+One step propagation
+*)
+
+From Stalmarck Require Export unionState.
+From Stalmarck Require Export stateExtra.
+
 (*We define the Stalmarck One Step Saturation as a relation *)
 
 Inductive doTripletP (S : State) : triplet -> State -> Prop :=

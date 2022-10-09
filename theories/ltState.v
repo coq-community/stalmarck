@@ -13,23 +13,21 @@
 (* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
 (* 02110-1301 USA                                                     *)
 
+(** * ltState
 
+Pierre Letouzey & Laurent Thery
 
-(****************************************************************************
-                                                                           
-          Stalmarck  :  ltState                                            
-                                                                           
-          Pierre Letouzey & Laurent Thery                                  
-                                                                           
-***************************************************************************
-Define a well-founded order on state looking at the number of equation valid where
-variables belong to a given list*)
-Require Import state.
-Require Import Arith.
-Require Import stateDec.
-Require Import Inverse_Image.
-Require Import Compare.
-Require Import Relation_Definitions.
+Define a well-founded order on state looking at the number
+of valid equations where variables belong to a given list
+*)
+
+From Stalmarck Require Import state.
+From Coq Require Import Arith.
+From Stalmarck Require Import stateDec.
+From Coq Require Import Inverse_Image.
+From Coq Require Import Compare.
+From Coq Require Import Relation_Definitions.
+
 Section lt.
 Variable L : list rNat.
 

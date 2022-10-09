@@ -13,18 +13,16 @@
 (* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
 (* 02110-1301 USA                                                     *)
 
+(** * stateDec
 
+Pierre Letouzey & Laurent Thery
 
-(****************************************************************************
-                                                                           
-          Stalmarck  :    stateDec                                         
-                                                                           
-          Pierre Letouzey & Laurent Thery                                  
-                                                                           
-***************************************************************************
-Given a state, equality is decidable*)
-Require Import List.
-Require Export state.
+Given a state, equality is decidable
+*)
+
+From Coq Require Import List.
+From Stalmarck Require Export state.
+
 (* To show that the equality is decidable we need a more `constructive' predicate
     than eqStateRz to define equality. We introduce eqConstrState and prove that
     it  has the same meaning than eqStateRz *)

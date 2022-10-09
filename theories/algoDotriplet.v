@@ -13,18 +13,16 @@
 (* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
 (* 02110-1301 USA                                                     *)
 
-(****************************************************************************
-                                                                           
-          Stalmarck  :   algoDotriplet                                        
-                                                                           
-          Pierre Letouzey & Laurent Thery                                  
-                                                                           
-***************************************************************************
-Implement the one step propagation*)
+(** * algoDotriplet
 
-Require Export memoryImplement.
-Require Export triplet.
-Require Import interState doTriplet.
+Pierre Letouzey & Laurent Thery
+
+Implement the one step propagation
+*)
+
+From Stalmarck Require Export memoryImplement.
+From Stalmarck Require Export triplet.
+From Stalmarck Require Import interState doTriplet.
 
 Section algo.
 

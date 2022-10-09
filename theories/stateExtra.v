@@ -13,17 +13,14 @@
 (* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
 (* 02110-1301 USA                                                     *)
 
+(** * stateExtra
 
+Pierre Letouzey & Laurent Thery
 
-(****************************************************************************
-                                                                           
-          Stalmarck  : stateExtra                                           
-                                                                           
-          Pierre Letouzey & Laurent Thery                                  
-                                                                           
-****************************************************************************
-Some extra results concerning mostly realizability of states *)
-Require Export stateDec.
+Some extra results concerning mostly realizability of states
+*)
+
+From Stalmarck Require Export stateDec.
 
 (* Auxillary function,  if  for the state S, i =+/- n returns ~ (f n)  otherwise (f n) *)
 

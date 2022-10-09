@@ -13,19 +13,17 @@
 (* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
 (* 02110-1301 USA                                                     *)
 
+(** * stalmarck
 
+Pierre Letouzey & Laurent Thery
 
-(****************************************************************************
-                                                                           
-          Stalmarck  :    stalmarck                                        
-                                                                           
-          Pierre Letouzey & Laurent Thery                                  
-                                                                           
-***************************************************************************
- Definition of stalmarck as the transitive closure of the dilemma rule *)
-Require Export doTriplets.
-Require Export interState.
-Require Export makeTriplet.
+Definition of stalmarck as the transitive closure of the dilemma rule
+*)
+
+From Stalmarck Require Export doTriplets.
+From Stalmarck Require Export interState.
+From Stalmarck Require Export makeTriplet.
+
 (* stalmarck is simply the reflexive transitive closure of dilemma *)
 
 Inductive stalmarckP : State -> list triplet -> State -> Prop :=

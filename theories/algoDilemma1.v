@@ -13,19 +13,17 @@
 (* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
 (* 02110-1301 USA                                                     *)
 
+(** * algoDilemma1
 
+Pierre Letouzey & Laurent Thery
 
-(****************************************************************************
-                                                                           
-          Stalmarck  :   algoDilemma1                                       
-                                                                           
-          Pierre Letouzey & Laurent Thery                                  
-                                                                           
-***************************************************************************
-Implement the dilemma with one variable*)
-Require Export algoDotriplets.
-Require Export interImplement2.
-Require Export stalmarck.
+Implement the dilemma with one variable
+*)
+
+From Stalmarck Require Export algoDotriplets.
+From Stalmarck Require Export interImplement2.
+From Stalmarck Require Export stalmarck.
+
 Section odilemma1.
 Variable getT : rZ -> list triplet.
 Variable LL : list triplet.

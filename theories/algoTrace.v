@@ -13,19 +13,15 @@
 (* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
 (* 02110-1301 USA                                                     *)
 
+(** * algoTrace
 
+Pierre Letouzey & Laurent Thery
+*)
 
-(****************************************************************************
-                                                                           
-          Stalmarck  :  algoTrace                                           
-                                                                           
-          Pierre Letouzey & Laurent Thery                                  
-                                                                           
-****************************************************************************)
-Require Export trace.
-Require Export algoDotriplet.
-Require Export interImplement2.
-Require Import makeTriplet.
+From Stalmarck Require Export trace.
+From Stalmarck Require Export algoDotriplet.
+From Stalmarck Require Export interImplement2.
+From Stalmarck Require Import makeTriplet.
 
 (* Append inside a triplet *)
 

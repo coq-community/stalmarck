@@ -13,17 +13,15 @@
 (* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
 (* 02110-1301 USA                                                     *)
 
+(** * addArray
 
+Pierre Letouzey & Laurent Thery
 
-(****************************************************************************
-                                                                           
-          Stalmarck  :   addArray                                          
-                                                                           
-          Pierre Letouzey & Laurent Thery                                  
-                                                                           
-***************************************************************************
-Addition of an equation to a well-formed array*)
-Require Export wfArray.
+Addition of an equation to a well-formed array
+*)
+
+From Stalmarck Require Export wfArray.
+
 (* We define the simultaneous update of arrays *)
 
 Fixpoint rArraySetList (Ar : rArray vM) (a : rZ) (L : list rZ) {struct L} :

@@ -13,17 +13,15 @@
 (* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
 (* 02110-1301 USA                                                     *)
 
+(** * makeTriplet
 
+Pierre Letouzey & Laurent Thery
 
-(****************************************************************************
-                                                                           
-          Stalmarck  :  makeTriplet                                         
-                                                                           
-          Pierre Letouzey & Laurent Thery                                  
-                                                                           
-***************************************************************************
- Definition of the transformation from rExpr to list of triplets *)
-Require Export equalBefore.
+Definition of the transformation from rExpr to list of triplets
+*)
+
+From Stalmarck Require Export equalBefore.
+
 (* Computing triplets return the list of triplets, the top signed variable
     and the next free variable *)
 

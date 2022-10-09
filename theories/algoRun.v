@@ -13,20 +13,18 @@
 (* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
 (* 02110-1301 USA                                                     *)
 
+(** * algoRun
 
+Pierre Letouzey & Laurent Thery
 
-(****************************************************************************
-                                                                           
-          Stalmarck  :    algoRun                                          
-                                                                           
-          Pierre Letouzey & Laurent Thery                                  
-                                                                           
-***************************************************************************
-Some example of computing with stalmarck inside Coq*)
-Require Import ZArith.
-Require Export algoStalmarck.
-Require Export algoTrace.
-Require Export makeTriplet.
+Some examples of computing with stalmarck inside Coq
+*)
+
+From Coq Require Import ZArith.
+From Stalmarck Require Export algoStalmarck.
+From Stalmarck Require Export algoTrace.
+From Stalmarck Require Export makeTriplet.
+
 Section orun.
 Eval compute in
   (makeTriplets
