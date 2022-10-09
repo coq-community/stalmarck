@@ -13,18 +13,16 @@
 (* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
 (* 02110-1301 USA                                                     *)
 
-(****************************************************************************
-                                                                           
-          Stalmarck  :    restrictState                                    
-                                                                           
-          Pierre Letouzey & Laurent Thery                                  
-                                                                           
-***************************************************************************
-Definition of state restriction and we show that only the variables of the triplets
-matter*)
+(** * restrictState
 
-Require Import stalmarck.
-Require Import ltState.
+Pierre Letouzey & Laurent Thery
+
+Definition of state restriction and we show that only the variables
+of the triplets matter
+*)
+
+From Stalmarck Require Import stalmarck.
+From Stalmarck Require Import ltState.
 
 (* Inversion theorem for contradictory state *)
 

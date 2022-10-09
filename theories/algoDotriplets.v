@@ -13,19 +13,17 @@
 (* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
 (* 02110-1301 USA                                                     *)
 
+(** * algoDotriplets
 
+Pierre Letouzey & Laurent Thery
 
-(****************************************************************************
-                                                                           
-          Stalmarck  :  algoDotriplets                                  
-                                                                           
-          Pierre Letouzey & Laurent Thery                                  
-                                                                           
-***************************************************************************
-Implement the propagation*)
-Require Export algoDotriplet.
-Require Export trace.
-Require Export doTriplets.
+Implement the propagation
+*)
+
+From Stalmarck Require Export algoDotriplet.
+From Stalmarck Require Export trace.
+From Stalmarck Require Export doTriplets.
+
 Section algos.
 (* To return 4 elements *)
 

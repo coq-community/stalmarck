@@ -13,18 +13,15 @@
 (* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
 (* 02110-1301 USA                                                     *)
 
+(** * equalBefore
 
+Pierre Letouzey & Laurent Thery
 
-(****************************************************************************
-                                                                           
-          Stalmarck  :    equalBefore                                      
-                                                                           
-          Pierre Letouzey & Laurent Thery                                  
-                                                                           
-***************************************************************************
- Definition of equality on booleans upto a certain number *)
-Require Import Relation_Definitions.
-Require Export triplet.
+Definition of equality on booleans up to a certain number
+*)
+
+From Coq Require Import Relation_Definitions.
+From Stalmarck Require Export triplet.
 
 (* f and g gives same value for rNat less than m *)
 

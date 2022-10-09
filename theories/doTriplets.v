@@ -13,18 +13,16 @@
 (* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
 (* 02110-1301 USA                                                     *)
 
+(** * doTriplets
 
+Pierre Letouzey & Laurent Thery
 
-(****************************************************************************
-                                                                           
-          Stalmarck  :  doTriplets                                          
-                                                                           
-          Pierre Letouzey & Laurent Thery                                  
-                                                                           
-***************************************************************************
- Propagation as transitive closure of the one step propagation *)
-Require Export doTriplet.
-Require Import PolyListAux.
+Propagation as transitive closure of the one step propagation
+*)
+
+From Stalmarck Require Export doTriplet.
+From Stalmarck Require Import PolyListAux.
+
 (* Reflexive transitive closure of doTriplet *)
 
 Inductive doTripletsP : State -> list triplet -> State -> Prop :=

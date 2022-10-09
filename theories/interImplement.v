@@ -13,22 +13,21 @@
 (* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
 (* 02110-1301 USA                                                     *)
 
+(** * interImplement
 
+Pierre Letouzey & Laurent Thery
 
-(****************************************************************************
-                                                                           
-          Stalmarck  :  interImplement                                     
-                                                                           
-          Pierre Letouzey & Laurent Thery                                  
-                                                                           
-***************************************************************************
 Implement the intersection (2 files)
- In this file we simply show that to build the intersection, we simply need for
-  every a, first find the maller b that is in relation with a in both arrays and
-  add the equation a=b*)
-Require Export addArray.
-Require Export interState.
-Require Export memoryImplement.
+
+In this file we simply show that to build the intersection, we simply need for
+every a, first find the maller b that is in relation with a in both arrays and
+add the equation a=b
+*)
+
+From Stalmarck Require Export addArray.
+From Stalmarck Require Export interState.
+From Stalmarck Require Export memoryImplement.
+
 Section inter.
 
 (* Return the equivalent class of an element plus the polarity *)

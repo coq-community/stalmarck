@@ -13,21 +13,19 @@
 (* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
 (* 02110-1301 USA                                                     *)
 
+(** * algoStalmarck
 
+Pierre Letouzey & Laurent Thery
+*)
 
-(****************************************************************************
-                                                                           
-          Stalmarck  : algoStalmarck                                         
-                                                                           
-          Pierre Letouzey & Laurent Thery                                  
-                                                                           
-****************************************************************************)
-Require Export algoDilemma1.
+From Stalmarck Require Export algoDilemma1.
+
 Section ostal.
 Variable getT : rZ -> list triplet.
 Variable LL : list triplet.
 Hypothesis getTCorrect : forall a : rZ, incl (getT a) LL.
 Variable n : nat.
+
 (*We iterate saturaturing from level n1 to n1+m*)
 
 Fixpoint stalN (L : list rZ) (n1 m : nat) {struct m} : 

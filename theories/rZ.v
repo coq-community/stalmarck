@@ -13,32 +13,30 @@
 (* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
 (* 02110-1301 USA                                                     *)
 
+(** * rZ
 
+Pierre Letouzey & Laurent Thery
 
-(****************************************************************************
-                                                                           
-          Stalmarck  : rZ                                                  
-                                                                           
-          Pierre Letouzey & Laurent Thery                                  
-                                                                           
-***************************************************************************
- We define signed variable as follows:
-     We first define rNat as an abbreviation for positive (from fast_integer)
-    and rZ as an inductive type with 2 constructors:
-       rZPlus: rNat ->rZ
-      rZMinus: rNat ->rZ .
+We define signed variable as follows:
 
-    We define usual operations on rZ, i.e. equality, comparison etc
+We first define [rNat] as an abbreviation for positive (from fast_integer)
+and [rZ] as an inductive type with 2 constructors:
 
-    At the end we define functional arrays that will be used in implementation
+- [rZPlus: rNat ->rZ]
+- [rZMinus: rNat ->rZ]
+
+We define usual operations on [rZ], i.e., equality, comparison, etc.
+
+At the end we define functional arrays that will be used in implementation
 *)
-Require Import sTactic.
-Require Import Relation_Definitions.
-Require Import ZArith.
-Require Import Inverse_Image.
-Require Import Inclusion.
-Require Import Wf_nat.
-Require Import List.
+
+From Stalmarck Require Import sTactic.
+From Coq Require Import Relation_Definitions.
+From Coq Require Import ZArith.
+From Coq Require Import Inverse_Image.
+From Coq Require Import Inclusion.
+From Coq Require Import Wf_nat.
+From Coq Require Import List.
 
 Definition rNat := positive.
 

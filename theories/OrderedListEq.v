@@ -13,24 +13,22 @@
 (* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
 (* 02110-1301 USA                                                     *)
 
+(** * OrderedListEq
 
+Pierre Letouzey & Laurent Thery
 
-(****************************************************************************
-                                                                           
-          Stalmarck  : OrderedListEq                                       
-                                                                           
-          Pierre Letouzey & Laurent Thery                                  
-                                                                           
-***************************************************************************
- A generic module to define concatenation on ordered list,
-   we took a special care so that every function can be evaluated
-   inside Coq, see OrderedListEq_ex.v  *)
-Require Import Arith.
-Require Export List.
-Require Import Lexicographic_Exponentiation.
-Require Export Relation_Definitions.
-Require Export Relation_Operators.
-Require Export sTactic.
+A generic module to define concatenation on ordered list,
+we took a special care so that every function can be evaluated
+inside Coq, see OrderedListEq_ex
+*)
+
+From Coq Require Import Arith.
+From Coq Require Export List.
+From Coq Require Import Lexicographic_Exponentiation.
+From Coq Require Export Relation_Definitions.
+From Coq Require Export Relation_Operators.
+From Stalmarck Require Export sTactic.
+
 Section OrderedList.
 
 (* All the operation are done over an arbitrary set A with explicit equality, < etc *)

@@ -13,18 +13,16 @@
 (* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
 (* 02110-1301 USA                                                     *)
 
+(** * unionState
 
+Pierre Letouzey & Laurent Thery
 
-(****************************************************************************
-                                                                           
-          Stalmarck  :   unionState                                        
-                                                                           
-          Pierre Letouzey & Laurent Thery                                  
-                                                                           
-***************************************************************************
- Definition of the union of two states *)
-Require Import List.
-Require Export state.
+Definition of the union of two states
+*)
+
+From Coq Require Import List.
+From Stalmarck Require Export state.
+
 (* The property of being an union *)
 
 Inductive unionStateP : State -> State -> State -> Prop :=

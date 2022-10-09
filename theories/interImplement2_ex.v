@@ -13,18 +13,15 @@
 (* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
 (* 02110-1301 USA                                                     *)
 
+(** * interImplement2_ex
 
+Pierre Letouzey & Laurent Thery
 
-(****************************************************************************
-                                                                           
-          Stalmarck  :   interImplement2_ex                               
-                                                                           
-          Pierre Letouzey & Laurent Thery                                  
-                                                                           
-***************************************************************************
-How to use our module on ordered list*)
-Require Import interImplement2.
-Require Import ZArith.
+How to use our module on ordered list
+*)
+
+From Stalmarck Require Import interImplement2.
+From Coq Require Import ZArith.
 
 Local Definition A := rArrayInit _ (fun n : rNat => class nil).
 

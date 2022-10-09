@@ -13,18 +13,16 @@
 (* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
 (* 02110-1301 USA                                                     *)
 
+(** * PolyListAux
 
+Pierre Letouzey & Laurent Thery
 
-(****************************************************************************
-                                                                           
-          Stalmarck  : PolyListAux                                         
-                                                                           
-          Pierre Letouzey & Laurent Thery                                  
-                                                                           
-***************************************************************************
- Definition of rem a function that removes elt from polymorphic lists *)
-Require Import Arith.
-Require Import List.
+Definition of rem a function that removes elt from polymorphic lists
+*)
+
+From Coq Require Import Arith.
+From Coq Require Import List.
+
 Section Auxrem.
 Variable A : Set.
 Variable ADec : forall a b : A, {a = b} + {a <> b}.

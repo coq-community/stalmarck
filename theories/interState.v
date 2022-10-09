@@ -13,18 +13,15 @@
 (* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
 (* 02110-1301 USA                                                     *)
 
+(** * interState
 
+Pierre Letouzey & Laurent Thery
 
-(****************************************************************************
-                                                                           
-          Stalmarck  :    interState                                       
-                                                                           
-          Pierre Letouzey & Laurent Thery                                  
-                                                                           
-***************************************************************************
- Definition of the intersection of two states *)
-Require Import List.
-Require Export stateDec.
+Definition of the intersection of two states
+*)
+
+From Coq Require Import List.
+From Stalmarck Require Export stateDec.
 
 (* The property of being an intersection *)
 

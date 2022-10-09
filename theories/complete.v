@@ -13,19 +13,16 @@
 (* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
 (* 02110-1301 USA                                                     *)
 
+(** complete
 
+Pierre Letouzey & Laurent Thery
 
-(****************************************************************************
-                                                                           
-          Stalmarck  :    stalmarck                                        
-                                                                           
-          Pierre Letouzey & Laurent Thery                                  
-                                                                           
-***************************************************************************
- The proof of completness of the algorithm *)
-Require Import PolyListAux.
-Require Import makeTriplet.
-Require Export stalmarck.
+The proof of completness of the algorithm
+*)
+
+From Stalmarck Require Import PolyListAux.
+From Stalmarck Require Import makeTriplet.
+From Stalmarck Require Export stalmarck.
 
 Definition stateAssignedOn (S : State) (L : list triplet) :=
   forall a : rZ,

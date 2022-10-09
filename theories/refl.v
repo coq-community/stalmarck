@@ -13,20 +13,18 @@
 (* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
 (* 02110-1301 USA                                                     *)
 
+(** * refl
+                                                                           
+Pierre Letouzey & Laurent Thery
 
+Construct a function of type [Expr -> Prop]
+*)
 
-(****************************************************************************
-                                                                           
-          Stalmarck  :  refl                                                    
-                                                                           
-          Pierre Letouzey & Laurent Thery                                  
-                                                                           
-***************************************************************************
-construct a function from Expr -> Prop*)
-Require Import ZArith.
-Require Import normalize.
-Require Import Classical.
-Require Import sTactic.
+From Coq Require Import ZArith.
+From Stalmarck Require Import normalize.
+From Coq Require Import Classical.
+From Stalmarck Require Import sTactic.
+
 Section refl.
 Variable fmap : rNat -> Prop.
 Hypothesis fmapO : fmap zero.

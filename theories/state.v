@@ -13,18 +13,15 @@
 (* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
 (* 02110-1301 USA                                                     *)
 
+(** * state
 
+Pierre Letouzey & Laurent Thery
 
-(****************************************************************************
-                                                                           
-          Stalmarck  :   state                                             
-                                                                           
-          Pierre Letouzey & Laurent Thery                                  
-                                                                           
-***************************************************************************
- Definition of states as the list of equations, i.e pairs of rZ *)
-Require Import List.
-Require Export triplet.
+Definition of states as the list of equations, i.e., pairs of rZ
+*)
+
+From Coq Require Import List.
+From Stalmarck Require Export triplet.
 
 Definition State := list (rZ * rZ).
 

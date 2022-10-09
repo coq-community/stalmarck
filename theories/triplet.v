@@ -13,21 +13,18 @@
 (* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
 (* 02110-1301 USA                                                     *)
 
+(** * triplet
 
+Pierre Letouzey & Laurent Thery
 
-(****************************************************************************
-                                                                           
-          Stalmarck  : triplet                                             
-                                                                           
-          Pierre Letouzey & Laurent Thery                                  
-                                                                           
-***************************************************************************
- Definition of triplets *)
-Require Export Bool.
-Require Export rZ.
-Require Export List.
-Require Export normalize.
-Require Export sTactic.
+Definition of triplets
+*)
+
+From Coq Require Export Bool.
+From Stalmarck Require Export rZ.
+From Coq Require Export List.
+From Stalmarck Require Export normalize.
+From Stalmarck Require Export sTactic.
 
 (* Lifting of f from rNat-> bool to rZ -> bool compatible with rZComp *)
 

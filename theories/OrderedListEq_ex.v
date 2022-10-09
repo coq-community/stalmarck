@@ -13,20 +13,15 @@
 (* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
 (* 02110-1301 USA                                                     *)
 
+(** * OrderedListEq_ex
 
+Pierre Letouzey & Laurent Thery
 
-(****************************************************************************
-                                                                           
-          Stalmarck  : OrderedListEq_ex                                    
-                                                                           
-          Pierre Letouzey & Laurent Thery                                  
-                                                                           
-***************************************************************************
- How to use OrderedList *)
-Require Import OrderedListEq.
+How to use OrderedList
+*)
 
-(* For Nat *)
-Require Import Arith.
+From Stalmarck Require Import OrderedListEq.
+From Coq Require Import Arith. (* For Nat *)
 
 Definition CNat : forall a b : nat, {a < b} + {b < a} + {a = b}.
 fix CNat 1; intros a; case a; [ idtac | intros a' ]; intros b; case b;
@@ -62,8 +57,7 @@ Eval compute in (appnat l1 l2).
 Eval compute in (getminnat l1 l2).
 Eval compute in (internat l1 l2).
 
-(* For Z *)
-Require Import ZArith.
+From Coq Require Import ZArith. (* For Z *)
 
 Definition CZ : forall a b : Z, {(a < b)%Z} + {(b < a)%Z} + {a = b}.
 intros a b; CaseEq (a - b)%Z.

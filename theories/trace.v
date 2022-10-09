@@ -13,17 +13,14 @@
 (* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
 (* 02110-1301 USA                                                     *)
 
-(**************************************************************************
-                                                                           
-          Stalmarck  :  trace                                              
-                                                                           
-          Pierre Letouzey & Laurent Thery                                  
-                                                                           
-***************************************************************************
- Definition of trace to represent stalmarck's computation
+(** * trace
+
+Pierre Letouzey & Laurent Thery
+
+Definition of trace to represent stalmarck's computation
 *)
 
-Require Export stalmarck.
+From Stalmarck Require Export stalmarck.
 
 Inductive Trace : Set :=
   | emptyTrace : Trace

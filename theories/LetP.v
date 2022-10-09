@@ -14,17 +14,12 @@
 (* 02110-1301 USA                                                     *)
 
 
-(****************************************************************************
-                                                                           
-          Stalmarck  :  LetP                                               
-                                                                           
-          Pierre Letouzey & Laurent Thery                                  
-                                                                           
-***************************************************************************
- A let that is left untouched by Simpl *)
+(** * LetP
 
-Definition LetP : forall (A B : Set) (h : A), (forall u : A, u = h -> B) -> B.
-intros A B h H'.
-apply H' with (u := h).
-auto.
-Defined.
+Pierre Letouzey & Laurent Thery
+
+A let that is left untouched by simpl.
+*)
+
+Definition LetP : forall (A B : Type) (h : A), (forall u : A, u = h -> B) -> B :=
+ fun A B h H' => H' h eq_refl.

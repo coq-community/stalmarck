@@ -13,20 +13,14 @@
 (* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
 (* 02110-1301 USA                                                     *)
 
+(** * sTactic
 
+Laurent Thery
 
-(****************************************************************************
-                                                                             
-          IEEE754  :  sTactic                                                     
-                                                                             
-          Laurent Thery                                                      
-                                                                             
-*****************************************************************************
+Some simple tactics
 *)
 
 #[export] Set Asymmetric Patterns.
-
-(* Some simple tactics *)
 
 Theorem Contradict1 : forall a b : Prop, b -> (a -> ~ b) -> ~ a.
 intuition.

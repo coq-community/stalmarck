@@ -13,23 +13,20 @@
 (* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
 (* 02110-1301 USA                                                     *)
 
+(** * wfArray
 
+Pierre Letouzey & Laurent Thery
 
-(****************************************************************************
-                                                                           
-          Stalmarck  :  wfArray                                                     
-                                                                           
-          Pierre Letouzey & Laurent Thery                                  
-                                                                           
-***************************************************************************
-Define a notion of wellformedness of function arrays for our application*)
-Require Export rZ.
-Require Export OrderedListEq.
-Require Export Relation_Definitions.
-Require Export LetP.
-Require Export PolyListAux.
-Require Export List.
-Require Export sTactic.
+Define a notion of wellformedness of function arrays for our application
+*)
+
+From Stalmarck Require Export rZ.
+From Stalmarck Require Export OrderedListEq.
+From Coq Require Export Relation_Definitions.
+From Stalmarck Require Export LetP.
+From Stalmarck Require Export PolyListAux.
+From Coq Require Export List.
+From Stalmarck Require Export sTactic.
 
 (*Definition of well formed array and some properties *)
 Section wfArray.

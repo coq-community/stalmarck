@@ -13,22 +13,21 @@
 (* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
 (* 02110-1301 USA                                                     *)
 
+(** * normalize
 
+Pierre Letouzey & Laurent Thery
 
-(****************************************************************************
-                                                                           
-          Stalmarck  :  normalize                                          
-                                                                           
-          Pierre Letouzey & Laurent Thery                                  
-                                                                           
-***************************************************************************
- We define our notion of boolean expression (Expr) with the connectors
- And Or Impl Eq, then we define the notion of reduced boolean expression
-(rExpr) with only the connectors And and Eq.
-   We define the normalization of Expr -> rExpr and show that it conserves
-   the semantic of the formula *)
-Require Export BoolAux.
-Require Export rZ.
+We define our notion of boolean expression ([Expr]) with the connectors
+[And], [Or] [Impl], [Eq], then we define the notion of reduced boolean
+expression ([rExpr]) with only the connectors [And] and [Eq].
+
+We define the normalization of [Expr -> rExpr] and show that it conserves
+the semantic of the formula.
+*)
+
+From Stalmarck Require Export BoolAux.
+From Stalmarck Require Export rZ.
+
 (* Here is the full set of boolean operator  (True is (V zero) !!!)*)
 
 Inductive boolOp : Set :=
