@@ -31,8 +31,8 @@ From Stalmarck Require Export sTactic.
 
 Section OrderedList.
 
-(* All the operation are done over an arbitrary set A with explicit equality, < etc *)
-Variable A : Set.
+(** All the operations are done over an arbitrary type A with explicit equality, < etc *)
+Variable A : Type.
 Variable ltA : A -> A -> Prop.
 Variable eqA : A -> A -> Prop.
 Hypothesis eqARefl : reflexive A eqA.
@@ -54,25 +54,29 @@ Casec Test; intros Test; auto.
 right.
 red in |- *; intros H'; absurd (eqA b a); auto.
 Qed.
-Hypothesis eqADec' : forall a b : A, {eqA a b} + {~ eqA a b}.
-(* What is to be ordered for a list *)
 
+Hypothesis eqADec' : forall a b : A, {eqA a b} + {~ eqA a b}.
+
+(** What it is to be ordered for a list *)
 Inductive Olist : list A -> Prop :=
   | OlistNil : Olist nil
   | OlistOne : forall a : A, Olist (a :: nil)
   | OlistCons :
       forall (a b : A) (L : list A),
       Olist (b :: L) -> ltA a b -> Olist (a :: b :: L).
-Local Hint Resolve OlistNil OlistOne OlistCons : core.
-(* Inversion lemma *)
 
+#[local] Hint Resolve OlistNil OlistOne OlistCons : core.
+
+(** Inversion lemma *)
 Theorem OlistInv : forall (a : A) (L : list A), Olist (a :: L) -> Olist L.
+Proof.
 intros a L H'; inversion H'; auto.
 Qed.
-(* Useful  short cut taking advantage of the transitivity of < *)
 
+(** Useful shortcut taking advantage of the transitivity of < *)
 Theorem OlistSkip :
  forall (a b : A) (L : list A), Olist (a :: b :: L) -> Olist (a :: L).
+Proof.
 intros a b L; case L.
 intros H'.
 apply OlistOne; auto.
@@ -87,11 +91,12 @@ intros a1 l0 H'; inversion H'; inversion H1.
 apply OlistCons; auto.
 apply ltATrans with (y := b); auto.
 Qed.
-(* The first element is the smallest *)
 
+(** The first element is the smallest *)
 Theorem OlistSup :
  forall (a : A) (L : list A),
  Olist (a :: L) -> forall b : A, In b L -> ltA a b.
+Proof.
 intros a L; elim L; simpl in |- *; auto.
 intros H' b H'0; elim H'0.
 intros a0 l H' H'0 b H'1; Elimc H'1; intros H'1; [ rewrite <- H'1 | idtac ];
@@ -100,19 +105,21 @@ inversion H'0; auto.
 apply H'; auto.
 apply OlistSkip with (b := a0); auto.
 Qed.
-(* Something equal to the head can't be in the tail *)
 
+(** Something equal to the head can't be in the tail *)
 Theorem OlistUnique :
  forall (L : list A) (a b : A), Olist (a :: L) -> eqA a b -> ~ In b L.
+Proof.
 intros L a b H' H'0; red in |- *; intros H'1; absurd (eqA a b); auto.
 apply ltAImpNotEqA; auto.
 apply OlistSup with (L := L); auto.
 Qed.
-(* Two elements equals in an ordered list are structuraly equal *)
 
+(** Two elements equals in an ordered list are structuraly equal *)
 Theorem OlistIn :
  forall (L : list A) (a b : A),
  In a L -> In b L -> Olist L -> eqA a b -> a = b.
+Proof.
 intros L; elim L; simpl in |- *; auto.
 intros a b H'; elim H'; auto.
 intros a l H' a0 b H'0; Elimc H'0; intros H'0; [ rewrite <- H'0 | idtac ].
@@ -127,14 +134,15 @@ apply OlistSup with (L := l); auto.
 apply H'; auto.
 apply OlistInv with (a := a); auto.
 Qed.
-(* Belonging with respect to InEq *)
 
+(** Belonging with respect to InEq *)
 Inductive InEq : A -> list A -> Prop :=
   | InEqHead : forall (a b : A) (L : list A), eqA a b -> InEq a (b :: L)
   | InEqSkip : forall (a b : A) (L : list A), InEq a L -> InEq a (b :: L).
-Local Hint Resolve InEqHead InEqSkip : core.
-(* Is it decidable *)
 
+#[local] Hint Resolve InEqHead InEqSkip : core.
+
+(** Is it decidable *)
 Definition InEqDec :
   forall (a : A) (L1 : list A), {InEq a L1} + {~ InEq a L1}.
 fix InEqDec 2.
@@ -146,18 +154,20 @@ case (InEqDec a l); intros REc.
 left; auto.
 right; red in |- *; intros H'0; inversion H'0; auto.
 Defined.
-(* Weakening lemma *)
 
+(** Weakening lemma *)
 Theorem inImpInEq : forall (a : A) (L : list A), In a L -> InEq a L.
+Proof.
 intros a L; elim L; simpl in |- *; auto.
 intros H'; elim H'.
 intros a0 l H' H'0; Elimc H'0; intros H'0; [ rewrite <- H'0 | idtac ]; auto.
 Qed.
-(* Version of OlistSup for InEq *)
 
+(** Version of OlistSup for InEq *)
 Theorem OlistSupEq :
  forall (a : A) (L : list A),
  Olist (a :: L) -> forall b : A, InEq b L -> ltA a b.
+Proof.
 intros a L; elim L; simpl in |- *; auto.
 intros H' b H'0; inversion H'0.
 intros a0 l H' H'0 b H'1; inversion_clear H'1.
@@ -166,40 +176,45 @@ apply OlistSup with (L := a0 :: l); simpl in |- *; auto.
 apply H'; auto.
 apply OlistSkip with (b := a0); auto.
 Qed.
-(* Version of OlistUnique for InEq *)
 
+(** Version of OlistUnique for InEq *)
 Theorem OlistUniqueEq :
  forall (L : list A) (a b : A), Olist (a :: L) -> eqA a b -> ~ InEq b L.
+Proof.
 intros L a b H' H'0; red in |- *; intros H'1; absurd (eqA a b); auto.
 apply ltAImpNotEqA; auto.
 apply OlistSupEq with (L := L); auto.
 Qed.
-(* It is comptable with equality *)
 
+(** It is comptable with equality *)
 Theorem InEqComp :
  forall (a b : A) (L : list A), InEq a L -> eqA a b -> InEq b L.
+Proof.
 intros a b L H'; generalize b; clear b; elim H'; auto.
 intros a0 b L0 H'0 b0 H'1.
 apply InEqHead; auto.
 apply eqATrans with (y := a0); auto.
 Qed.
-(* and the converse *)
 
+(** and the converse *)
 Theorem NotInEqComp :
  forall (a b : A) (L : list A), ~ InEq a L -> eqA a b -> ~ InEq b L.
+Proof.
 intros a b L H' H'0; red in |- *; intros H'1; case H'; auto.
 apply InEqComp with (a := b); auto.
 Qed.
-(* Inclusion with respect to eqA *)
 
+(** Inclusion with respect to eqA *)
 Inductive InclEq : list A -> list A -> Prop :=
     InclEqDef :
       forall L1 L2 : list A,
       (forall a : A, InEq a L1 -> InEq a L2) -> InclEq L1 L2.
-Local Hint Resolve InclEqDef : core.
-(*  Weakening *)
 
+#[local] Hint Resolve InclEqDef : core.
+
+(** Weakening *)
 Theorem inclImpImplEq : forall L1 L2 : list A, incl L1 L2 -> InclEq L1 L2.
+Proof.
 intros L1 L2 H'; apply InclEqDef.
 intros a H'0; generalize H'; elim H'0; auto.
 intros a0 b L H'1 H'2.
@@ -209,76 +224,89 @@ intros a0 b L H'1 H'2 H'3.
 apply H'2; auto.
 apply incl_tran with (A := A) (m := b :: L); auto with datatypes core.
 Qed.
-(* The empty list is in every list *)
 
+(** The empty list is in every list *)
 Theorem InclEqNil : forall L : list A, InclEq nil L.
+Proof.
 intros L.
 apply InclEqDef; auto.
 intros a H'; inversion H'.
 Qed.
-Local Hint Resolve InclEqNil : core.
-(* Reflexivity *)
 
+#[local] Hint Resolve InclEqNil : core.
+
+(** Reflexivity *)
 Theorem InclEqRef : forall L : list A, InclEq L L.
+Proof.
 intros L.
 apply InclEqDef; auto.
 Qed.
-Local Hint Resolve InclEqRef : core.
-(* Transitivity *)
 
+#[local] Hint Resolve InclEqRef : core.
+
+(** Transitivity *)
 Theorem InclEqTrans : transitive (list A) InclEq.
+Proof.
 red in |- *.
 intros x y z H' H'0; inversion_clear H'; inversion_clear H'0; auto.
 Qed.
-(* f Useful lemma *)
 
+(** Useful lemma *)
 Theorem InclEqCons :
  forall (a : A) (L1 L2 : list A),
  InEq a L2 -> InclEq L1 L2 -> InclEq (a :: L1) L2.
+Proof.
 intros a L1 L2 H' H'0; inversion H'0; auto.
 apply InclEqDef; auto.
 intros a0 H'1; inversion H'1; auto.
 apply InEqComp with (a := a); auto.
 Qed.
-Local Hint Resolve InclEqCons : core.
-(* Equality with respect to eqA *)
 
+#[local] Hint Resolve InclEqCons : core.
+
+(** Equality with respect to eqA *)
 Inductive EqL : list A -> list A -> Prop :=
   | EqLNil : EqL nil nil
   | EqLCons :
       forall (a b : A) (L1 L2 : list A),
       eqA a b -> EqL L1 L2 -> EqL (a :: L1) (b :: L2).
-Local Hint Resolve EqLNil EqLCons : core.
-(* InEq is compatible with eqL *)
 
+#[local] Hint Resolve EqLNil EqLCons : core.
+
+(** InEq is compatible with eqL *)
 Theorem EqLInv :
  forall (L1 L2 : list A) (a : A), EqL L1 L2 -> InEq a L1 -> InEq a L2.
+Proof.
 intros L1 L2 a H'; elim H'; auto.
 intros a0 b L3 L4 H'0 H'1 H'2 H'3; inversion H'3; auto.
 apply InEqHead; auto.
 apply eqATrans with (y := a0); auto.
 Qed.
-(* Reflexivity *)
 
+(** Reflexivity *)
 Theorem EqLRef : forall L : list A, EqL L L.
+Proof.
 intros L; elim L; auto.
 Qed.
-Local Hint Resolve EqLRef : core.
-(* Transitivity *)
 
+#[local] Hint Resolve EqLRef : core.
+
+(** Transitivity *)
 Theorem EqLTrans : forall L : list A, transitive (list A) EqL.
+Proof.
 intros L; red in |- *.
 intros x y z H'; generalize z; Elimc H'; clear z; auto.
 intros a b L1 L2 H' H'0 H'1 z H'2; inversion H'2; auto.
 apply EqLCons; auto.
 apply eqATrans with (y := b); auto.
 Qed.
-(* Useful inversion lemma *)
 
+(** Useful inversion lemma *)
 Theorem InclEqOlist :
  forall (L1 L2 : list A) (a b : A),
  Olist (a :: L1) ->
  Olist (b :: L2) -> InclEq (a :: L1) (b :: L2) -> InclEq L1 L2.
+Proof.
 intros L1 L2 a b H' H'0 H'1.
 apply InclEqDef; auto.
 intros a0 H'2.
@@ -296,12 +324,13 @@ apply ltAntiSym; auto.
 apply ltAeqAComp with (a := a) (b := a0); auto.
 apply OlistSupEq with (L := L2); auto.
 Qed.
-(* As we have to take care of multiplicity, a sufficient condition is
-    that lists are ordered *)
 
+(** As we have to take care of multiplicity, a sufficient condition is
+    that lists are ordered *)
 Theorem EqLOlist :
  forall L1 L2 : list A,
  Olist L1 -> Olist L2 -> InclEq L1 L2 -> InclEq L2 L1 -> EqL L1 L2.
+Proof.
 intros L1; elim L1; auto.
 intros L2; case L2; auto.
 intros a l H' H'0 H'1 H'2; inversion H'2.
@@ -325,8 +354,8 @@ apply ltAntiSym; auto.
 apply OlistSupEq with (L := l); auto.
 apply OlistSupEq with (L := l0); auto.
 Qed.
-(* Try to find an element in the first list that is not in the second *)
 
+(** Try to find an element in the first list that is not in the second *)
 Fixpoint diffElem (L1 : list A) : list A -> option A :=
   fun L2 : list A =>
   match L1 with
@@ -337,19 +366,21 @@ Fixpoint diffElem (L1 : list A) : list A -> option A :=
       | right _ => Some a
       end
   end.
-(* If we can't find such element there is inclusion *)
 
+(** If we can't find such element there is inclusion *)
 Theorem diffElemNone :
  forall L1 L2 : list A, diffElem L1 L2 = None -> InclEq L1 L2.
+Proof.
 intros L1; elim L1; simpl in |- *; auto.
 intros a l H' L2.
 case (InEqDec a L2); auto.
 intros H'0 H'1; discriminate.
 Qed.
-(* If there is an element it belongs to the first *)
 
+(** If there is an element it belongs to the first *)
 Theorem diffElemSomeIn :
  forall (L1 L2 : list A) (a : A), diffElem L1 L2 = Some a -> InEq a L1.
+Proof.
 intros L1; elim L1; simpl in |- *; auto.
 intros H' a H'0; discriminate.
 intros a l H' L2 a0.
@@ -358,10 +389,11 @@ apply InEqSkip; auto.
 apply H' with (L2 := L2); auto.
 inversion Eq0; auto.
 Qed.
-(* and does not belong to the other *)
 
+(** and does not belong to the other *)
 Theorem diffElemSomeNIn :
  forall (L1 L2 : list A) (a : A), diffElem L1 L2 = Some a -> ~ InEq a L2.
+Proof.
 intros L1; elim L1; simpl in |- *; auto.
 intros H' a H'0; discriminate.
 intros a l H' L2 a0.
@@ -369,8 +401,8 @@ case (InEqDec a L2); intros InEq0 Eq0; auto.
 inversion Eq0; auto.
 rewrite <- H0; auto.
 Qed.
-(* If the list are not the same we should find such an element *)
 
+(** If the list are not the same we should find such an element *)
 Definition olistDiff :
   forall L1 L2 : list A,
   Olist L1 ->
@@ -396,61 +428,67 @@ apply EqLOlist; auto.
 apply diffElemNone; auto.
 apply diffElemNone; auto.
 Defined.
-(* Two list are disjoint if there are no common element *)
 
+(** Two list are disjoint if there are no common element *)
 Inductive Disjoint : list A -> list A -> Prop :=
     DisjointDef :
       forall L1 L2 : list A,
       (forall a : A, InEq a L1 -> ~ InEq a L2) -> Disjoint L1 L2.
-(* Symmetry *)
 
+(** Symmetry *)
 Theorem DisjointCom : forall L1 L2 : list A, Disjoint L1 L2 -> Disjoint L2 L1.
+Proof.
 intros L1 L2 H'; elim H'; auto.
 intros L3 L4 H'0.
 apply DisjointDef.
 intros a H'1; red in |- *; intros H'2; absurd (InEq a L4); auto.
 Qed.
-(* First inversion lemma *)
 
+(** First inversion lemma *)
 Theorem DisjointInv1 :
  forall (a : A) (L1 L2 : list A), Disjoint L1 (a :: L2) -> Disjoint L1 L2.
+Proof.
 intros a L1 L2 H'; inversion H'; apply DisjointDef.
 intros a0 H'0; red in |- *; intros H'1.
 lapply (H a0); [ intros H'3; apply H'3 | idtac ]; auto.
 Qed.
-(* Second inversion lemma *)
 
+(** Second inversion lemma *)
 Theorem DisjointInv2 :
  forall (a : A) (L1 L2 : list A), Disjoint (a :: L1) L2 -> Disjoint L1 L2.
+Proof.
 intros a L1 L2 H'.
 apply DisjointCom.
 apply DisjointInv1 with (a := a); auto.
 apply DisjointCom; auto.
 Qed.
-(* First Destructor  *)
 
+(** First Destructor  *)
 Theorem DisjointCons1 :
  forall (b : A) (L1 L2 : list A),
  Disjoint L1 L2 -> ~ InEq b L1 -> Disjoint L1 (b :: L2).
+Proof.
 intros a L1 L2 H' H'0; inversion_clear H'.
 apply DisjointDef; simpl in |- *; auto.
 intros b H'1; red in |- *; intros H'2; inversion_clear H'2; auto.
 case H'0; apply InEqComp with (a := b); auto.
 absurd (InEq b L2); auto.
 Qed.
-(* Second destructor *)
 
+(** Second destructor *)
 Theorem DisjointCons2 :
  forall (a : A) (L1 L2 : list A),
  Disjoint L1 L2 -> ~ InEq a L2 -> Disjoint (a :: L1) L2.
+Proof.
 intros a L1 L2 H' H'0; apply DisjointCom; auto.
 apply DisjointCons1; auto.
 apply DisjointCom; auto.
 Qed.
-(* Disjoint is compaatible with inclusion *)
 
+(** Disjoint is compatible with inclusion *)
 Theorem DisjointInclL :
  forall L1 L2 L3 : list A, Disjoint L1 L2 -> InclEq L3 L1 -> Disjoint L3 L2.
+Proof.
 intros L1 L2 L3 H' H'0.
 apply DisjointDef; auto.
 intros a H'1; inversion H'.
@@ -460,6 +498,7 @@ Qed.
 
 Theorem DisjointInclR :
  forall L1 L2 L3 : list A, Disjoint L1 L2 -> InclEq L3 L2 -> Disjoint L1 L3.
+Proof.
 intros L1 L2 L3 H' H'0.
 apply DisjointCom.
 apply DisjointInclL with (L1 := L2); auto.
@@ -469,12 +508,13 @@ Qed.
 Theorem DisjointIncl :
  forall L1 L2 L3 L4 : list A,
  Disjoint L1 L2 -> InclEq L3 L1 -> InclEq L4 L2 -> Disjoint L3 L4.
+Proof.
 intros L1 L2 L3 L4 H' H'0 H'1.
 apply DisjointInclR with (L2 := L2); auto.
 apply DisjointInclL with (L1 := L1); auto.
 Qed.
-(* Append two list (valid if the two list are ordered ) *)
 
+(** Append two lists (valid if the two list are ordered) *)
 Inductive append : list A -> list A -> list A -> Prop :=
   | appendNil1 : forall L1 : list A, append L1 nil L1
   | appendNil2 : forall L2 : list A, append nil L2 L2
@@ -489,12 +529,14 @@ Inductive append : list A -> list A -> list A -> Prop :=
       forall (a b : A) (L1 L2 L3 : list A),
       ltA b a ->
       append (a :: L1) L2 L3 -> append (a :: L1) (b :: L2) (b :: L3).
-Local Hint Resolve appendNil1 appendNil2 appendEqA appendLtA1 appendLtA2 : core.
-(* If the two list are disjoint it does not matter how we do the append *)
 
+#[local] Hint Resolve appendNil1 appendNil2 appendEqA appendLtA1 appendLtA2 : core.
+
+(** If the two list are disjoint it does not matter how we do the append *)
 Theorem appendCom :
  forall L1 L2 L3 : list A,
  append L1 L2 L3 -> Disjoint L1 L2 -> append L2 L1 L3.
+Proof.
 intros L1 L2 L3 H'; elim H'; auto.
 intros a b L4 L5 L6 H'0 H'1 H'2 H'3; inversion_clear H'3.
 absurd (InEq a (b :: L5)); auto.
@@ -506,10 +548,11 @@ intros a b L4 L5 L6 H'0 H'1 H'2 H'3; apply appendLtA1; auto.
 apply H'2; auto.
 apply DisjointInv1 with (a := b); auto.
 Qed.
-(* We get a greater list than the first *)
 
+(** We get a greater list than the first *)
 Theorem appendIncl1 :
  forall L1 L2 L3 : list A, append L1 L2 L3 -> InclEq L1 L3.
+Proof.
 intros L1 L2 L3 H'; elim H'; auto with datatypes core.
 intros a b L4 L5 L6 H'0 H'1 H'2.
 apply InclEqDef; auto.
@@ -520,10 +563,11 @@ intros a0 H'3; inversion_clear H'2; inversion_clear H'3; auto.
 intros a b L4 L5 L6 H'0 H'1 H'2; apply InclEqDef; auto.
 intros a0 H'3; inversion_clear H'2; inversion_clear H'3; auto.
 Qed.
-(* The condition of the two list is not necessary but we keep it for symmetry with Incl2 *)
 
+(** The condition of the two list is not necessary but we keep it for symmetry with Incl2 *)
 Theorem appendDisjIncl1 :
  forall L1 L2 L3 : list A, append L1 L2 L3 -> Disjoint L1 L2 -> incl L1 L3.
+Proof.
 intros L1 L2 L3 H'; elim H'; auto with datatypes core.
 intros L4 H'0; red in |- *; intros a H'1; inversion H'1.
 intros a b L4 L5 L6 H'0 H'1 H'2 H'3; inversion_clear H'3.
@@ -536,10 +580,11 @@ intros a b L4 L5 L6 H'0 H'1 H'2 H'3; apply incl_tran with (m := L6);
  simpl in |- *; auto with datatypes core.
 apply H'2; apply DisjointInv1 with (a := b); auto.
 Qed.
-(* Same for the second argument *)
 
+(** Same for the second argument *)
 Theorem appendIncl2 :
  forall L1 L2 L3 : list A, append L1 L2 L3 -> InclEq L2 L3.
+Proof.
 intros L1 L2 L3 H'; elim H'; auto with datatypes core.
 intros a b L4 L5 L6 H'0 H'1 H'2; apply InclEqDef.
 intros a0 H'3; inversion_clear H'2; inversion_clear H'3; auto.
@@ -549,10 +594,11 @@ intros a0 H'3; inversion_clear H'2; inversion_clear H'3; auto.
 intros a b L4 L5 L6 H'0 H'1 H'2; apply InclEqDef; auto.
 intros a0 H'3; inversion_clear H'2; inversion_clear H'3; auto.
 Qed.
-(* Same for the second argument *)
 
+(** Same for the second argument *)
 Theorem appendDisjIncl2 :
  forall L1 L2 L3 : list A, append L1 L2 L3 -> Disjoint L1 L2 -> incl L2 L3.
+Proof.
 intros L1 L2 L3 H'; elim H'; auto with datatypes core.
 intros L4 H'0; red in |- *; intros a H'1; inversion H'1.
 intros a b L4 L5 L6 H'0 H'1 H'2 H'3; inversion_clear H'3.
@@ -566,11 +612,12 @@ intros a b L4 L5 L6 H'0 H'1 H'2 H'3; apply incl_cons with (A := A);
  auto with datatypes core.
 apply H'2; apply DisjointInv1 with (a := b); auto.
 Qed.
-(* The element an append belongs to one of the two list *)
 
+(** The element an append belongs to one of the two list *)
 Theorem appendInv :
  forall L1 L2 L3 : list A,
  append L1 L2 L3 -> forall m : A, In m L3 -> In m L1 \/ In m L2.
+Proof.
 intros L1 L2 L3 H'; elim H'; simpl in |- *; auto.
 intros a b L4 L5 L6 H'0 H'1 H'2 m H'3; Elimc H'3; intros H'3;
  [ rewrite <- H'3 | idtac ]; auto.
@@ -580,11 +627,12 @@ elim (H'2 m); [ intros H'6 | intros H'6 | idtac ]; auto.
 intros a b L4 L5 L6 H'0 H'1 H'2 m H'3; Elimc H'3; intros H'3; auto.
 elim (H'2 m); [ intros H'6 | intros H'6 | idtac ]; auto.
 Qed.
-(* Same but for InEq *)
 
+(** Same but for InEq *)
 Theorem appendEqInv :
  forall L1 L2 L3 : list A,
  append L1 L2 L3 -> forall m : A, InEq m L3 -> InEq m L1 \/ InEq m L2.
+Proof.
 intros L1 L2 L3 H'; elim H'; simpl in |- *; auto.
 intros a b L4 L5 L6 H'0 H'1 H'2 m H'3; inversion_clear H'3; auto.
 case (H'2 m H); intros H'5; auto.
@@ -593,12 +641,13 @@ case (H'2 m H); intros H'5; auto.
 intros a b L4 L5 L6 H'0 H'1 H'2 m H'3; inversion_clear H'3; auto.
 case (H'2 m H); intros H'5; auto.
 Qed.
-(* Compatibility with Disjoint *)
 
+(** Compatibility with Disjoint *)
 Theorem appendDisjoint :
  forall L1 L2 L3 : list A,
  append L1 L2 L3 ->
  forall L4 : list A, Disjoint L1 L4 -> Disjoint L2 L4 -> Disjoint L3 L4.
+Proof.
 intros L1 L2 L3 H'; elim H'; auto.
 intros a b L4 L5 L6 H'0 H'1 H'2 L7 H'3 H'4.
 apply DisjointCons2; auto.
@@ -615,24 +664,26 @@ apply H'2; auto.
 apply DisjointInv2 with (a := b); auto.
 inversion_clear H'4; auto.
 Qed.
-(* A mimimun for the two lists is a minimum for the append *)
 
+(** A minimum for the two lists is a minimum for the append *)
 Theorem appendSup :
  forall L1 L2 L3 : list A,
  append L1 L2 L3 ->
  forall a : A,
  (forall b : A, In b L1 -> ltA a b) ->
  (forall b : A, In b L2 -> ltA a b) -> forall b : A, In b L3 -> ltA a b.
+Proof.
 intros L1 L2 L3 H'; elim H'; simpl in |- *; auto;
  intros a b L4 L5 L6 H'0 H'1 H'2 a0 H'3 H'4 b0 H'5;
  (Elimc H'5; intros H'5; [ rewrite <- H'5 | idtac ]); 
  auto.
 Qed.
-(* If the two lists are ordered the result is ordered *)
 
+(** If the two lists are ordered the result is ordered *)
 Theorem appendOlist :
  forall L1 L2 L3 : list A,
  append L1 L2 L3 -> Olist L1 -> Olist L2 -> Olist L3.
+Proof.
 intros L1 L2 L3 H'; elim H'; auto.
 intros a b L4 L5 L6; case L6; auto.
 intros a0 l H'0 H'1 H'2 H'3 H'4.
@@ -671,8 +722,7 @@ apply OlistSup with (L := L5); auto.
 simpl in |- *; auto.
 Qed.
 
-(* We have a hard time to define this function so it can be evaluated inside Coq !! *)
-
+(** We have a hard time to define this function so it can be evaluated inside Coq !! *)
 Definition appendf :=
   (fix aux1 (l1 l2 : list A) {struct l1} : list A :=
      match l1, l2 with
@@ -695,9 +745,10 @@ Definition appendf :=
      | nil, _ => l2
      | _, nil => l1
      end).
-(* We simply show that it realize  append *)
 
+(** We simply show that it realize  append *)
 Theorem appendfAppend : forall L1 L2 : list A, append L1 L2 (appendf L1 L2).
+Proof.
 intros L1; elim L1; simpl in |- *.
 intros L2; case L2; simpl in |- *; auto with datatypes core.
 intros a l H' L2; case L2; simpl in |- *; auto with datatypes core.
@@ -710,33 +761,39 @@ intros a1 l1 H'0.
 case (ltADec a a1); intros s1; auto.
 Casec s1; intros s1; auto.
 Qed.
-Local Hint Resolve appendfAppend : core.
-(* and now we simply lift of the propertiers of append to append f *)
 
+#[local] Hint Resolve appendfAppend : core.
+
+(** and now we simply lift of the propertiers of append to append f *)
 Theorem appendfIncl1 :
  forall L1 L2 : list A, Disjoint L1 L2 -> incl L1 (appendf L1 L2).
+Proof.
 intros L1 L2 HL1L2.
 apply appendDisjIncl1 with (L2 := L2); auto.
 Qed.
 
 Theorem appendfIncl2 :
  forall L1 L2 : list A, Disjoint L1 L2 -> incl L2 (appendf L1 L2).
+Proof.
 intros L1 L2 HL1L2.
 apply appendDisjIncl2 with (L1 := L1); auto.
 Qed.
 
 Theorem appendfInv :
  forall (L1 L2 : list A) (m : A), In m (appendf L1 L2) -> In m L1 \/ In m L2.
+Proof.
 intros L1 L2 m H'.
 apply appendInv with (L3 := appendf L1 L2); auto.
 Qed.
 
 Theorem appendfInclEq1 : forall L1 L2 : list A, InclEq L1 (appendf L1 L2).
+Proof.
 intros L1 L2.
 apply appendIncl1 with (L2 := L2); auto.
 Qed.
 
 Theorem appendfInclEq2 : forall L1 L2 : list A, InclEq L2 (appendf L1 L2).
+Proof.
 intros L1 L2.
 apply appendIncl2 with (L1 := L1); auto.
 Qed.
@@ -744,6 +801,7 @@ Qed.
 Theorem appendfInvEq :
  forall (L1 L2 : list A) (m : A),
  InEq m (appendf L1 L2) -> InEq m L1 \/ InEq m L2.
+Proof.
 intros L1 L2 m H'.
 apply appendEqInv with (L3 := appendf L1 L2); auto.
 Qed.
@@ -751,6 +809,7 @@ Qed.
 Theorem NotInAppendf :
  forall (L1 L2 : list A) (m : A),
  ~ InEq m L1 -> ~ InEq m L2 -> ~ InEq m (appendf L1 L2).
+Proof.
 intros L1 L2 m H' H'0; red in |- *; intros H'1.
 case (appendfInvEq L1 L2 m H'1); auto.
 Qed.
@@ -760,17 +819,20 @@ Theorem appendfDisjoint :
  Disjoint L1 L2 ->
  forall L3 : list A,
  Disjoint L1 L3 -> Disjoint L2 L3 -> Disjoint (appendf L1 L2) L3.
+Proof.
 intros L1 L2 HL1L2 L3 H' H'0.
 apply appendDisjoint with (L1 := L1) (L2 := L2); auto.
 Qed.
 
 Theorem appendfOlist :
  forall L1 L2 : list A, Olist L1 -> Olist L2 -> Olist (appendf L1 L2).
+Proof.
 intros L1 L2 H' H'0.
 apply appendOlist with (L1 := L1) (L2 := L2); auto.
 Qed.
 
 Theorem Olistf : forall L : list A, Olist L -> Olist (map f L).
+Proof.
 intros L H'; elim H'; simpl in |- *; auto.
 intros a b L0 H'0 H'1 H'2.
 apply OlistCons; auto.
@@ -779,6 +841,7 @@ Qed.
 
 Theorem Disjointf :
  forall L1 L2 : list A, Disjoint L1 L2 -> Disjoint L1 (map f L2).
+Proof.
 intros L1 L2 H'; elim H'; auto.
 intros L3 L4; elim L4; simpl in |- *; auto.
 intros H'0.
@@ -792,8 +855,7 @@ red in |- *; intros H'2.
 lapply (H'1 (f a)); [ intros H'5; case H'5 | idtac ]; auto.
 Qed.
 
-(* A variant of append when we consider that the second must be seen through a filter f *)
-
+(** A variant of append when we consider that the second must be seen through a filter f *)
 Definition fappendf :=
   (fix aux1 (l1 l2 : list A) {struct l1} : list A :=
      match l1, l2 with
@@ -816,10 +878,11 @@ Definition fappendf :=
      | nil, _ => map f l2
      | _, nil => l1
      end).
-(* Show that this filtered append is correct *)
 
+(** Show that this filtered append is correct *)
 Theorem fappendfAppend :
  forall L1 L2 : list A, append L1 (map f L2) (fappendf L1 L2).
+Proof.
 intros L1; elim L1; simpl in |- *.
 intros L2; case L2; simpl in |- *; auto with datatypes core.
 intros a l H' L2; case L2; simpl in |- *; auto with datatypes core.
@@ -848,11 +911,13 @@ apply eqATrans with a1; auto.
 apply appendEqA; auto.
 apply eqATrans with a0; auto.
 Qed.
-Local Hint Resolve fappendfAppend : core.
-(* We lift the properties as usual *)
 
+#[local] Hint Resolve fappendfAppend : core.
+
+(** We lift the properties as usual *)
 Theorem fappendfIncl1 :
  forall (L1 L2 : list A) (HL1L2 : Disjoint L1 L2), incl L1 (fappendf L1 L2).
+Proof.
 intros L1 L2 HL1L2.
 apply appendDisjIncl1 with (L2 := map f L2); auto.
 apply Disjointf; auto.
@@ -861,6 +926,7 @@ Qed.
 Theorem fappendfIncl2 :
  forall (L1 L2 : list A) (HL1L2 : Disjoint L1 L2),
  incl (map f L2) (fappendf L1 L2).
+Proof.
 intros L1 L2 HL1L2.
 apply appendDisjIncl2 with (L1 := L1); auto.
 apply Disjointf; auto.
@@ -869,17 +935,20 @@ Qed.
 Theorem fappendfInv :
  forall (L1 L2 : list A) (m : A),
  In m (fappendf L1 L2) -> In m L1 \/ In m (map f L2).
+Proof.
 intros L1 L2 m H'.
 apply appendInv with (L3 := fappendf L1 L2); auto.
 Qed.
 
 Theorem fappendfInclEq1 : forall L1 L2 : list A, InclEq L1 (fappendf L1 L2).
+Proof.
 intros L1 L2.
 apply appendIncl1 with (L2 := map f L2); auto.
 Qed.
 
 Theorem fappendfInclEq2 :
  forall L1 L2 : list A, InclEq (map f L2) (fappendf L1 L2).
+Proof.
 intros L1 L2.
 apply appendIncl2 with (L1 := L1); auto.
 Qed.
@@ -887,6 +956,7 @@ Qed.
 Theorem fappendfInvEq :
  forall (L1 L2 : list A) (m : A),
  InEq m (fappendf L1 L2) -> InEq m L1 \/ InEq m (map f L2).
+Proof.
 intros L1 L2 m H'.
 apply appendEqInv with (L3 := fappendf L1 L2); auto.
 Qed.
@@ -894,6 +964,7 @@ Qed.
 Theorem fappendfDisjoint :
  forall (L1 L2 : list A) (HL1L2 : Disjoint L1 L2) (L3 : list A),
  Disjoint L1 L3 -> Disjoint L2 L3 -> Disjoint (fappendf L1 L2) L3.
+Proof.
 intros L1 L2 HL1L2 L3 H' H'0.
 apply appendDisjoint with (L1 := L1) (L2 := map f L2); auto.
 apply DisjointCom.
@@ -903,18 +974,18 @@ Qed.
 
 Theorem fappendfOlist :
  forall L1 L2 : list A, Olist L1 -> Olist L2 -> Olist (fappendf L1 L2).
+Proof.
 intros L1 L2 H' H'0.
 apply appendOlist with (L1 := L1) (L2 := map f L2); auto.
 apply Olistf; auto.
 Qed.
 
-(* A test function that is finer that the equality *)
+(** A test function that is finer that the equality *)
 Variable test : A -> A -> Prop.
 Variable testDec : forall a b : A, eqA a b -> {test a b} + {~ test a b}.
 Variable testEq : forall a b : A, test a b -> eqA a b.
 
-(* Finding the minimum element that verifies test *)
-
+(** Finding the minimum element that verifies test *)
 Definition getMin :=
   (fix aux1 (l1 l2 : list A) {struct l1} : option A :=
      match l1, l2 with
@@ -945,11 +1016,12 @@ Definition getMin :=
      | nil, _ => None
      | _, nil => None
      end).
-(* If there is such elemnt it belongs to the first list *)
 
+(** If there is such element it belongs to the first list *)
 Theorem geMinIn :
  forall (L1 L2 : list A) (a : A),
  Olist L1 -> Olist L2 -> getMin L1 L2 = Some a -> In a L1.
+Proof.
 intros L1; elim L1; simpl in |- *.
 intros L2; case L2; simpl in |- *; auto with datatypes core.
 intros a H' H'0 H'1; discriminate.
@@ -984,12 +1056,13 @@ apply (H' l0); auto.
 apply OlistInv with (a := a); auto.
 apply OlistInv with (a := a0); auto.
 Qed.
-(* and there is an element in L2 such that test is satisified *)
 
+(** and there is an element in L2 such that test is satisified *)
 Theorem getMinComp :
  forall (L1 L2 : list A) (a : A),
  Olist L1 ->
  Olist L2 -> getMin L1 L2 = Some a -> exists b : A, test a b /\ In b L2.
+Proof.
 intros L1; elim L1; simpl in |- *.
 intros L2; case L2; simpl in |- *; auto with datatypes core.
 intros a H' H'0 H'1; discriminate.
@@ -1031,14 +1104,15 @@ apply OlistInv with (a := a); auto.
 apply OlistInv with (a := a0); auto.
 intros x H'4; elim H'4; intros H'5 H'6; exists x; auto.
 Qed.
-(* and it is the minimal element such that *)
 
+(** and it is the minimal element such that *)
 Theorem getMinMin :
  forall (L1 L2 : list A) (a : A),
  Olist L1 ->
  Olist L2 ->
  getMin L1 L2 = Some a ->
  forall b c : A, ltA b a -> In b L1 -> In c L2 -> ~ test b c.
+Proof.
 intros L1; elim L1; simpl in |- *.
 intros L2; case L2; simpl in |- *; auto with datatypes core.
 intros a l H' L2; case L2; simpl in |- *; auto with datatypes core.
@@ -1125,13 +1199,14 @@ apply (H' l0 a1); auto.
 apply OlistInv with (a := a); auto.
 apply OlistInv with (a := a0); auto.
 Qed.
-(* If there is not then this mean that there is no couple (a,b) such that (test a b) *)
 
+(** If there is not then this mean that there is no couple (a,b) such that (test a b) *)
 Theorem getMinNone :
  forall L1 L2 : list A,
  Olist L1 ->
  Olist L2 ->
  getMin L1 L2 = None -> forall a b : A, In a L1 -> In b L2 -> ~ test a b.
+Proof.
 intros L1; elim L1; simpl in |- *.
 intros L2; case L2; simpl in |- *; auto with datatypes core.
 intros a l H' L2; case L2; simpl in |- *; auto with datatypes core.
@@ -1212,8 +1287,8 @@ apply (H' l0); auto.
 apply OlistInv with (a := a); auto.
 apply OlistInv with (a := a0); auto.
 Qed.
-(* Intersection of 2 list *)
 
+(** Intersection of 2 lists *)
 Inductive inter : list A -> list A -> list A -> Prop :=
   | interNil1 : forall L1 : list A, inter L1 nil nil
   | interNil2 : forall L2 : list A, inter nil L2 nil
@@ -1226,9 +1301,10 @@ Inductive inter : list A -> list A -> list A -> Prop :=
   | interLtA2 :
       forall (a b : A) (L1 L2 L3 : list A),
       ltA b a -> inter (a :: L1) L2 L3 -> inter (a :: L1) (b :: L2) L3.
-(* The intersection is included in the first list *)
 
+(** The intersection is included in the first list *)
 Theorem interIncl1 : forall L1 L2 L3 : list A, inter L1 L2 L3 -> InclEq L3 L1.
+Proof.
 intros L1 L2 L3 H'; elim H'; auto with datatypes core.
 intros a b L4 L5 L6 H'0 H'1 H'2.
 apply InclEqCons; auto.
@@ -1236,9 +1312,10 @@ apply InclEqTrans with (y := L4); auto.
 intros a b L4 L5 L6 H'0 H'1 H'2.
 apply InclEqTrans with (y := L4); auto.
 Qed.
-(* The intersection is included in the second list *)
 
+(** The intersection is included in the second list *)
 Theorem interIncl2 : forall L1 L2 L3 : list A, inter L1 L2 L3 -> InclEq L3 L2.
+Proof.
 intros L1 L2 L3 H'; elim H'; auto with datatypes core.
 intros a b L4 L5 L6 H'0 H'1 H'2.
 apply InclEqCons; auto.
@@ -1246,23 +1323,25 @@ apply InclEqTrans with (y := L5); auto.
 intros a b L4 L5 L6 H'0 H'1 H'2.
 apply InclEqTrans with (y := L5); auto.
 Qed.
-(* A minimum for the the two list is a minimum for the intersection *)
 
+(** A minimum for the the two list is a minimum for the intersection *)
 Theorem interSup :
  forall L1 L2 L3 : list A,
  inter L1 L2 L3 ->
  forall a : A,
  (forall b : A, In b L1 -> ltA a b) ->
  (forall b : A, In b L2 -> ltA a b) -> forall b : A, In b L3 -> ltA a b.
+Proof.
 intros L1 L2 L3 H'; elim H'; simpl in |- *; auto;
  intros a b L4 L5 L6 H'0 H'1 H'2 a0 H'3 H'4 b0 H'5;
  (Elimc H'5; intros H'5; [ rewrite <- H'5 | idtac ]); 
  auto.
 Qed.
-(* Intersection is ordered *)
 
+(** Intersection is ordered *)
 Theorem interOlist :
  forall L1 L2 L3 : list A, inter L1 L2 L3 -> Olist L1 -> Olist L2 -> Olist L3.
+Proof.
 intros L1 L2 L3 H'; elim H'; auto.
 intros a b L4 L5 L6; case L6; auto.
 intros a0 l H'0 H'1 H'2 H'3 H'4.
@@ -1284,9 +1363,10 @@ intros a b L4 L5 L6 H'0 H'1 H'2 H'3 H'4.
 apply H'2; auto.
 apply OlistInv with (a := b); auto.
 Qed.
-(* An ordered list can't have multiple elements *)
 
+(* An ordered list can't have multiple elements *)
 Theorem InEqNList : forall (a : A) (L : list A), InEq a L -> ~ Olist (a :: L).
+Proof.
 intros a L; elim L; auto.
 intros H'; inversion H'; auto.
 intros a0 l H' H'0; inversion H'0; auto.
@@ -1295,10 +1375,11 @@ absurd (eqA a a0); auto.
 red in |- *; intros H'1; case H'; auto.
 apply OlistSkip with (b := a0); auto.
 Qed.
-(* The head of the list is a minimum *)
 
+(* The head of the list is a minimum *)
 Theorem InEqSup :
  forall (a b : A) (L : list A), InEq a L -> Olist (b :: L) -> ltA b a.
+Proof.
 intros a b L; elim L; auto.
 intros H'; inversion H'; auto.
 intros a0 l H' H'0 H'1; inversion H'0; auto.
@@ -1307,13 +1388,14 @@ apply OlistSup with (L := a0 :: l); auto with datatypes core.
 apply H'; auto.
 apply OlistSkip with (b := a0); auto.
 Qed.
-(* Inversion lemma for inclusion *)
 
+(** Inversion lemma for inclusion *)
 Theorem InEqOlistInv :
  forall (a b : A) (L1 L2 : list A),
  InclEq (a :: L1) (b :: L2) ->
  Olist (a :: L1) ->
  Olist (b :: L2) -> InclEq (a :: L1) L2 \/ eqA a b /\ InclEq L1 L2.
+Proof.
 intros a b L1 L2 H' H'0 H'1.
 case (ltADec a b); intros Eqab.
 Casec Eqab; intros Eqab.
@@ -1341,14 +1423,15 @@ apply ltAImpNotEqA; auto.
 apply InEqSup with (L := L1); auto.
 apply eqATrans with (y := b); auto.
 Qed.
-(* The intersection is the maximum list that is included in both *)
 
+(** The intersection is the maximum list that is included in both *)
 Theorem interMin :
  forall L1 L2 L3 L4 : list A,
  inter L1 L2 L3 ->
  Olist L1 ->
  Olist L2 ->
  Olist L3 -> Olist L4 -> InclEq L4 L1 -> InclEq L4 L2 -> InclEq L4 L3.
+Proof.
 intros L1 L2 L3 L4 H'; generalize L4; clear L4; elim H'; auto.
 intros a b L4 L5 L6 H'0 H'1 H'2 L7; case L7; auto.
 intros a0 l H'3 H'4 H'5 H'6 H'7 H'8.
@@ -1415,12 +1498,13 @@ inversion H'7; auto.
 apply OlistCons; auto.
 apply ltAeqAComp with (a := b) (b := a); auto.
 Qed.
-(* intersection commutes if the list are ordered *)
 
+(** intersection commutes if the list are ordered *)
 Theorem interCom :
  forall L1 L2 L3 L4 : list A,
  inter L1 L2 L3 ->
  inter L2 L1 L4 -> Olist L1 -> Olist L2 -> Olist L3 -> Olist L4 -> EqL L3 L4.
+Proof.
 intros L1 L2 L3 L4 H' H'0 H'1 H'2 H'3 H'4.
 apply EqLOlist; auto.
 apply interMin with (L1 := L2) (L2 := L1); auto.
@@ -1431,8 +1515,7 @@ apply interIncl2 with (L1 := L2); auto.
 apply interIncl1 with (L2 := L1); auto.
 Qed.
 
-(* A function that realizes intersection *)
-
+(** A function that realizes intersection *)
 Definition interf :=
   (fix aux1 (l1 l2 : list A) {struct l1} : list A :=
      match l1, l2 with
@@ -1455,9 +1538,10 @@ Definition interf :=
      | nil, _ => nil
      | _, nil => nil
      end).
-(* it is correct *)
 
+(** it is correct *)
 Theorem interfProp1 : forall L1 L2 : list A, inter L1 L2 (interf L1 L2).
+Proof.
 intros L1; elim L1; simpl in |- *.
 intros L2; case L2; simpl in |- *; intros; apply interNil2; auto.
 intros a l H' L2; case L2; simpl in |- *; auto with datatypes core.
@@ -1475,21 +1559,25 @@ apply interLtA2; auto.
 apply interEqA; auto.
 apply interEqA; auto.
 Qed.
-Local Hint Resolve interfProp1 : core.
-(* Now we can lift the properties *)
 
+#[local] Hint Resolve interfProp1 : core.
+
+(** Now we can lift the properties *)
 Theorem interfIncl1 : forall L1 L2 : list A, InclEq (interf L1 L2) L1.
+Proof.
 intros L1 L2.
 apply interIncl1 with (L2 := L2); auto.
 Qed.
 
 Theorem interfIncl2 : forall L1 L2 : list A, InclEq (interf L1 L2) L2.
+Proof.
 intros L1 L2.
 apply interIncl2 with (L1 := L1); auto.
 Qed.
 
 Theorem interfOlist :
  forall L1 L2 : list A, Olist L1 -> Olist L2 -> Olist (interf L1 L2).
+Proof.
 intros L1 L2 H' H'0.
 apply interOlist with (L1 := L1) (L2 := L2); auto.
 Qed.
@@ -1499,6 +1587,7 @@ Theorem interfMin :
  Olist L1 ->
  Olist L2 ->
  Olist L3 -> InclEq L3 L1 -> InclEq L3 L2 -> InclEq L3 (interf L1 L2).
+Proof.
 intros L1 L2 L3 H' H'0 H'1 H'2 H'3.
 apply interMin with (L1 := L1) (L2 := L2); auto.
 apply interfOlist; auto.
@@ -1507,9 +1596,11 @@ Qed.
 Theorem interfCom :
  forall L1 L2 : list A,
  Olist L1 -> Olist L2 -> EqL (interf L1 L2) (interf L2 L1).
+Proof.
 intros L1 L2 H' H'0.
 apply interCom with (L1 := L1) (L2 := L2); auto.
 apply interfOlist; auto.
 apply interfOlist; auto.
 Qed.
+
 End OrderedList.

@@ -23,10 +23,9 @@ Given a state, equality is decidable
 From Coq Require Import List.
 From Stalmarck Require Export state.
 
-(* To show that the equality is decidable we need a more `constructive' predicate
+(** To show that the equality is decidable we need a more `constructive' predicate
     than eqStateRz to define equality. We introduce eqConstrState and prove that
     it  has the same meaning than eqStateRz *)
-
 Inductive eqConstrState : State -> rZ -> rZ -> Prop :=
   | eqConstrStateNil : forall a : rZ, eqConstrState nil a a
   | eqConstrStateTail :
@@ -51,43 +50,54 @@ Inductive eqConstrState : State -> rZ -> rZ -> Prop :=
   | eqConstrStateContr :
       forall (a b c d : rZ) (S : State),
       eqConstrState S a (rZComp b) -> eqConstrState ((a, b) :: S) c d.
+
 #[export] Hint Resolve eqConstrStateNil eqConstrStateTail eqConstrStateComp1
   eqConstrStateComp2 eqConstrStateComp3 eqConstrStateComp4 eqConstrStateContr : stalmarck.
 
 Theorem eqConstrStateRef : forall (a : rZ) (S : State), eqConstrState S a a.
+Proof.
 intros a L; elim L; auto with stalmarck.
 Qed.
+
 #[export] Hint Resolve eqConstrStateRef : stalmarck.
 
 Theorem eqConstrStateIn :
  forall (a b : rZ) (S : State), In (a, b) S -> eqConstrState S a b.
+Proof.
 intros a b L; elim L; simpl in |- *; auto with stalmarck.
 intros H'; elim H'; auto with stalmarck.
 intros a0 l H' H'0; Elimc H'0; intros H'0; [ rewrite H'0 | idtac ]; auto with stalmarck.
 Qed.
+
 #[export] Hint Resolve eqConstrStateIn : stalmarck.
 
 Theorem eqConstrStateInv :
  forall (a b : rZ) (S : State),
  eqConstrState S a b -> eqConstrState S (rZComp a) (rZComp b).
+Proof.
 intros a b S H'; elim H'; auto with stalmarck.
 intros a0 b0 S0; repeat rewrite rZCompInv; auto with stalmarck.
 intros a0 b0 S0; repeat rewrite rZCompInv; auto with stalmarck.
 Qed.
+
 #[export] Hint Resolve eqConstrStateInv : stalmarck.
 
 Theorem eqConstrStateSym :
  forall (a b : rZ) (S : State), eqConstrState S a b -> eqConstrState S b a.
+Proof.
 intros a b S H'; elim H'; auto with stalmarck.
 Qed.
+
 #[export] Hint Immediate eqConstrStateSym : stalmarck.
 
 Theorem eqConstrStateSimpl :
  forall (a b : rZ) (S : State),
  eqConstrState S (rZComp a) b -> eqConstrState S a (rZComp b).
+Proof.
 intros a b S H'; auto with stalmarck.
 rewrite <- (rZCompInv a); auto with stalmarck.
 Qed.
+
 #[export] Hint Resolve eqConstrStateSimpl : stalmarck.
 
 Theorem eqConstrStateTransConstr :
@@ -95,6 +105,7 @@ Theorem eqConstrStateTransConstr :
  (forall a b c : rZ, eqConstrState S a (rZComp a) -> eqConstrState S b c) /\
  (forall a b c : rZ,
   eqConstrState S a b -> eqConstrState S b c -> eqConstrState S a c).
+Proof.
 intros L; elim L; auto with stalmarck.
 split; intros a b c H'; inversion H'; auto with stalmarck.
 generalize H1; case a; intros; discriminate.
@@ -130,6 +141,7 @@ Qed.
 Theorem eqConstrStateTrans :
  forall (S : State) (a b c : rZ),
  eqConstrState S a b -> eqConstrState S b c -> eqConstrState S a c.
+Proof.
 intros S a b c H' H'0.
 elim (eqConstrStateTransConstr S); intros H'2 H'3; lapply (H'3 a b c);
  [ intros H'7; lapply H'7; clear H'7; [ intros H'7; apply H'7 | idtac ]
@@ -139,6 +151,7 @@ Qed.
 Theorem eqConstrStateContrGen :
  forall (S : State) (a b c : rZ),
  eqConstrState S a (rZComp a) -> eqConstrState S b c.
+Proof.
 intros S a b c H'.
 elim (eqConstrStateTransConstr S); intros H'1 H'2; lapply (H'1 a b c);
  [ intros H'6; apply H'6 | idtac ]; auto with stalmarck.
@@ -146,6 +159,7 @@ Qed.
 
 Theorem eqStateRzPImpeqConstrState :
  forall (S : State) (a b : rZ), eqStateRz S a b -> eqConstrState S a b.
+Proof.
 intros S a b H'; elim H'; auto with stalmarck.
 intros a0 b0 c S0 H'0 H'1 H'2 H'3.
 apply eqConstrStateTrans with (b := b0); auto with stalmarck.
@@ -156,6 +170,7 @@ Qed.
 Theorem eqStateRzTail :
  forall (a b : rZ) (S : State) (p : rZ * rZ),
  eqStateRz S a b -> eqStateRz (p :: S) a b.
+Proof.
 intros a b S p H'; elim H'; auto with stalmarck.
 intros a0 b0 S0 H'0.
 apply eqStateRzIn; simpl in |- *; auto with stalmarck.
@@ -164,16 +179,20 @@ apply eqStateRzTrans with (b := b0); auto with stalmarck.
 intros a0 b0 c S0 H'0 H'1.
 apply eqStateRzContr with (a := a0); auto with stalmarck.
 Qed.
+
 #[export] Hint Resolve eqStateRzTail : stalmarck.
 
 Theorem eqConstrStateCons :
  forall (S : State) (a b : rZ), eqStateRz ((a, b) :: S) a b.
+Proof.
 auto with datatypes stalmarck.
 Qed.
+
 #[export] Hint Resolve eqConstrStateCons : stalmarck.
 
 Theorem eqConstrStateImpeqStateRz :
  forall (S : State) (a b : rZ), eqConstrState S a b -> eqStateRz S a b.
+Proof.
 intros S a b H'; elim H'; auto with stalmarck.
 intros a0 b0 c d S0 H'0 H'1 H'2 H'3.
 apply eqStateRzTrans with (b := b0); auto with stalmarck.
@@ -191,9 +210,10 @@ intros a0 b0 c d S0 H'0 H'1.
 apply eqStateRzContr with (a := b0); auto with stalmarck.
 apply eqStateRzTrans with (b := a0); auto with stalmarck.
 Qed.
-#[export] Hint Immediate eqStateRzPImpeqConstrState eqConstrStateImpeqStateRz : stalmarck.
-(* To check equality for eqConstrState is quite direct *)
 
+#[export] Hint Immediate eqStateRzPImpeqConstrState eqConstrStateImpeqStateRz : stalmarck.
+
+(** To check equality for eqConstrState is quite direct *)
 Definition eqConstrStateDec :
   forall (S : State) (a b : rZ),
   {eqConstrState S a b} + {~ eqConstrState S a b}.
@@ -235,14 +255,14 @@ case (H' (rZComp c) b); intros Eqmcb; auto with stalmarck.
 right; red in |- *; intros H'0; inversion H'0; auto with stalmarck.
 right; red in |- *; intros H'0; inversion H'0; auto with stalmarck.
 Defined.
-(* So we can lift the previous definition for eqStateRz *)
 
+(** So we can lift the previous definition for eqStateRz *)
 Definition eqStateRzDec :
   forall (S : State) (a b : rZ), {eqStateRz S a b} + {~ eqStateRz S a b}.
 intros S a b; case (eqConstrStateDec S a b); auto with stalmarck.
 Defined.
-(* Check if a state is contradictory *)
 
+(** Check if a state is contradictory *)
 Definition eqStateRzContrDec :
   forall S : State,
   {(forall a b : rZ, eqStateRz S a b)} +

@@ -13,9 +13,8 @@
 (* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
 (* 02110-1301 USA                                                     *)
 
-
 From Stalmarck Require Import algoRun.
-Require Import ZArith.
-Require Import Extraction.
+From Coq Require Import ZArith.
+From Coq Require Import Extraction.
 
 Extraction "stal.ml" run checkTracef zero Pos.of_succ_nat.

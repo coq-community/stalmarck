@@ -13,25 +13,24 @@
 (* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
 (* 02110-1301 USA                                                     *)
 
+(** * StalTac_ex
+                                                           
+Pierre Letouzey & Laurent Thery
 
+Examples for the stalmarck tactic
+*)
 
-(****************************************************************************
-                                                                           
-          Stalmarck  :   StalTac_ex                                          
-                                                                           
-          Pierre Letouzey & Laurent Thery                                  
-                                                                           
-***************************************************************************
-Examples for the stalmarck tactic *)
-Require Import StalTac.
-Require Import Classical.
+From Stalmarck Require Import StalTac.
+From Coq Require Import Classical.
 
 Theorem Praeclarum :
  forall x y z t : Prop, (x -> z) /\ (y -> t) -> x /\ y -> z /\ t.
+Proof.
 staltac.
 Qed.
 
 Theorem c2 : forall x y : Prop, x /\ y \/ x /\ ~ y \/ ~ x /\ y \/ ~ x /\ ~ y.
+Proof.
 staltac.
 Qed.
 
@@ -46,6 +45,7 @@ Theorem puz002_1 :
   (~ v5 \/ v1) /\
   (~ v10 \/ ~ v2) /\
   (~ v3 \/ v4) /\ (v5 \/ v6) /\ (~ v7 \/ v8) /\ ~ v9 /\ v10).
+Proof.
 staltac.
 Qed.
 
@@ -104,6 +104,7 @@ Theorem puz003_1 :
   (~ v18 \/ ~ v26 \/ v19) /\
   (~ v20 \/ ~ v26 \/ v21) /\
   (~ v22 \/ ~ v26 \/ v23) /\ ~ v24 /\ v25 /\ v26 /\ v27 /\ v28 /\ v29).
+Proof.
 staltac.
 Qed.
 
@@ -270,5 +271,6 @@ Theorem dubois20:
       (~ v39 \/ ~ v40 \/ ~ v38) /\
       (v39 \/ ~ v40 \/ v38) /\
        (~ v39 \/ v40 \/ v38)).
+Proof.
 staltac.
 Qed.

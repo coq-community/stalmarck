@@ -44,12 +44,14 @@ Inductive evalTrace : State -> Trace -> State -> Prop :=
       evalTrace (addEq (a, rZComp b) S1) t2 S3 ->
       eqState (interState S2 S3) S4 ->
       evalTrace S1 (dilemmaTrace a b t1 t2) S4.
+
 #[export] Hint Resolve emptyTraceEval tripletTraceEval : stalmarck.
 
 Theorem evalTraceEq :
  forall (S1 S2 : State) (t : Trace),
  evalTrace S1 t S2 ->
  forall S3 S4 : State, evalTrace S3 t S4 -> eqState S1 S3 -> eqState S2 S4.
+Proof.
 intros S1 S2 t H'; elim H'; clear H' t S2 S1; auto with stalmarck.
 intros S1 S2 H' S3 S4 H'0; inversion H'0; auto with stalmarck.
 intros H'1.
@@ -77,6 +79,7 @@ Theorem evalTraceComp :
  forall (S1 S2 : State) (t : Trace),
  evalTrace S1 t S2 ->
  forall S3 S4 : State, eqState S1 S3 -> eqState S2 S4 -> evalTrace S3 t S4.
+Proof.
 intros S1 S2 t H'; elim H'; clear H' t S2 S1; auto with stalmarck.
 intros S1 S2 H' S3 S4 H'0 H'1.
 apply emptyTraceEval; auto with stalmarck.
@@ -108,6 +111,7 @@ Theorem doTripletsExTrace :
  forall (L : list triplet) (S1 S2 : State),
  doTripletsP S1 L S2 ->
  exists t : Trace, evalTrace S1 t S2 /\ TraceInList t L.
+Proof.
 intros L S1 S2 H'; elim H'; clear H' S1 S2 L.
 intros S1 S2 H' H'0; exists emptyTrace; simpl in |- *; auto with stalmarck.
 intros S1 S2 S3 L t H' H'0 H'1 H'2; elim H'2; intros t0 E; elim E;
@@ -120,6 +124,7 @@ Qed.
 Theorem stalmarckExTrace :
  forall (L : list triplet) (S1 S2 : State),
  stalmarckP S1 L S2 -> exists t : Trace, evalTrace S1 t S2 /\ TraceInList t L.
+Proof.
 intros L S1 S2 H'; elim H'; clear H' S2 S1 L; auto with stalmarck.
 intros S1 S2 L H'; apply doTripletsExTrace with (L := L); auto with stalmarck.
 intros a b S1 S2 S3 S4 L H' H'0 H'1 H'2 H'3.

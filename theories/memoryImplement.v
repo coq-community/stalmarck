@@ -26,70 +26,74 @@ From Stalmarck Require Export ltState.
 From Stalmarck Require Export wfArray.
 From Stalmarck Require Export addArray.
 
-(*Definition of well formed array and some properties *)
+(** Definition of well formed array and some properties *)
 Section Deval.
 
-(* Ordered list for list on  rZ *)
-
+(** Ordered list for list on [rZ] *)
 Definition OlistRz := Olist rZ rZlt.
 
-(* Disjoint list for list on rZ *)
-
+(** Disjoint list for list on [rZ] *)
 Definition DisjointRz := Disjoint rZ eqRz.
 
-(* To be in a list for rZ with no sign consideration  *)
-
+(** To be in a list for [rZ] with no sign consideration *)
 Definition InRz := InEq rZ eqRz.
+
 Variable Ar : rArray vM.
 Hypothesis War : wellFormedArray Ar.
 
-(* Given a rNat n returns the smaller rZ p such that +a = p *)
-
+(** Given a rNat n returns the smaller rZ p such that +a = p *)
 Definition evalN (v : rNat) : rZ :=
   match rArrayGet _ Ar v with
   | ref p => p
   | class _ => rZPlus v
   end.
 
-(* Lift evalMnat to rZ *)
-
+(** Lift evalMnat to rZ *)
 Definition evalZ (v : rZ) : rZ := samePolRz v (evalN (valRz v)).
 
 Theorem EqrZComp : forall a b : rZ, a = b -> rZComp a = rZComp b.
+Proof.
 intros a b H'; rewrite H'; auto with stalmarck.
 Qed.
-Local Hint Resolve EqrZComp : stalmarck.
-(* We can't be smaller than zero *)
 
+#[local] Hint Resolve EqrZComp : stalmarck.
+
+(** We can't be smaller than zero *)
 Theorem notrltzero : forall r : rZ, ~ rVlt r zero.
+Proof.
 intros r; red in |- *; intros H'; absurd (rlt (valRz r) (valRz r)); auto with stalmarck.
 apply rltTransRnext2 with (m := zero); auto with stalmarck.
 Qed.
-Local Hint Resolve notrltzero : stalmarck.
-(* True evaluate to true *)
 
+#[local] Hint Resolve notrltzero : stalmarck.
+
+(** True evaluates to true *)
 Theorem evalZTrue : evalZ rZTrue = rZTrue.
+Proof.
 simpl in |- *; unfold evalN in |- *.
 generalize (fun s : rZ => wfPd _ War zero s); case (rArrayGet vM Ar zero);
  auto with stalmarck.
 intros r H'; absurd (rVlt r zero); auto with stalmarck.
 Qed.
-(* False evaluate to false *)
 
+(** False evaluates to false *)
 Theorem evalZFalse : evalZ rZFalse = rZFalse.
+Proof.
 simpl in |- *; unfold evalN in |- *.
 generalize (fun s : rZ => wfPd _ War zero s); case (rArrayGet vM Ar zero);
  auto with stalmarck.
 intros r H'; absurd (rVlt r zero); auto with stalmarck.
 Qed.
-(* Evaluation is compatible with the complement *)
 
+(** Evaluation is compatible with the complement *)
 Theorem evalZComp : forall v : rZ, evalZ (rZComp v) = rZComp (evalZ v).
+Proof.
 intros v; case v; simpl in |- *; auto with stalmarck.
 Qed.
-(* Evaluate an element returns something smaller or equal *)
 
+(** Evaluate an element returns something smaller or equal *)
 Theorem evalZltOr : forall v : rZ, evalZ v = v \/ rZlt (evalZ v) v.
+Proof.
 intros v; case v; simpl in |- *; auto with stalmarck; intros a; unfold evalN in |- *;
  generalize (fun s : rZ => wfPd _ War a s); case (rArrayGet _ Ar a);
  intros r H'; auto with stalmarck; right.
@@ -97,9 +101,10 @@ lapply (H' r); auto with stalmarck.
 apply rZltEqComp with (a := r) (b := rZMinus a); auto with stalmarck.
 lapply (H' r); auto with stalmarck.
 Qed.
-(* The result of an evaluation evaluates to itself *)
 
+(** The result of an evaluation evaluates to itself *)
 Theorem evalZInv : forall v : rZ, evalZ (evalZ v) = evalZ v.
+Proof.
 intros v; case v; intros a; simpl in |- *; unfold evalN in |- *;
  CaseEq (rArrayGet _ Ar a); simpl in |- *; auto with stalmarck.
 intros r; case r; simpl in |- *; intros r0 H'; unfold evalN in |- *;
@@ -111,44 +116,51 @@ intros r; case r; simpl in |- *; intros r0 H'; unfold evalN in |- *;
  apply wfPcr with (2 := H'); auto with stalmarck.
 intros l H'; unfold evalN in |- *; rewrite H'; auto with stalmarck.
 Qed.
-(* Every element smaller than the evaluation is not in the same equivalent class *)
 
+(** Every element smaller than the evaluation is not in the same equivalent class *)
 Theorem evalZMin :
  forall (a : rNat) (b c : rZ), evalN a = b -> rZlt c b -> evalN a <> evalZ c.
+Proof.
 intros a b c H' H'0; Contradict H'0.
 rewrite <- H'; rewrite H'0.
 case (evalZltOr c); auto with stalmarck.
 intros H'1; rewrite H'1; auto with stalmarck.
 Qed.
-End Deval.
-(* Relation between Get et evalN *)
 
+End Deval.
+
+(** Relation between Get and evalN *)
 Theorem rArrayGetEvalN :
  forall Ar Ar' : rArray vM,
  (forall e : rNat, rArrayGet vM Ar' e = rArrayGet vM Ar e) ->
  forall e : rNat, evalN Ar e = evalN Ar' e.
+Proof.
 intros Ar Ar' H' e; unfold evalN in |- *.
 rewrite (H' e); auto with stalmarck.
 Qed.
-(* relation between evalN et evanZ *)
 
+(** relation between evalN and evanZ *)
 Theorem evalNEvalZ :
  forall Ar Ar' : rArray vM,
  (forall e : rNat, evalN Ar e = evalN Ar' e) ->
  forall e : rZ, evalZ Ar e = evalZ Ar' e.
+Proof.
 intros Ar Ar' H' e; case e; simpl in |- *; auto with stalmarck.
 intros r; rewrite H'; auto with stalmarck.
 Qed.
-(* relation between get et evalZ *)
 
+(** relation between get and evalZ *)
 Theorem rArrayGetEvalZ :
  forall Ar Ar' : rArray vM,
  (forall e : rNat, rArrayGet vM Ar' e = rArrayGet vM Ar e) ->
  forall e : rZ, evalZ Ar e = evalZ Ar' e.
+Proof.
 intros Ar Ar' H' e; apply evalNEvalZ; auto with stalmarck.
 intros e'; apply rArrayGetEvalN; auto with stalmarck.
 Qed.
+
 Section Dprop.
+
 Variable Ar : rArray vM.
 Hypothesis War : wellFormedArray Ar.
 Variable a b : rNat.
@@ -160,7 +172,8 @@ Hypothesis getb : rArrayGet _ Ar b = class Lb.
 Variable S : State.
 Hypothesis
   SisAr : forall c d : rZ, eqStateRz S c d <-> evalZ Ar c = evalZ Ar d.
-(* We first need to prove some properties of update with respect to evalN and evalZ 
+
+(** We first need to prove some properties of update with respect to evalN and evalZ 
 
 First if before evalN was giving b, it now gives a,  samePolRz is used to ensure
 that the rule of sign is followed *)
@@ -170,6 +183,7 @@ Theorem updateEvalNb :
  valRz (evalN Ar c) = b ->
  evalN (updateArray a b pol La Lb Ar) c =
  samePolRz (evalN Ar c) (samePolRz pol (rZPlus a)).
+Proof.
 intros c; unfold evalN in |- *.
 CaseEq (rArrayGet vM Ar c); simpl in |- *.
 intros r; case r; simpl in |- *.
@@ -186,12 +200,13 @@ rewrite H'0; auto with stalmarck.
 intros l H' H'0; rewrite H'0.
 rewrite (updateArrayb a b pol La Lb Ar); auto with stalmarck.
 Qed.
-(* If evalN is not b the value is not changed *)
 
+(** If evalN is not b the value is not changed *)
 Theorem updateEvalNO :
  forall c : rNat,
  valRz (evalN Ar c) <> b ->
  evalN (updateArray a b pol La Lb Ar) c = evalN Ar c.
+Proof.
 intros c; unfold evalN in |- *.
 case (rNatDec c a); intros Eqa; auto with stalmarck.
 rewrite Eqa; auto with stalmarck; rewrite (updateArraya a b pol La Lb Ar); rewrite geta;
@@ -212,13 +227,14 @@ replace c with (valRz (rZMinus c)); auto with stalmarck;
 intros H'; case H'; auto with stalmarck.
 rewrite (updateArrayOtherwise a b pol La Lb Ar c); auto with stalmarck.
 Qed.
-(* Equations that were valid before are still valid *)
 
+(** Equations that were valid before are still valid *)
 Theorem updateEvalN2 :
  forall c d : rNat,
  evalN Ar c = evalN Ar d ->
  evalN (updateArray a b pol La Lb Ar) c =
  evalN (updateArray a b pol La Lb Ar) d.
+Proof.
 intros c d; case (rNatDec (valRz (evalN Ar c)) b); intros Eqt.
 rewrite updateEvalNb; auto with stalmarck.
 case (rNatDec (valRz (evalN Ar d)) b); intros Eqt'.
@@ -230,13 +246,14 @@ case (rNatDec (valRz (evalN Ar d)) b); intros Eqt'.
 intros H'; Contradict Eqt; rewrite H'; auto with stalmarck.
 rewrite updateEvalNO; auto with stalmarck.
 Qed.
-(* Same as before but with complement *)
 
+(** Same as before but with complement *)
 Theorem updateEvalN2Comp :
  forall c d : rNat,
  evalN Ar c = rZComp (evalN Ar d) ->
  evalN (updateArray a b pol La Lb Ar) c =
  rZComp (evalN (updateArray a b pol La Lb Ar) d).
+Proof.
 intros c d; case (rNatDec (valRz (evalN Ar c)) b); intros Eqt.
 rewrite updateEvalNb; auto with stalmarck.
 case (rNatDec (valRz (evalN Ar d)) b); intros Eqt'.
@@ -250,13 +267,14 @@ intros H'; Contradict Eqt; rewrite <- Eqt'; rewrite H'; case (evalN Ar d);
  auto with stalmarck.
 rewrite updateEvalNO; auto with stalmarck.
 Qed.
-(* If evalZ was given b, now it gives a *)
 
+(** If evalZ was given b, now it gives a *)
 Theorem updateEvalZb :
  forall c : rZ,
  valRz (evalZ Ar c) = b ->
  evalZ (updateArray a b pol La Lb Ar) c =
  samePolRz (evalZ Ar c) (samePolRz pol (rZPlus a)).
+Proof.
 intros c; case c; simpl in |- *.
 exact updateEvalNb.
 intros r H'.
@@ -267,25 +285,27 @@ apply EqrZComp; auto with stalmarck.
 apply updateEvalNb; auto with stalmarck.
 rewrite <- H'; case (evalN Ar r); auto with stalmarck.
 Qed.
-(* If evalZ was not giving b, its value is unchanged *)
 
+(** If evalZ was not giving b, its value is unchanged *)
 Theorem updateEvalZO :
  forall c : rZ,
  valRz (evalZ Ar c) <> b ->
  evalZ (updateArray a b pol La Lb Ar) c = evalZ Ar c.
+Proof.
 intros c; case c; simpl in |- *.
 exact updateEvalNO.
 intros r H'; apply EqrZComp; auto with stalmarck.
 apply updateEvalNO; auto with stalmarck.
 Contradict H'; rewrite <- H'; case (evalN Ar r); auto with stalmarck.
 Qed.
-(* Equations for evalZ are still valid *)
 
+(** Equations for evalZ are still valid *)
 Theorem updateEvalZ2 :
  forall c d : rZ,
  evalZ Ar c = evalZ Ar d ->
  evalZ (updateArray a b pol La Lb Ar) c =
  evalZ (updateArray a b pol La Lb Ar) d.
+Proof.
 intros c d; case c; case d; simpl in |- *; intros; try apply EqrZComp;
  try apply updateEvalN2 || apply updateEvalN2Comp; 
  auto with stalmarck.
@@ -293,21 +313,23 @@ apply sym_equal; apply updateEvalN2Comp; auto with stalmarck.
 generalize H; case (evalN Ar r0); case (evalN Ar r); simpl in |- *;
  intros r1 r2 H'; inversion H'; auto with stalmarck.
 Qed.
-(* Same with complement *)
 
+(** Same with complement *)
 Theorem updateEvalZ2Comp :
  forall c d : rZ,
  evalZ Ar c = rZComp (evalZ Ar d) ->
  evalZ (updateArray a b pol La Lb Ar) c =
  rZComp (evalZ (updateArray a b pol La Lb Ar) d).
+Proof.
 intros c d; repeat rewrite <- evalZComp.
 intros H'; apply updateEvalZ2; auto with stalmarck.
 Qed.
-(* evalN a = +/- evalN b  depending of the polarity*)
 
+(** evalN a = +/- evalN b  depending of the polarity *)
 Theorem updateEvalNab :
  evalN (updateArray a b pol La Lb Ar) a =
  samePolRz pol (evalN (updateArray a b pol La Lb Ar) b).
+Proof.
 unfold evalN in |- *; rewrite (updateArraya a b pol La Lb Ar);
  rewrite (updateArrayb a b pol La Lb Ar); auto with stalmarck.
 case pol; auto with stalmarck.
@@ -317,16 +339,18 @@ Qed.
 Theorem updateEvalZab :
  evalZ (updateArray a b pol La Lb Ar) (rZPlus a) =
  samePolRz pol (evalZ (updateArray a b pol La Lb Ar) (rZPlus b)).
+Proof.
 simpl in |- *; auto with stalmarck.
 exact updateEvalNab.
 Qed.
-(* update is correct *)
 
+(** update is correct *)
 Theorem updateCorrect :
  forall c d : rZ,
  eqStateRz (addEq (rZPlus a, samePol pol b) S) c d <->
  evalZ (updateArray a b pol La Lb Ar) c =
  evalZ (updateArray a b pol La Lb Ar) d.
+Proof.
 intros c d; split.
 cut (exists S' : _, S' = addEq (rZPlus a, samePol pol b) S).
 intros H'; Elimc H'; intros S' E; rewrite <- E.
@@ -397,13 +421,15 @@ rewrite updateEvalZO; auto with stalmarck.
 intros H'; apply eqStateaddEq2.
 case (SisAr c d); auto with stalmarck.
 Qed.
+
 End Dprop.
-(* To be able to return a triple *)
 
-Inductive Triple (A B C : Set) : Set :=
-    triple : A -> B -> C -> Triple A B C.
+(** To be able to return a triple *)
+Inductive Triple (A B C : Type) : Type :=
+ triple : A -> B -> C -> Triple A B C.
 
-(* Adding an equation returns 3 elements:
+(** Adding an equation returns 3 elements:
+
     - The new array
     - A boolean that says if a contradiction has been reached
     - The list of elements of the array whose values have changed
@@ -414,12 +440,10 @@ Definition mbD := Triple (rArray vM) bool (list rZ).
 
 Definition mbDOp := triple (rArray vM) bool (list rZ).
 
-(* A let that is not simplified during extraction *)
+(** A let that is not simplified during extraction *)
+Definition letP (A B : Type) (h : A) (u : A -> B) : B := u h.
 
-Definition letP (A B : Set) (h : A) (u : A -> B) : B := u h.
-
-(* Given a rNat n returns the equivalence class*)
-
+(** Given a rNat n returns the equivalence class*)
 Definition getClassN (Ar : rArray vM) (v : rNat) : 
   list rZ := match rArrayGet _ Ar v with
              | ref _ => nil
@@ -431,6 +455,7 @@ Theorem GetClassNProp :
  wellFormedArray Ar ->
  rArrayGet vM Ar (valRz (evalZ Ar a)) =
  class (getClassN Ar (valRz (evalZ Ar a))).
+Proof.
 intros Ar a War; case a; simpl in |- *; unfold evalN, getClassN in |- *;
  intros r; generalize (fun s => wfPcr _ War r s); CaseEq (rArrayGet vM Ar r);
  simpl in |- *.
@@ -442,9 +467,9 @@ intros r0 H' H'0; rewrite (valRzComp r0); CaseEq (rArrayGet vM Ar (valRz r0));
 intros r1 H'1; case (H'0 r0 r1); auto with stalmarck.
 intros l H'; rewrite H'; auto with stalmarck.
 Qed.
-(* To add an equation, we find the minimal elements and
-     compare them to build the proper call to update *)
 
+(** To add an equation, we find the minimal elements and
+     compare them to build the proper call to update *)
 Definition addEqMem : forall (Ar : rArray vM) (a b : rZ), mbD.
 intros Ar a b.
 apply letP with (1 := evalZ Ar a); intros a'.
@@ -467,20 +492,21 @@ Defined.
 
 From Stalmarck Require Import stateDec.
 
-(* The property for an array to represent a state *)
-
+(** The property for an array to represent a state *)
 Definition rArrayState (Ar : rArray vM) (S : State) :=
   forall c d : rZ, eqStateRz S c d <-> evalZ Ar c = evalZ Ar d.
 
 Theorem rArrayStateDef1 :
  forall (Ar : rArray vM) (S : State) (c d : rZ),
  rArrayState Ar S -> eqStateRz S c d -> evalZ Ar c = evalZ Ar d.
+Proof.
 intros Ar S c d H' H'0; case (H' c d); auto with stalmarck.
 Qed.
 
 Theorem rArrayStateDef2 :
  forall (Ar : rArray vM) (S : State) (c d : rZ),
  rArrayState Ar S -> evalZ Ar c = evalZ Ar d -> eqStateRz S c d.
+Proof.
 intros Ar S c d H' H'0; case (H' c d); auto with stalmarck.
 Qed.
 
@@ -489,12 +515,13 @@ Theorem rArrayStateGet :
  rArrayState Ar S ->
  (forall e : rNat, rArrayGet vM Ar' e = rArrayGet vM Ar e) ->
  rArrayState Ar' S.
+Proof.
 intros Ar Ar' S H' H'0.
 red in |- *; split; repeat rewrite <- (rArrayGetEvalZ _ _ H'0); auto with stalmarck;
  case (H' c d); auto with stalmarck.
 Qed.
-(* rArrayState is compatible with equality *)
 
+(** rArrayState is compatible with equality *)
 Theorem rArrayStateEqState :
  forall (Ar : rArray vM) (S S' : State),
  rArrayState Ar S -> eqState S S' -> rArrayState Ar S'.
@@ -506,10 +533,11 @@ intros H'1.
 apply eqStateEq with (S1 := S); auto with stalmarck.
 apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
 Qed.
-(* The empty array represents the empty state *)
 
+(** The empty array represents the empty state *)
 Theorem initCorrect :
  rArrayState (rArrayInit _ (fun n : rNat => class nil)) nil.
+Proof.
 red in |- *; intros c d; split; intros H'.
 cut (eqConstrState nil c d).
 intros H'0; inversion H'0; auto with stalmarck.
@@ -525,6 +553,7 @@ Theorem getClassOlist :
  forall (Ar : rArray vM) (a : rZ),
  wellFormedArray Ar ->
  OlistRz (evalZ Ar a :: getClassN Ar (valRz (evalZ Ar a))).
+Proof.
 intros Ar a War; case a; simpl in |- *.
 intros r; unfold evalN, getClassN in |- *.
 CaseEq (rArrayGet vM Ar r); simpl in |- *.
@@ -568,12 +597,13 @@ case r0; simpl in |- *; auto with stalmarck.
 apply wfPd with (Ar := Ar); auto with stalmarck.
 apply wfPcc1 with (Lr := r0 :: l0); simpl in |- *; auto with stalmarck.
 Qed.
-(* addMem is correct, ie
-   If the boolean is true, we have reached a contradiction 
-   If the boolena is false, the resulting array is well-formed
-   it represents the state plus the equation,
-   the diff list is ordered, and elements outside this list are unchanged *)
 
+(** [addMem] is correct, i.e.,
+
+   - If the boolean is true, we have reached a contradiction 
+   - If the boolean is false, the resulting array is well-formed and
+     it represents the state plus the equation,
+     and the diff list is ordered, and elements outside this list are unchanged *)
 Theorem addEqMemCorrect :
  forall (Ar : rArray vM) (a b : rZ) (S : State),
  wellFormedArray Ar ->
@@ -587,6 +617,7 @@ Theorem addEqMemCorrect :
       ~ InRz (rZPlus c) L -> rArrayGet _ Ar' c = rArrayGet _ Ar c)
  | triple Ar' true L => contradictory (addEq (a, b) S)
  end.
+Proof.
 intros Ar a b S War H'; unfold addEqMem, letP in |- *.
 case (rZltEDec (evalZ Ar a) (evalZ Ar b)); simpl in |- *.
 intros s; case s; simpl in |- *.
@@ -772,8 +803,8 @@ generalize H'0 H'1; case (evalZ Ar a); case (evalZ Ar b); unfold eqRz in |- *;
  simpl in |- *; intros r r0 H'4 H'5; rewrite H'5; auto with stalmarck; 
  case H'4; rewrite H'5; auto with stalmarck.
 Qed.
-(* Same but adding a=b and c=d *)
 
+(** Same but adding a=b and c=d *)
 Definition addEqMem2 : forall (Ar : rArray vM) (a b c d : rZ), mbD.
 intros Ar a b c d.
 case (addEqMem Ar a b).
@@ -797,6 +828,7 @@ Theorem addEqMem2Correct :
       ~ InRz (rZPlus e) L -> rArrayGet _ Ar' e = rArrayGet _ Ar e)
  | triple Ar' true L => contradictory (addEq (c, d) (addEq (a, b) S))
  end.
+Proof.
 intros Ar a b c d S War H'; unfold addEqMem2 in |- *.
 generalize (addEqMemCorrect Ar a b S War H').
 case (addEqMem Ar a b); simpl in |- *.

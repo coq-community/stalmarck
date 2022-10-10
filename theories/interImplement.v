@@ -30,8 +30,7 @@ From Stalmarck Require Export memoryImplement.
 
 Section inter.
 
-(* Return the equivalent class of an element plus the polarity *)
-
+(** Return the equivalent class of an element plus the polarity *)
 Definition getEquiv (Ar : rArray vM) (a : rNat) : list rZ * bool :=
   match rArrayGet vM Ar a with
   | ref r =>
@@ -174,6 +173,7 @@ Theorem getEquivProp1 :
  forall (Ar : rArray vM) (War : wellFormedArray Ar) (a : rNat) (c : rZ),
  snd (getEquiv Ar a) = true ->
  (In (rZComp c) (fst (getEquiv Ar a)) <-> evalZ Ar c = evalZ Ar (rZPlus a)).
+Proof.
 intros Ar War a c; generalize (getEquivProp Ar War a); case (getEquiv Ar a);
  auto with stalmarck.
 intros x; case x; auto with stalmarck.
@@ -189,6 +189,7 @@ Theorem getEquivProp2 :
  forall (Ar : rArray vM) (War : wellFormedArray Ar) (a : rNat) (c : rZ),
  snd (getEquiv Ar a) = false ->
  (In c (fst (getEquiv Ar a)) <-> evalZ Ar c = evalZ Ar (rZPlus a)).
+Proof.
 intros Ar War a c; generalize (getEquivProp Ar War a); case (getEquiv Ar a);
  auto with stalmarck.
 intros x; case x; auto with stalmarck.
@@ -203,6 +204,7 @@ Qed.
 Theorem getEquivProp3 :
  forall (Ar : rArray vM) (War : wellFormedArray Ar) (a : rNat),
  OlistRz (fst (getEquiv Ar a)).
+Proof.
 intros Ar War a; generalize (getEquivProp Ar War a); case (getEquiv Ar a);
  auto with stalmarck.
 intros x; case x; auto with stalmarck.
@@ -210,8 +212,7 @@ intros b; case b; intros H'; elim H'; auto with stalmarck.
 intros r l b; case b; intros H'; elim H'; auto with stalmarck.
 Qed.
 
-(* Given an element of rZ compute its equivalent class *)
-
+(** Given an element of rZ compute its equivalent class *)
 Definition getEquivList (Ar : rArray vM) (a : rZ) : 
   list rZ :=
   match a with
@@ -229,6 +230,7 @@ Definition getEquivList (Ar : rArray vM) (a : rZ) :
 
 Theorem inMapComp :
  forall (a : rZ) (L : list rZ), In (rZComp a) (map rZComp L) -> In a L.
+Proof.
 intros a L; elim L; simpl in |- *; auto with stalmarck.
 intros a0 l H' H'0; Elimc H'0; auto with stalmarck.
 left; apply rZCompEq; auto with stalmarck.
@@ -237,6 +239,7 @@ Qed.
 Theorem getEquivListProp1 :
  forall (Ar : rArray vM) (War : wellFormedArray Ar) (a c : rZ),
  In c (getEquivList Ar a) <-> evalZ Ar c = evalZ Ar a.
+Proof.
 intros Ar War a; unfold getEquivList in |- *; case a; intros a';
  generalize (getEquivProp1 Ar War a'); generalize (getEquivProp2 Ar War a');
  case (getEquiv Ar a'); simpl in |- *; auto with stalmarck; intros l b; 
@@ -275,6 +278,7 @@ Qed.
 Theorem getEquivListProp2 :
  forall (Ar : rArray vM) (War : wellFormedArray Ar) (a : rZ),
  OlistRz (getEquivList Ar a).
+Proof.
 intros Ar War a; unfold getEquivList in |- *; case a; intros a';
  generalize (getEquivProp3 Ar War a'); case (getEquiv Ar a'); 
  simpl in |- *; auto with stalmarck; intros l b; case b; auto with stalmarck; intros H'; 
@@ -285,6 +289,7 @@ Qed.
 Theorem getEquivListProp3 :
  forall (Ar : rArray vM) (War : wellFormedArray Ar) (a : rZ),
  In a (getEquivList Ar a).
+Proof.
 intros Ar War a.
 case (getEquivListProp1 _ War a a); auto with stalmarck.
 Qed.
@@ -293,6 +298,7 @@ Theorem getEquivListProp4 :
  forall (Ar : rArray vM) (War : wellFormedArray Ar) (S : State),
  rArrayState Ar S ->
  forall a b : rZ, eqStateRz S a b <-> getEquivList Ar a = getEquivList Ar b.
+Proof.
 intros Ar War S Sar a b; red in |- *; split; intros H'1; auto with stalmarck.
 cut (EqL _ (eq (A:=rZ)) (getEquivList Ar a) (getEquivList Ar b)).
 intros H'; elim H'; simpl in |- *; auto with stalmarck.
@@ -336,6 +342,7 @@ Definition getMinId :=
 Theorem getMinIdSym :
  forall L1 L2 : list rZ,
  OlistRz L1 -> OlistRz L2 -> getMinId L1 L2 = getMinId L2 L1.
+Proof.
 intros L1 L2 H' H'0; CaseEq (getMinId L1 L2).
 CaseEq (getMinId L2 L1).
 intros x H'1 x0 H'2.
@@ -386,6 +393,7 @@ Theorem getMinInvSym :
  | None => getMinInv L2 L1 = None
  | Some a => getMinInv L2 L1 = Some (rZComp a)
  end.
+Proof.
 intros L1 L2 H' H'0; CaseEq (getMinInv L1 L2).
 CaseEq (getMinInv L2 L1).
 intros x H'1 x0 H'2.
@@ -429,9 +437,8 @@ intros x1 H'5; elim H'5; intros H'6 H'7; rewrite H'6; rewrite rZCompInv; auto wi
 unfold getMinInv in H'2; apply geMinIn with (4 := H'2); auto with stalmarck.
 Qed.
 
-(* Given two arrays and a rNat find the smallest element that are in
+(** Given two arrays and a rNat find the smallest element that are in
     both equivalent classes of a *)
-
 Definition getEquivMin (Ar1 Ar2 : rArray vM) (a : rNat) : rZ :=
   match getEquiv Ar1 a with
   | (L1, true) =>
@@ -466,6 +473,7 @@ Theorem getEquivMinSym :
  forall (Ar1 Ar2 : rArray vM) (War1 : wellFormedArray Ar1)
    (War2 : wellFormedArray Ar2) (a : rNat),
  getEquivMin Ar1 Ar2 a = getEquivMin Ar2 Ar1 a.
+Proof.
 intros Ar1 Ar2 War1 War2 a; unfold getEquivMin in |- *;
  generalize (getEquivProp3 Ar1 War1 a); generalize (getEquivProp3 Ar2 War2 a);
  case (getEquiv Ar1 a); case (getEquiv Ar2 a); simpl in |- *.
@@ -477,6 +485,7 @@ intros L1 b1 L2 b2 OL1 OL2; case b1; case b2; auto with stalmarck;
 Qed.
 
 Theorem rZCompInvolList : forall L : list rZ, L = map rZComp (map rZComp L).
+Proof.
 intros L; elim L; simpl in |- *; auto with stalmarck.
 intros a l H'; rewrite <- H'; auto with datatypes stalmarck.
 rewrite <- rZCompInvol; auto with stalmarck.
@@ -486,6 +495,7 @@ Theorem getEquivMinIn1 :
  forall (Ar1 Ar2 : rArray vM) (War1 : wellFormedArray Ar1)
    (War2 : wellFormedArray Ar2) (a : rNat),
  In (getEquivMin Ar1 Ar2 a) (getEquivList Ar1 (rZPlus a)).
+Proof.
 intros Ar1 Ar2 War1 War2 a;
  generalize (getEquivListProp2 Ar1 War1 (rZPlus a));
  generalize (getEquivListProp3 Ar1 War1 (rZPlus a));
@@ -560,6 +570,7 @@ Theorem getEquivMinIn2 :
  forall (Ar1 Ar2 : rArray vM) (War1 : wellFormedArray Ar1)
    (War2 : wellFormedArray Ar2) (a : rNat),
  In (getEquivMin Ar1 Ar2 a) (getEquivList Ar2 (rZPlus a)).
+Proof.
 intros Ar1 Ar2 War1 War2 a;
  generalize (getEquivListProp2 Ar1 War1 (rZPlus a));
  generalize (getEquivListProp3 Ar1 War1 (rZPlus a));
@@ -640,6 +651,7 @@ Theorem getEquivMinMin :
    (War2 : wellFormedArray Ar2) (a : rNat) (c : rZ),
  rZlt c (getEquivMin Ar1 Ar2 a) ->
  ~ (In c (getEquivList Ar1 (rZPlus a)) /\ In c (getEquivList Ar2 (rZPlus a))).
+Proof.
 intros Ar1 Ar2 War1 War2 a;
  generalize (getEquivListProp2 Ar1 War1 (rZPlus a));
  generalize (getEquivListProp3 Ar1 War1 (rZPlus a));
@@ -733,6 +745,7 @@ Theorem getEquivMinEq1 :
    (War2 : wellFormedArray Ar2) (S : State),
  rArrayState Ar1 S ->
  forall a : rNat, eqStateRz S (rZPlus a) (getEquivMin Ar1 Ar2 a).
+Proof.
 intros Ar1 Ar2 War1 War2 S H' a.
 apply rArrayStateDef2 with (Ar := Ar1); auto with stalmarck.
 case (getEquivListProp1 Ar1 War1 (rZPlus a) (getEquivMin Ar1 Ar2 a)).
@@ -745,6 +758,7 @@ Theorem getEquivMinEq2 :
    (War2 : wellFormedArray Ar2) (S : State),
  rArrayState Ar2 S ->
  forall a : rNat, eqStateRz S (rZPlus a) (getEquivMin Ar1 Ar2 a).
+Proof.
 intros Ar1 Ar2 War1 War2 S H' a.
 apply rArrayStateDef2 with (Ar := Ar2); auto with stalmarck.
 case (getEquivListProp1 Ar2 War2 (rZPlus a) (getEquivMin Ar1 Ar2 a)).
@@ -761,6 +775,7 @@ Theorem getEquivMinMinEq :
  forall (a : rNat) (c : rZ),
  rZlt c (getEquivMin Ar1 Ar2 a) ->
  ~ (eqStateRz S1 (rZPlus a) c /\ eqStateRz S2 (rZPlus a) c).
+Proof.
 intros Ar1 Ar2 War1 War2 S1 S2 H' H'0 a c H'1; red in |- *; intros H'2;
  Elimc H'2; intros H'2 H'3; auto with stalmarck.
 absurd
@@ -777,15 +792,18 @@ apply rArrayStateDef1 with (S := S2); auto with stalmarck.
 Qed.
 
 Theorem eqNotltRz : forall a b : rZ, rZlt a b -> a <> b.
+Proof.
 intros a b H'; red in |- *; intros H'0; absurd (rZlt a b); auto with stalmarck.
 rewrite H'0; auto with stalmarck.
 Qed.
-Local Hint Resolve eqNotltRz : stalmarck.
+
+#[local] Hint Resolve eqNotltRz : stalmarck.
 
 Theorem evalZMin :
  forall (Ar : rArray vM) (War : wellFormedArray Ar) (S : State),
  rArrayState Ar S ->
  forall a c : rZ, rZlt c (evalZ Ar a) -> ~ eqStateRz S a c.
+Proof.
 intros Ar War S H'0 a c H'1; red in |- *; intros H'2.
 absurd (evalZ Ar c = evalZ Ar a); auto with stalmarck.
 generalize H'1 H'2; clear H'1 H'2.
@@ -808,6 +826,7 @@ Theorem getEquivIdR :
  forall a : rNat,
  eqStateRz S2 (rZPlus a) (evalZ Ar1 (rZPlus a)) ->
  getEquivMin Ar1 Ar2 a = evalZ Ar1 (rZPlus a).
+Proof.
 intros Ar1 Ar2 War1 War2 S1 S2 Sar1 Sar2 a H'0;
  case (rZltEDec (getEquivMin Ar1 Ar2 a) (evalZ Ar1 (rZPlus a))); 
  intros s; [ Casec s; intros s | idtac ].
@@ -842,6 +861,7 @@ Theorem getEquivIdL :
  forall a : rNat,
  eqStateRz S1 (rZPlus a) (evalZ Ar2 (rZPlus a)) ->
  getEquivMin Ar1 Ar2 a = evalZ Ar2 (rZPlus a).
+Proof.
 intros Ar1 Ar2 War1 War2 S1 S2 H' H'0 a H'1.
 rewrite getEquivMinSym; auto with stalmarck.
 apply getEquivIdR with (S1 := S2) (S2 := S1); auto with stalmarck.
@@ -850,6 +870,7 @@ Qed.
 Theorem getMinInvInd :
  forall L1 L2 : list rZ,
  OlistRz L1 -> OlistRz L2 -> getMinInv L1 (map rZComp L2) = getMinId L1 L2.
+Proof.
 intros L1 L2 Ol1 Ol2; auto with stalmarck.
 cut (OlistRz (map rZComp L2));
  [ intros Ol2'
@@ -894,8 +915,7 @@ unfold getMinId in H'; elim getMinComp with (4 := H'); auto with stalmarck.
 intros x0 H'1; Elimc H'1; intros H'1 H'2; rewrite H'1; auto with stalmarck.
 Qed.
 
-(* List the function getEquivMin to rZ *)
-
+(** List the function getEquivMin to rZ *)
 Definition getRzMin (Ar1 Ar2 : rArray vM) (a : rZ) : rZ :=
   match a with
   | rZPlus a' => getEquivMin Ar1 Ar2 a'
@@ -906,6 +926,7 @@ Theorem getRzMinSym :
  forall (Ar1 Ar2 : rArray vM) (War1 : wellFormedArray Ar1)
    (War2 : wellFormedArray Ar2) (a : rZ),
  getRzMin Ar1 Ar2 a = getRzMin Ar2 Ar1 a.
+Proof.
 intros Ar1 Ar2 War1 War2 a; case a; simpl in |- *; intros a';
  rewrite getEquivMinSym; auto with stalmarck.
 Qed.
@@ -914,6 +935,7 @@ Theorem getRzMinIn1 :
  forall (Ar1 Ar2 : rArray vM) (War1 : wellFormedArray Ar1)
    (War2 : wellFormedArray Ar2) (a : rZ),
  In (getRzMin Ar1 Ar2 a) (getEquivList Ar1 a).
+Proof.
 intros Ar1 Ar2 War1 War2 a; case a; intros a';
  generalize (getEquivMinIn1 Ar1 Ar2 War1 War2 a'); 
  simpl in |- *; auto with stalmarck.
@@ -927,6 +949,7 @@ Theorem getRzMinIn2 :
  forall (Ar1 Ar2 : rArray vM) (War1 : wellFormedArray Ar1)
    (War2 : wellFormedArray Ar2) (a : rZ),
  In (getRzMin Ar1 Ar2 a) (getEquivList Ar2 a).
+Proof.
 intros Ar1 Ar2 War1 War2 a; case a; intros a';
  generalize (getEquivMinIn2 Ar1 Ar2 War1 War2 a'); 
  simpl in |- *; auto with stalmarck.
@@ -941,6 +964,7 @@ Theorem getRzMinMin :
    (War2 : wellFormedArray Ar2) (a c : rZ),
  rZlt c (getRzMin Ar1 Ar2 a) ->
  ~ (In c (getEquivList Ar1 a) /\ In c (getEquivList Ar2 a)).
+Proof.
 intros Ar1 Ar2 War1 War2 a c; case a; intros a';
  generalize (getEquivMinMin Ar1 Ar2 War1 War2 a'); 
  simpl in |- *; auto with stalmarck.
@@ -956,6 +980,7 @@ Theorem getRzMinEq1 :
  forall (Ar1 Ar2 : rArray vM) (War1 : wellFormedArray Ar1)
    (War2 : wellFormedArray Ar2) (S : State),
  rArrayState Ar1 S -> forall a : rZ, eqStateRz S a (getRzMin Ar1 Ar2 a).
+Proof.
 intros Ar1 Ar2 War1 War2 S H' a; case a; intros a';
  generalize (getEquivMinEq1 Ar1 Ar2 War1 War2 S H' a'); 
  simpl in |- *; auto with stalmarck.
@@ -965,6 +990,7 @@ Theorem getRzMinEq2 :
  forall (Ar1 Ar2 : rArray vM) (War1 : wellFormedArray Ar1)
    (War2 : wellFormedArray Ar2) (S : State),
  rArrayState Ar2 S -> forall a : rZ, eqStateRz S a (getRzMin Ar1 Ar2 a).
+Proof.
 intros Ar1 Ar2 War1 War2 S H' a; case a; intros a';
  generalize (getEquivMinEq2 Ar1 Ar2 War1 War2 S H' a'); 
  simpl in |- *; auto with stalmarck.
@@ -977,6 +1003,7 @@ Theorem getRzMinMinEq :
  rArrayState Ar2 S2 ->
  forall a c : rZ,
  rZlt c (getRzMin Ar1 Ar2 a) -> ~ (eqStateRz S1 a c /\ eqStateRz S2 a c).
+Proof.
 intros Ar1 Ar2 War1 War2 S1 S2 H' H'0 a c; case a; intros a';
  generalize (getEquivMinMinEq Ar1 Ar2 War1 War2 S1 S2 H' H'0 a').
 auto with stalmarck.
@@ -994,6 +1021,7 @@ Theorem getRzMinUnique :
  forall a b : rZ,
  eqStateRz S1 a b ->
  eqStateRz S2 a b -> getRzMin Ar1 Ar2 a = getRzMin Ar1 Ar2 b.
+Proof.
 intros Ar1 Ar2 War1 War2 S1 S2 H' H'0 a b H'1 H'2.
 cut (getEquivList Ar1 a = getEquivList Ar1 b);
  [ intros Eq1 | case (getEquivListProp4 Ar1 War1 S1 H' a b) ]; 
@@ -1026,13 +1054,14 @@ Theorem forallgetEquivgetRzMin :
    (War2 : wellFormedArray Ar2) (S : State),
  (forall a : rNat, eqStateRz S (rZPlus a) (getEquivMin Ar1 Ar2 a)) ->
  forall a : rZ, eqStateRz S a (getRzMin Ar1 Ar2 a).
+Proof.
 intros Ar1 Ar2 War1 War2 S H' a; case a; intros a'; simpl in |- *; auto with stalmarck.
 apply eqStateRzInv with (1 := H' a'); auto with stalmarck.
 Qed.
-(* here where we wanted to arrive a state S that is included is S1 and S2
+
+(** here where we wanted to arrive a state S that is included is S1 and S2
    and for every a, a is in relation with the intersection of the equivalent classes,
   then S is the intersection *)
-
 Theorem getEquivInter :
  forall (Ar1 Ar2 : rArray vM) (War1 : wellFormedArray Ar1)
    (War2 : wellFormedArray Ar2) (S S1 S2 : State),
@@ -1040,6 +1069,7 @@ Theorem getEquivInter :
  rArrayState Ar2 S2 ->
  (forall a : rNat, eqStateRz S (rZPlus a) (getEquivMin Ar1 Ar2 a)) ->
  inclState (interState S1 S2) S.
+Proof.
 intros Ar1 Ar2 War1 War2 S S1 S2 H' H'0 H'1.
 red in |- *; auto with stalmarck.
 intros i j H'2.
@@ -1055,4 +1085,5 @@ rewrite (getRzMinUnique Ar1 Ar2 War1 War2 S1 S2 H' H'0 i j); auto with stalmarck
 apply eqStateRzSym; auto with stalmarck.
 apply forallgetEquivgetRzMin; auto with stalmarck.
 Qed.
+
 End inter.

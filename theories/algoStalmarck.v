@@ -21,13 +21,13 @@ Pierre Letouzey & Laurent Thery
 From Stalmarck Require Export algoDilemma1.
 
 Section ostal.
+
 Variable getT : rZ -> list triplet.
 Variable LL : list triplet.
 Hypothesis getTCorrect : forall a : rZ, incl (getT a) LL.
 Variable n : nat.
 
-(*We iterate saturaturing from level n1 to n1+m*)
-
+(** We iterate saturating from level n1 to n1+m *)
 Fixpoint stalN (L : list rZ) (n1 m : nat) {struct m} : 
  rArray vM -> mbDT :=
   fun Ar =>
@@ -47,6 +47,7 @@ Fixpoint stalN (L : list rZ) (n1 m : nat) {struct m} :
 Theorem stalNCorrect :
  forall (L : list rZ) (n1 m : nat) (Ar : rArray vM) (S : State),
  FStalCorrect Ar LL S (stalN L n1 m Ar).
+Proof.
 intros L n1 m; generalize n1 L; elim m; simpl in |- *; auto with stalmarck; clear n1 L.
 intros n1 L Ar S;
  generalize (dilemmaNCorrect getT LL getTCorrect n L n n1 Ar).
@@ -63,8 +64,7 @@ intros r b l t H'1.
 apply FStalCorrectComp with (Ar' := Ar1); auto with stalmarck.
 Qed.
 
-(* We first do a propagation then a dilemma1 .. then dilemma m*)
-
+(** We first do a propagation then a dilemma1 .. then dilemma m*)
 Definition stal (m : nat) (Ar : rArray vM) (a b : rZ) : mbDT :=
   match addEqMem Ar a b with
   | triple Ar1 true L1 => quatuor _ _ _ _ Ar true nil emptyTrace
@@ -73,6 +73,7 @@ Definition stal (m : nat) (Ar : rArray vM) (a b : rZ) : mbDT :=
       | quatuor Ar2 b2 L2 T2 => quatuor _ _ _ _ Ar2 b2 (appendRz L1 L2) T2
       end
   end.
+
 Opaque addEqMem.
 
 Theorem stalCorrect :
@@ -86,6 +87,7 @@ Theorem stalCorrect :
        stalmarckP (addEq (a, b) S) LL S' /\
        contradictory S' /\ evalTrace (addEq (a, b) S) T S'
  end.
+Proof.
 intros m Ar a b S H' H'0; unfold stal in |- *.
 generalize (addEqMemCorrect Ar a b S).
 case (addEqMem Ar a b).
@@ -101,5 +103,7 @@ case (stalN L1 0 m Ar1).
 intros Ar2 b2 L2 T2; case b2; auto with stalmarck.
 unfold FStalCorrect in |- *; simpl in |- *; auto with stalmarck.
 Qed.
+
 Transparent addEqMem.
+
 End ostal.

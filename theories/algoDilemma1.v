@@ -25,12 +25,12 @@ From Stalmarck Require Export interImplement2.
 From Stalmarck Require Export stalmarck.
 
 Section odilemma1.
+
 Variable getT : rZ -> list triplet.
 Variable LL : list triplet.
 Hypothesis getTCorrect : forall a : rZ, incl (getT a) LL.
 
-(* Avoid constructing sequence of empty traces *)
-
+(** Avoid constructing sequence of empty traces *)
 Definition dT (a b : rZ) (T1 T2 : Trace) :=
   match T1, T2 with
   | emptyTrace, emptyTrace => emptyTrace
@@ -42,6 +42,7 @@ Theorem dTCorrect :
  evalTrace (addEq (a, b) S1) t1 S2 ->
  evalTrace (addEq (a, rZComp b) S1) t2 S3 ->
  eqState (interState S2 S3) S4 -> evalTrace S1 (dT a b t1 t2) S4.
+Proof.
 intros t1; case t1; simpl in |- *; auto with stalmarck.
 intros t1'; case t1'; simpl in |- *; auto with stalmarck.
 intros a b S1 S2 S3 S4 H' H'0 H'1.
@@ -67,8 +68,7 @@ intros r r0 t t0 t2 a b S1 S2 S3 S4 H' H'0 H'1.
 apply dilemmaTraceEval with (S2 := S2) (S3 := S3); auto with stalmarck.
 Qed.
 
-(* Dilemma with 2 branches a=b and a=-b *)
-
+(** Dilemma with 2 branches a=b and a=-b *)
 Definition dilemma1 (f : list rZ -> rArray vM -> mbDT) 
   (Ar : rArray vM) (a b : rZ) : mbDT :=
   match addEqMem Ar a b with
@@ -103,16 +103,18 @@ Definition dilemma1 (f : list rZ -> rArray vM -> mbDT)
           end
       end
   end.
-(* To speedup Coq *)
+
+(** To speedup Coq *)
 Opaque addEqMem.
 
-Local Hint Resolve f_equal : core.
+#[local] Hint Resolve f_equal : core.
 
 Theorem dilemma1Correct :
  forall (f : list rZ -> rArray vM -> mbDT) (Ar : rArray vM) 
    (a b : rZ) (S : State),
  (forall (L : list rZ) (Ar : rArray vM) (S : State),
   FStalCorrect Ar LL S (f L Ar)) -> FStalCorrect Ar LL S (dilemma1 f Ar a b).
+Proof.
 intros f Ar a b S H'; unfold dilemma1 in |- *.
 generalize (addEqMemCorrect Ar a b S).
 case (addEqMem Ar a b).
@@ -344,8 +346,8 @@ cut (InclEq _ eqRz L2' (appendf _ rZlt eqRz rZltEDec L2 L2')).
 intros H'21; inversion H'21; red in |- *; auto with stalmarck.
 apply appendfInclEq2; auto with stalmarck.
 Qed.
-(* We do the dilemma n times starting from v *)
 
+(** We do the dilemma n times starting from v *)
 Fixpoint dilemma1R (f : list rZ -> rArray vM -> mbDT) 
  (v : rNat) (n : nat) {struct n} : rArray vM -> mbDT :=
   fun Ar =>
@@ -376,6 +378,7 @@ Theorem dilemma1RCorrect :
  (forall (L : list rZ) (Ar : rArray vM) (S : State),
   FStalCorrect Ar LL S (f L Ar)) ->
  FStalCorrect Ar LL S (dilemma1R f v n1 Ar).
+Proof.
 intros f n1; elim n1; simpl in |- *; auto with stalmarck.
 intros v Ar S H'; case (rArrayGet vM Ar v); auto with stalmarck.
 intros H'0.
@@ -394,10 +397,11 @@ case (dilemma1R f (rnext v) n0 Ar1).
 intros r b l t H'2.
 apply FStalCorrectComp with (Ar' := Ar1); auto with stalmarck.
 Qed.
-Variable n : nat.
-(* Now we iter  dilemma1R till no information, this is done using an integer
-    n1 sufficiently large *)
 
+Variable n : nat.
+
+(** Now we iterate dilemma1R until no information, this is done using an integer
+    n1 sufficiently large *)
 Fixpoint dilemma1RR (f : list rZ -> rArray vM -> mbDT) 
  (n1 : nat) {struct n1} : rArray vM -> mbDT :=
   fun Ar =>
@@ -420,6 +424,7 @@ Theorem dilemma1RRCorrect :
    (Ar : rArray vM) (S : State),
  (forall (L : list rZ) (Ar : rArray vM) (S : State),
   FStalCorrect Ar LL S (f L Ar)) -> FStalCorrect Ar LL S (dilemma1RR f n1 Ar).
+Proof.
 intros f n1; elim n1; simpl in |- *; auto with stalmarck.
 intros Ar S H'.
 generalize (dilemma1RCorrect f n zero Ar S H').
@@ -438,8 +443,7 @@ intros r0 b l0 t H'2.
 apply FStalCorrectComp with (Ar' := Ar1); auto with stalmarck.
 Qed.
 
-(*We first apply  a doTriplets to take care of the modif*)
-
+(** We first apply a doTriplets to take care of the modif *)
 Definition dilemma1RRL (f : list rZ -> rArray vM -> mbDT) 
   (Lt : list rZ) (n : nat) (Ar : rArray vM) : mbDT :=
   match doTripletsN getT Lt n Ar with
@@ -457,6 +461,7 @@ Theorem dilemma1RRLCorrect :
  (forall (L : list rZ) (Ar : rArray vM) (S : State),
   FStalCorrect Ar LL S (f L Ar)) ->
  FStalCorrect Ar LL S (dilemma1RRL f Lt n1 Ar).
+Proof.
 intros f Lt n1 Ar S H'; unfold dilemma1RRL in |- *.
 generalize (doTripletFsNCorrect getT LL getTCorrect n1 Ar Lt S).
 case (doTripletsN getT Lt n1 Ar); auto with stalmarck.
@@ -479,6 +484,7 @@ Fixpoint dilemmaN (L : list rZ) (m n : nat) {struct n} :
 Theorem dilemmaNCorrect :
  forall (L : list rZ) (m n : nat) (Ar : rArray vM) (S : State),
  FStalCorrect Ar LL S (dilemmaN L m n Ar).
+Proof.
 intros L m n0; generalize L; elim n0; auto with stalmarck; clear L.
 intros L Ar S;
  change (FStalCorrect Ar LL S (doTripletsN getT L m Ar)) in |- *.
@@ -486,5 +492,7 @@ apply doTripletFsNCorrect; auto with stalmarck.
 intros n1 H' L Ar S0; simpl in |- *; auto with stalmarck.
 apply dilemma1RRLCorrect; auto with stalmarck.
 Qed.
+
 Transparent addEqMem.
+
 End odilemma1.

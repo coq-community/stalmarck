@@ -22,13 +22,12 @@ Definition of the transformation from rExpr to list of triplets
 
 From Stalmarck Require Export equalBefore.
 
-(* Computing triplets return the list of triplets, the top signed variable
+(** Computing triplets return the list of triplets, the top signed variable
     and the next free variable *)
-
 Inductive tripletResult : Set :=
     tRC : list triplet -> rZ -> rNat -> tripletResult.
-(* Given an expression e and an indice of free variable, computes the list of triplets *)
 
+(** Given an expression e and an indice of free variable, computes the list of triplets *)
 Fixpoint makeTripletsFun (l : list triplet) (n : rNat) 
  (e : rExpr) {struct e} : tripletResult :=
   match e with
@@ -48,8 +47,7 @@ Fixpoint makeTripletsFun (l : list triplet) (n : rNat)
       end
   end.
 
-(* To compute the list, we start with an empty list and the indice is maxVar *)
-
+(** To compute the list, we start with an empty list and the indice is maxVar *)
 Definition makeTriplets (e : rExpr) : tripletResult :=
   makeTripletsFun nil (rnext (maxVar e)) e.
 
@@ -70,6 +68,7 @@ Ltac RecExpr :=
 Lemma makeTripletsFunMax :
  forall (e : rExpr) (l l' : list triplet) (n n' : rNat) (s' : rZ),
  makeTripletsFun l n e = tRC l' s' n' -> rlt (maxVar e) n -> rVlt s' n'.
+Proof.
 RecExpr.
 intro H'3. lapply (H' l l0 n n' r0);
   [ intros H'8; lapply H'8; [ intros H'9; clear H'8 | clear H'8 ] | idtac ];
@@ -81,17 +80,20 @@ Qed.
 Lemma makeTripletsFunIncr :
  forall (e : rExpr) (l l' : list triplet) (n n' : rNat) (s' : rZ),
  makeTripletsFun l n e = tRC l' s' n' -> rlt n (rnext n').
+Proof.
 RecExpr.
 lapply (H' l l0 n n' r0); auto with stalmarck. rewrite <- H2; auto with stalmarck.
 lapply (H' l l0 n r3 r2); [ intros H'9 | auto with stalmarck ].
 lapply (A l0 l2 r3 r5 r4); [ intros H'10 | auto with stalmarck ].
 apply rltTrans with (y := rnext r3); auto with stalmarck.
 Qed.
+
 #[export] Hint Resolve makeTripletsFunIncr : stalmarck.
 
 Lemma makeTripletsFunIncl :
  forall (e : rExpr) (l l' : list triplet) (n n' : rNat) (s' : rZ),
  makeTripletsFun l n e = tRC l' s' n' -> incl l l'.
+Proof.
 RecExpr.
 auto with datatypes stalmarck.
 lapply (H' l l' n r1 r0); auto with stalmarck. rewrite <- H0; auto with stalmarck.
@@ -100,12 +102,14 @@ lapply (A l0 l2 r3 r5 r4); [ intros H'10 | idtac ]; auto with stalmarck.
 apply incl_tran with l0; auto with stalmarck.
 apply incl_tran with l2; auto with datatypes stalmarck.
 Qed.
+
 #[export] Hint Resolve makeTripletsFunIncr : stalmarck.
 
 Lemma maxVarTripletsRlt :
  forall (e : rExpr) (l l' : list triplet) (n n' : rNat) (s' : rZ),
  makeTripletsFun l n e = tRC l' s' n' ->
  rlt (maxVar e) n -> rlt (maxVarTriplets l) n -> rlt (maxVarTriplets l') n'.
+Proof.
 RecExpr; intros H'0 H'1. 
 rewrite <- H2; rewrite <- H0.
 lapply (H' l l0 n r1 r0);
@@ -145,6 +149,7 @@ Theorem extendEvalMakeTripletsFun :
  realizeTriplets f l ->
  exists g : rNat -> bool,
    equalBefore n f g /\ realizeTriplets g l' /\ rEval f e = rZEval g s'.
+Proof.
 RecExpr; intros f H'4 H'5 H'6.
 exists f; split; [ idtac | split ]; auto with stalmarck; try rewrite <- H0; red in |- *;
  auto with stalmarck.
@@ -215,6 +220,7 @@ Theorem extendEvalMakeTriplets :
  exists g : rNat -> bool,
    equalBefore (rnext (maxVar e)) f g /\
    realizeTriplets g l /\ rEval f e = rZEval g s.
+Proof.
 intros f e l n s H'.
 apply extendEvalMakeTripletsFun with (l := nil (A:=triplet)) (n' := n);
  simpl in |- *; auto with stalmarck.
@@ -228,6 +234,7 @@ Theorem equalBeforeMakeTripletsFun :
  rlt (maxVarTriplets l) n ->
  equalBefore n f g ->
  realizeTriplets f l' -> realizeTriplets g l' -> equalBefore n' f g.
+Proof.
 RecExpr; intros f g H'4 H'5 H'6 H'7 H'8.
 apply H' with (l := l) (l' := l') (n := n) (s' := r0); auto with stalmarck.
 rewrite <- H0; rewrite <- H2; auto with stalmarck.
@@ -279,6 +286,7 @@ Theorem equalBeforeMakeTriplets :
  equalBefore (rnext (maxVar e)) f g ->
  realizeTriplets f l ->
  realizeTriplets g l -> makeTriplets e = tRC l s n -> rZEval f s = rZEval g s.
+Proof.
 intros f g e l n s H' H'0 H'1 H'2.
 apply equalBeforerZEval with (n := n); auto with stalmarck.
 apply
@@ -300,6 +308,7 @@ Theorem rZEvalREvalMakeTriplets :
    (n : rNat) (s : rZ),
  equalBefore (rnext (maxVar e)) f g ->
  realizeTriplets g l -> makeTriplets e = tRC l s n -> rZEval g s = rEval f e.
+Proof.
 intros f g e l n s H' H'0 H'1.
 elim (extendEvalMakeTriplets f e l n s);
  [ intros g0 E; elim E; intros H'8 H'9; elim H'9; intros H'10 H'11;
@@ -313,21 +322,22 @@ Qed.
 Theorem rZEvalEvalRZMakeTriplets :
  forall (f : rNat -> bool) (e : rExpr) (l : list triplet) (n : rNat) (s : rZ),
  realizeTriplets f l -> makeTriplets e = tRC l s n -> rEval f e = rZEval f s.
+Proof.
 intros f e l n s H' H'0.
 apply sym_equal; auto with stalmarck.
 apply rZEvalREvalMakeTriplets with (l := l) (n := n); auto with stalmarck.
 red in |- *; auto with stalmarck.
 Qed.
 
-(* A tautology for triplets is simply that top_variable := true is a valid equation *)
-
+(** A tautology for triplets is simply that top_variable := true is a valid equation *)
 Definition tTautology (e : rExpr) :=
   match makeTriplets e with
   | tRC l s n => validEquation l s (rZPlus zero)
   end.
-(* This definition is equivalent to the one of rTautology *)
 
+(** This definition is equivalent to the one of rTautology *)
 Theorem rTautotTauto : forall e : rExpr, rTautology e <-> tTautology e.
+Proof.
 intros e; unfold tTautology in |- *; unfold rTautology in |- *.
 DCase (makeTriplets e).
 intros l r r0 H'; split; intros H'1.
@@ -347,13 +357,14 @@ rewrite (H'1 g); simpl in |- *; auto with stalmarck.
 rewrite <- equalBeforeElim with (1 := H'7); auto with stalmarck.
 rewrite <- equalBeforeElim with (1 := H'7); auto with stalmarck.
 Qed.
-(* The top variable occurs in the list of triplets *)
 
+(** The top variable occurs in the list of triplets *)
 Theorem makeTripletsIn :
  forall e : rExpr,
  match makeTriplets e with
  | tRC l s n => l <> nil -> inTriplets s l
  end.
+Proof.
 unfold makeTriplets in |- *; intros e; elim e; simpl in |- *; auto with stalmarck.
 intros r H'; case H'; auto with stalmarck.
 intros r; case (makeTripletsFun nil (rnext (maxVar r)) r); auto with stalmarck.
