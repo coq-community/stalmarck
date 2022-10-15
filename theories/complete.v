@@ -34,6 +34,7 @@ Lemma stateAssignedProp1 :
  forall a b : rZ,
  In a (varTriplets L) ->
  In b (varTriplets L) -> eqStateRz S a b \/ eqStateRz S a (rZComp b).
+Proof.
 unfold stateAssignedOn in |- *; intros S L H a b Ha Hb.
 elim (H a Ha); elim (H b Hb); intros H1 H2.
 left; apply eqStateRzTrans with (b := rZTrue); auto with stalmarck.
@@ -50,6 +51,7 @@ Lemma stateAssignedProp2 :
  forall a b : rZ,
  inTriplets a L ->
  inTriplets b L -> eqStateRz S a b \/ eqStateRz S a (rZComp b).
+Proof.
 intros S L H a b Ha Hb.
 case (inTripletsVarTriplet L a Ha); case (inTripletsVarTriplet L b Hb);
  intros H1 H2.
@@ -72,6 +74,7 @@ Theorem stateAssignedDoTriplet :
    match u with
    | (a, b) => inTriplets a L /\ inTriplets b L
    end /\ doTripletP S t (addEq u S).
+Proof.
 unfold stateAssignedOn in |- *; intros S L H t; case t; intros b p q r Ht.
 cut (inTriplets p L); [ intros Hp | apply inTripletsIn with (2 := Ht) ];
  simpl in |- *; auto with stalmarck.
@@ -115,6 +118,7 @@ Qed.
 Lemma negRealizeTriplets :
  forall (f : rNat -> bool) (L : list triplet),
  ~ realizeTriplets f L -> ex (fun t : triplet => In t L /\ tEval f t = false).
+Proof.
 simple induction L.
 intros Abs; absurd (realizeTriplets f nil); auto with stalmarck.
 intros t L' HR Abs.
@@ -144,6 +148,7 @@ Theorem stateAssignContrad :
  validEquation L a b ->
  eqStateRz S a (rZComp b) ->
  ex (fun S' : State => doTripletsP S L S' /\ contradictory S').
+Proof.
 intros S L H a b Hab1 Hab2.
 case (eqStateRzContrDec2 S); intros HS.
 exists S; auto with stalmarck.
@@ -168,7 +173,8 @@ lapply (realizeStateInv f S Hf1 a (rZComp b)); auto with stalmarck.
 rewrite (Hab1 f Abs Hf2); rewrite (rZEvalCompInv b f).
 case (rZEval f b); auto with bool stalmarck.
 Qed.
-Require Import Arith.
+
+From Coq Require Import Arith.
 
 Fixpoint nthTail (n : nat) : list rZ -> list rZ :=
   fun l : list rZ =>
@@ -190,6 +196,7 @@ Fixpoint myNth (n : nat) (l : list rZ) {struct l} :
 Lemma nthTailProp1 :
  forall (n : nat) (l : list rZ),
  n < length l -> nthTail n l = myNth n l rZTrue :: nthTail (S n) l.
+Proof.
 simple induction n.
 intros l; case l; simpl in |- *; intros; auto with stalmarck; absurd (0 < 0);
  auto with arith stalmarck.
@@ -200,6 +207,7 @@ Qed.
 
 Lemma nthTailProp2 :
  forall (n : nat) (l : list rZ), length l <= n -> nthTail n l = nil.
+Proof.
 simple induction n.
 intros l; case l; simpl in |- *; auto with stalmarck; intros t l' H;
  absurd (S (length l') <= 0); auto with arith stalmarck.
@@ -210,6 +218,7 @@ Qed.
 Lemma nthTailProp3 :
  forall (n : nat) (l : list rZ),
  length l <= n -> nthTail n l = nthTail (S n) l.
+Proof.
 intros n l H; rewrite (nthTailProp2 n l H); apply sym_eq; apply nthTailProp2;
  auto with arith stalmarck.
 Qed.
@@ -222,6 +231,7 @@ Lemma DilemmaContradAux :
   In a (nthTail n (varTriplets L)) ->
   eqStateRz S a rZTrue \/ eqStateRz S a rZFalse) ->
  ex (fun S' : State => stalmarckP S L S' /\ contradictory S').
+Proof.
 simple induction n.
 simpl in |- *; intros S L a b V Eq H;
  elim (stateAssignContrad S L H a b V Eq); intros S' HS'.
@@ -261,6 +271,7 @@ Theorem DilemmaContrad :
  validEquation L a b ->
  eqStateRz S a (rZComp b) ->
  ex (fun S' : State => stalmarckP S L S' /\ contradictory S').
+Proof.
 intros S L a b V Eq;
  apply (DilemmaContradAux (length (varTriplets L)) S L a b); 
  auto with stalmarck.
@@ -277,6 +288,7 @@ Theorem stalmarckComplete :
        (fun S : State =>
         stalmarckP (addEq (s, rZFalse) nil) l S /\ contradictory S)
  end.
+Proof.
 intros e; generalize (refl_equal (makeTriplets (norm e)));
  pattern (makeTriplets (norm e)) at -2 in |- *; case (makeTriplets (norm e)).
 intros l r r0 H H1.

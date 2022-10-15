@@ -28,9 +28,9 @@ From Stalmarck Require Import sTactic.
 Section refl.
 Variable fmap : rNat -> Prop.
 Hypothesis fmapO : fmap zero.
-(* Standard translation of boolean expression to Propositions, f is the function
- that gives meaning to boolean variables *)
 
+(** Standard translation of boolean expression to Propositions, f is the function
+ that gives meaning to boolean variables *)
 Fixpoint ExprToProp (e : Expr) : Prop :=
   match e with
   | V n => fmap n
@@ -40,8 +40,8 @@ Fixpoint ExprToProp (e : Expr) : Prop :=
   | Node Impl e1' e2' => ExprToProp e1' -> ExprToProp e2'
   | Node normalize.Eq e1' e2' => ExprToProp e1' <-> ExprToProp e2'
   end.
-(* A variable n is in a boolean expression *)
 
+(** A variable n is in a boolean expression *)
 Inductive inExpr (n : rNat) : Expr -> Prop :=
   | inV : inExpr n (V n)
   | inN : forall e : Expr, inExpr n e -> inExpr n (normalize.N e)
@@ -51,9 +51,10 @@ Inductive inExpr (n : rNat) : Expr -> Prop :=
   | inNodeRight :
       forall (i : boolOp) (e1 e2 : Expr),
       inExpr n e2 -> inExpr n (Node i e1 e2).
-Local Hint Resolve inV inN inNodeLeft inNodeRight : stalmarck.
-(* This is of course decidable *)
 
+#[local] Hint Resolve inV inN inNodeLeft inNodeRight : stalmarck.
+
+(** This is of course decidable *)
 Definition inExprDec :
   forall (a : rNat) (e : Expr), {inExpr a e} + {~ inExpr a e}.
 intros a e; elim e.
@@ -66,15 +67,16 @@ intros b e0 H' e1 H'0; case H'; intros H'1; auto with stalmarck.
 case H'0; intros H'2; auto with stalmarck.
 right; red in |- *; intros H'3; generalize H'2 H'1; inversion H'3; intuition.
 Defined.
-(* There is a function that gives true to all the variable whose interpretation
-    by f are True *)
 
+(** There is a function that gives true to all the variable whose interpretation
+    by f are True *)
 Theorem ExprToPropF :
  forall e : Expr,
  exists f : rNat -> bool,
    f zero = true /\
    (forall n : rNat, inExpr n e -> fmap n -> f n = true) /\
    (forall n : rNat, inExpr n e -> ~ fmap n -> f n = false).
+Proof.
 intros e; elim e; simpl in |- *; auto with stalmarck.
 intros r.
 case (rNatDec r zero); auto with stalmarck.
@@ -115,8 +117,8 @@ case (inExprDec zero e0); auto with stalmarck.
 split; intros n H'5 H'6; inversion H'5; case (inExprDec n e0); auto with stalmarck.
 intros H'7; case H'7; auto with stalmarck.
 Qed.
-(* The precedent condition is sufficient to insure correctness of the translation *)
 
+(** The precedent condition is sufficient to insure correctness of the translation *)
 Theorem ExprToPropF2 :
  forall (e : Expr) (f : rNat -> bool),
  (forall n : rNat, inExpr n e -> fmap n -> f n = true) ->
@@ -196,14 +198,17 @@ Qed.
 (* If e is a tautoly then its translated is True *)
 
 Theorem ExprToPropTautology : forall e : Expr, Tautology e -> ExprToProp e.
+Proof.
 intros e H'.
 elim (ExprToPropF e); intros f E; elim E; intros H'1 H'2; elim H'2;
  intros H'3 H'4; clear H'2 E.
 elim (ExprToPropF2 e f); [ intros H'7 H'8; apply H'7 | idtac | idtac ]; auto with stalmarck.
 Qed.
+
 End refl.
 
-(* We define arrays  on Prop in order to build the function for variables*)
+(** We define arrays on Prop in order to build the function for variables*)
+
 Section rA.
 
 Inductive POption : Type :=
@@ -237,6 +242,7 @@ Fixpoint rTreeSetP (t : rTreeP) (r : rNat) {struct r} :
 Theorem rTreeDef1P :
  forall (t : rTreeP) (m : rNat) (v : Prop),
  rTreeGetP (rTreeSetP t m v) m = PSome v.
+Proof.
 intros t m; generalize t; Elimc m; simpl in |- *; clear t.
 intros p H' t v; case t; auto with stalmarck.
 intros p H' t v; case t; auto with stalmarck.
@@ -246,6 +252,7 @@ Qed.
 Theorem rTreeDef2 :
  forall (t : rTreeP) (m1 m2 : rNat) (v : Prop),
  m1 <> m2 -> rTreeGetP (rTreeSetP t m1 v) m2 = rTreeGetP t m2.
+Proof.
 intros t m; generalize t; Elimc m; simpl in |- *; clear t.
 intros p H' t m2 v; case m2; simpl in |- *; case t; auto with stalmarck.
 intros p0 H'0; rewrite H'; auto with stalmarck.
@@ -286,6 +293,7 @@ Definition rArraySetP (ar : rArrayP) (r : rNat) (v : Prop) :=
 Theorem rArrayDef1P :
  forall (Ar : rArrayP) (m : rNat) (v : Prop),
  rArrayGetP (rArraySetP Ar m v) m = v.
+Proof.
 intros Ar m v; case Ar; simpl in |- *.
 intros r a; rewrite (rTreeDef1P r m v); auto with stalmarck.
 Qed.
@@ -293,6 +301,7 @@ Qed.
 Theorem rArrayDef2P :
  forall (Ar : rArrayP) (m1 m2 : rNat) (v : Prop),
  m1 <> m2 -> rArrayGetP (rArraySetP Ar m1 v) m2 = rArrayGetP Ar m2.
+Proof.
 intros Ar m1 m2 v H'; case Ar; simpl in |- *.
 intros r a; rewrite (rTreeDef2 r m1 m2 v); auto with stalmarck.
 Qed.
@@ -301,7 +310,9 @@ Definition rArrayInitP (f : rNat -> Prop) := rArrayMakeP rEmptyP f.
 
 Theorem rArrayDefP :
  forall (m : rNat) (f : rNat -> Prop), rArrayGetP (rArrayInitP f) m = f m.
+Proof.
 intros m f; simpl in |- *; auto with stalmarck.
 elim m; simpl in |- *; auto with stalmarck.
 Qed.
+
 End rA.

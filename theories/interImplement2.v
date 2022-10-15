@@ -32,9 +32,9 @@ From Stalmarck Require Export addArray.
 From Stalmarck Require Export interImplement.
 
 Section inter.
-(* We simply add to an array  all the equation formed from an element of L
-    and the minimal element b that are in both equivalent classes *)
 
+(** We simply add to an array  all the equation formed from an element of L
+    and the minimal element b that are in both equivalent classes *)
 Fixpoint addInterAux (Ar1 Ar2 : rArray vM) (L : list rZ) {struct L} :
  rArray vM -> rArray vM * list rZ :=
   fun Ar3 : rArray vM =>
@@ -54,12 +54,14 @@ Fixpoint addInterAux (Ar1 Ar2 : rArray vM) (L : list rZ) {struct L} :
 Theorem rArrayContradictory :
  forall (Ar : rArray vM) (War : wellFormedArray Ar) (S : State),
  rArrayState Ar S -> ~ contradictory S.
+Proof.
 intros Ar H' S H'0; red in |- *; intros H'1; case H'1.
 intros x H'2; absurd (evalZ Ar x = evalZ Ar (rZComp x)).
 rewrite evalZComp; auto with stalmarck.
 apply rArrayStateDef1 with (S := S); auto with stalmarck.
 Qed.
-(* I dont like this but it makes Coq run faster *)
+
+(** makes Coq run faster *)
 Opaque addEqMem.
 
 Theorem addInterAuxProp :
@@ -85,6 +87,7 @@ Theorem addInterAuxProp :
       ~ InRz (rZPlus e) L1 -> rArrayGet _ Ar4 e = rArrayGet _ Ar1 e) /\
      OlistRz L1
  end.
+Proof.
 intros L Ar1 Ar2 Ar3 H' H'0 H'1 S1 S2 S3 H'2 H'3 H'4 H'5 H'6.
 elim L; simpl in |- *.
 split; [ idtac | split; [ exists S1; repeat split | idtac ] ]; auto with stalmarck.
@@ -152,9 +155,8 @@ red in |- *; unfold appendRz in |- *; apply appendfOlist; auto with stalmarck.
 try exact rZltEqComp.
 Qed.
 
-(* Ok, now to compute the intersection we simply take the intersection of the diff lists
+(** OK, now to compute the intersection we simply take the intersection of the diff lists
     that contains the element that have changed in both arrays *)
-
 Definition interMem (Ar1 Ar2 Ar3 : rArray vM) (L1 L2 : list rZ) :=
   addInterAux Ar1 Ar2 (interf _ rZlt eqRz rZltEDec L1 L2) Ar3.
 
@@ -182,6 +184,7 @@ Definition interMemProp :
        ~ InRz (rZPlus e) L3 -> rArrayGet _ Ar4 e = rArrayGet _ Ar3 e) /\
       OlistRz L3
   end.
+Proof.
 intros Ar1 Ar2 Ar3 War1 War2 War3 L1 L2 Ol1 Ol2 S1 S2 S3 Sar1 Sar2 Sar3 I1 I2
  D1 D2.
 unfold interMem in |- *;
@@ -247,5 +250,7 @@ simpl in |- *; auto with stalmarck.
 unfold evalN in |- *.
 rewrite (D1 a); auto with stalmarck.
 Qed.
+
 Transparent addEqMem.
+
 End inter.

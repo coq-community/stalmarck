@@ -23,18 +23,18 @@ From Stalmarck Require Export algoDotriplet.
 From Stalmarck Require Export interImplement2.
 From Stalmarck Require Import makeTriplet.
 
-(* Append inside a triplet *)
-
+(** Append inside a triplet *)
 Definition appL (L : list rZ) (d : mbD) : mbD :=
   match d with
   | triple a b l => triple _ _ _ a b (appendRz L l)
   end.
-(* To make Coq run faster *)
+
+(** To make Coq run faster *)
 Opaque addEqMem.
 Opaque doTripletF.
 Opaque interMem.
-(* Evaluation of a dotriplet trace *)
 
+(** Evaluation of a dotriplet trace *)
 Fixpoint evalTraceF (T : Trace) : rArray vM -> mbD :=
   fun Ar =>
   match T with
@@ -95,6 +95,7 @@ Theorem TraceCorrect :
  | triple Ar' true L =>
      exists S' : State, stalmarckP S LL S' /\ contradictory S'
  end.
+Proof.
 intros Ar T; generalize Ar; clear Ar; elim T; simpl in |- *.
 intros Ar LL H' S H'0 H'1; repeat (split; auto with stalmarck).
 exists S; split; auto with stalmarck.
@@ -383,10 +384,10 @@ apply stalmarckIncl with (L := LL); auto with stalmarck.
 apply inclStateTrans with (addEq (a, b) S); auto with stalmarck.
 apply stalmarckIncl with (L := LL); auto with stalmarck.
 Qed.
-(* A computable InDec *)
 
+(** A computable InDec *)
 Definition InDec :
-  forall A : Set,
+  forall A : Type,
   (forall x y : A, {x = y :>A} + {x <> y :>A}) ->
   forall (a : A) (l : list A), {In a l} + {~ In a l}.
 fix InDec 4.
@@ -398,9 +399,9 @@ intros H'0; case (InDec A H' a l0).
 intros H'1; left; auto with datatypes stalmarck.
 intros H'1; right; simpl in |- *; red in |- *; intros H'2; case H'2; auto with stalmarck.
 Defined.
-(* the function f returns given a signed variable the triplets that contains this variable
-    fIn just check if all triplets in the trace are in the image of f *)
 
+(** the function f returns given a signed variable the triplets that contains this variable
+    fIn just check if all triplets in the trace are in the image of f *)
 Fixpoint fInT (f : rZ -> list triplet) (T : Trace) {struct T} : bool :=
   match T with
   | emptyTrace => true
@@ -424,6 +425,7 @@ Fixpoint fInT (f : rZ -> list triplet) (T : Trace) {struct T} : bool :=
 Theorem fInTCorrect :
  forall (LL : list triplet) (f : rZ -> _) (T : Trace),
  (forall n : rZ, incl (f n) LL) -> fInT f T = true -> TraceInList T LL.
+Proof.
 intros LL f T H'; elim T; simpl in |- *; auto with stalmarck.
 intros t; case t; auto with stalmarck.
 intros r r0 r1 r2; case (InDec _ tripletDec (Triplet r r0 r1 r2) (f r0));
@@ -435,8 +437,8 @@ intros; discriminate.
 intros a b t; case (fInT f t); auto with stalmarck.
 intros; discriminate.
 Qed.
-(* Build the hashtable *)
 
+(** Build the hashtable *)
 Fixpoint buildL (L : list triplet) : rArray (list triplet) :=
   match L with
   | nil => rArrayMake _ (rEmpty _) (fun r => nil)
@@ -460,6 +462,7 @@ Definition getT (Ar : rArray (list triplet)) (r : rZ) :=
 
 Theorem getTCorrect :
  forall (L : list triplet) (a : rZ), incl (getT (buildL L) a) L.
+Proof.
 unfold getT in |- *; intros L; elim L; simpl in |- *.
 intros a; elim a; simpl in |- *.
 intros r; case r; simpl in |- *; auto with datatypes stalmarck.
@@ -495,9 +498,10 @@ repeat rewrite Eq3.
 repeat rewrite rArrayDef1 with (m := valRz a); auto with datatypes stalmarck.
 rewrite rArrayDef2 with (m2 := valRz a); auto with datatypes stalmarck.
 Qed.
-(* The initial array is well-formed *)
 
+(** The initial array is well-formed *)
 Theorem rIwF : wellFormedArray (rArrayInit vM (fun _ : rNat => class nil)).
+Proof.
 apply wellFormedArrayDef; auto with stalmarck.
 apply pointerDecreaseDef; simpl in |- *; auto with stalmarck.
 intros r; case r; simpl in |- *; intros; discriminate.
@@ -518,8 +522,8 @@ intros H' Lr H'0; inversion H'0; red in |- *; apply OlistNil; auto with stalmarc
 intros H' Lr H'0; inversion H'0; red in |- *; apply OlistNil; auto with stalmarck.
 intros Lr H'; inversion H'; red in |- *; apply OlistNil; auto with stalmarck.
 Qed.
-(* The correction of our checker *)
 
+(** The correction of our checker *)
 Theorem checkTrace :
  forall (e : Expr) (T : Trace),
  match makeTriplets (norm e) with
@@ -537,6 +541,7 @@ Theorem checkTrace :
      | false => True
      end
  end.
+Proof.
 intros e T; CaseEq (makeTriplets (norm e)).
 intros l r r0.
 CaseEq (fInT (getT (buildL l)) T); auto with stalmarck.
@@ -584,13 +589,13 @@ intros n; apply getTCorrect; auto with stalmarck.
 apply rIwF; auto with stalmarck.
 exact initCorrect; auto with stalmarck.
 Qed.
+
 Transparent addEqMem.
 Transparent doTripletF.
 Transparent interMem.
 
-(* How to prove a\/ ~a *)
-
-Local Definition t1 :
+(** How to prove a\/ ~a *)
+#[local] Definition t1 :
   Tautology (Node Or (V (rnext zero)) (normalize.N (V (rnext zero)))) :=
   checkTrace (Node Or (V (rnext zero)) (normalize.N (V (rnext zero))))
     (seqTrace
@@ -599,8 +604,7 @@ Local Definition t1 :
              (rZMinus (rnext zero)) (rZPlus (rnext zero)))) emptyTrace).
 
 
-(* A function to check trace *)
-
+(** A function to check trace *)
 Definition checkTracef (e : Expr) (T : Trace) :=
   match makeTriplets (norm e) with
   | tRC L r n =>

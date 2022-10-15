@@ -25,31 +25,31 @@ From Stalmarck Require Export trace.
 From Stalmarck Require Export doTriplets.
 
 Section algos.
-(* To return 4 elements *)
 
-Inductive Quatuor (A B C D : Set) : Set :=
-    quatuor : A -> B -> C -> D -> Quatuor A B C D.
+(** To return 4 elements *)
+Inductive Quatuor (A B C D : Type) : Type :=
+ quatuor : A -> B -> C -> D -> Quatuor A B C D.
 
-(* The propagation returns
-          - the new array
-          - a boolean that says if we have reached a contradiction 
-          -  the diff list
-          -  the trace *)
+(** The propagation returns:
 
+    - the new array
+    - a boolean that says if we have reached a contradiction 
+    - the diff list
+    - the trace
+*)
 Definition mbDT := Quatuor (rArray vM) bool (list rZ) Trace.
 
 Definition mbDTOp := quatuor (rArray vM) bool (list rZ) Trace.
 
-(* append two trace removing useless emptyTrace *)
-
+(** append two trace removing useless emptyTrace *)
 Definition appTrace (t1 : Trace) t2 :=
   match t1, t2 with
   | emptyTrace, _ => t2
   | _, emptyTrace => t1
   | _, _ => seqTrace t1 t2
   end.
-(* Given a list of triplets we try the propagation on all of them *)
 
+(** Given a list of triplets we try the propagation on all of them *)
 Fixpoint doTripletFs (L : list triplet) : rArray vM -> mbDT :=
   fun Ar =>
   match L with
@@ -68,11 +68,12 @@ Fixpoint doTripletFs (L : list triplet) : rArray vM -> mbDT :=
           end
       end
   end.
-(* evaluation of traces is compatible with equality *)
 
+(** evaluation of traces is compatible with equality *)
 Theorem evalTraceEq :
  forall (S1 S2 S3 S4 : State) (T : Trace),
  evalTrace S1 T S2 -> eqState S1 S3 -> eqState S2 S4 -> evalTrace S3 T S4.
+Proof.
 intros S1 S2 S3 S4 T H'; generalize S3 S4; clear S3 S4; elim H'; auto with stalmarck.
 intros S3 S4 H'0 S5 S6 H'1 H'2.
 apply emptyTraceEval; auto with stalmarck.
@@ -87,13 +88,14 @@ intros t1 t2 a b S3 S4 S5 S6 H'0 H'1 H'2 H'3 H'4 S7 S8 H'5 H'6.
 apply dilemmaTraceEval with (S2 := S4) (S3 := S5); auto with stalmarck.
 apply eqStateTrans with S6; auto with stalmarck.
 Qed.
-(* two identical arrays give identical states *)
 
+(** two identical arrays give identical states *)
 Theorem eqStateRarray :
  forall (Ar Ar' : rArray vM) (S S' : State),
  rArrayState Ar S ->
  rArrayState Ar' S' ->
  (forall e : rNat, rArrayGet vM Ar' e = rArrayGet vM Ar e) -> eqState S S'.
+Proof.
 intros Ar Ar' S S' H' H'0 H'1; red in |- *; split.
 red in |- *; intros i j H; case (H'0 i j); intros H1 H2; apply H2.
 repeat rewrite <- (rArrayGetEvalZ Ar Ar'); auto with stalmarck.
@@ -123,6 +125,7 @@ Definition FStalCorrect (Ar : rArray vM) (Lt : list triplet)
 Theorem stalmarckInclList :
  forall (L1 L2 : list triplet) (S1 S2 : State),
  incl L1 L2 -> stalmarckP S1 L1 S2 -> stalmarckP S1 L2 S2.
+Proof.
 intros L1 L2 S1 S2 H' H'0; generalize L2 H'; clear H' L2; elim H'0; auto with stalmarck.
 intros S3 S4 L H' L2 H'1.
 apply stalmarckPref.
@@ -132,11 +135,12 @@ apply stalmarckPSplit with (a := a) (b := b) (S2 := S4) (S3 := S5); auto with st
 intros S3 S4 S5 L H' H'1 H'2 H'3 L2 H'4.
 apply stalmarckTrans with (S2 := S4); auto with stalmarck.
 Qed.
-(* Propagation is correct *)
 
+(** Propagation is correct *)
 Theorem doTripletFsCorrect :
  forall (Ar : rArray vM) (Lt : list triplet) (S : State),
  FStalCorrect Ar Lt S (doTripletFs Lt Ar).
+Proof.
 intros Ar Lt; generalize Ar; clear Ar; elim Lt; unfold FStalCorrect in |- *;
  simpl in |- *.
 intros Ar S H' H'0; repeat (split; auto with stalmarck).
@@ -241,11 +245,12 @@ repeat (split; auto with stalmarck).
 exists S'; repeat (split; auto with stalmarck).
 apply stalmarckInclList with (L1 := l); auto with datatypes stalmarck.
 Qed.
+
 Variable getT : rZ -> list triplet.
 Variable LL : list triplet.
 Hypothesis getTCorrect : forall a : rZ, incl (getT a) LL.
-(* Given a diff listed, try all the triplets related to these variables *)
 
+(** Given a diff listed, try all the triplets related to these variables *)
 Fixpoint doTripletsR (L : list rZ) : rArray vM -> mbDT :=
   fun Ar =>
   match L with
@@ -264,6 +269,7 @@ Fixpoint doTripletsR (L : list rZ) : rArray vM -> mbDT :=
 Theorem appTraceCorrect :
  forall (S1 S2 S3 : State) (T1 T2 : Trace),
  evalTrace S1 T1 S2 -> evalTrace S2 T2 S3 -> evalTrace S1 (appTrace T1 T2) S3.
+Proof.
 intros S1 S2 S3 T1 T2 H' H'0; inversion_clear H'; inversion_clear H'0;
  simpl in |- *; auto with stalmarck.
 apply evalTraceEq with (S1 := S2) (S2 := S3); auto with stalmarck.
@@ -315,6 +321,7 @@ Theorem FStalCorrect0 :
  forall (Ar : rArray vM) (S : State),
  FStalCorrect Ar LL S
    (quatuor (rArray vM) bool (list rZ) Trace Ar false nil emptyTrace).
+Proof.
 intros Ar S; repeat (split; auto with stalmarck).
 exists S; repeat (split; auto with stalmarck).
 red in |- *; apply OlistNil; auto with stalmarck.
@@ -323,6 +330,7 @@ Qed.
 Theorem FStalCorrectIncl :
  forall (Ar : rArray vM) (S : State) (L1 L2 : list triplet) (M : mbDT),
  incl L1 L2 -> FStalCorrect Ar L1 S M -> FStalCorrect Ar L2 S M.
+Proof.
 intros Ar S L1 L2 M; case M; unfold FStalCorrect in |- *; simpl in |- *; auto with stalmarck.
 intros Ar' b'; case b'; auto with stalmarck.
 intros H' t H'0 H'1 H'2 H'3.
@@ -357,6 +365,7 @@ Theorem FStalCorrectComp :
  FStalCorrect Ar LL S
    (quatuor (rArray vM) bool (list rZ) Trace Ar'' b'' 
       (appendRz L' L'') (appTrace T' T'')).
+Proof.
 intros Ar Ar' Ar'' b'' L' L'' T' T''; unfold FStalCorrect in |- *;
  simpl in |- *.
 case b''; auto with stalmarck.
@@ -413,6 +422,7 @@ Qed.
 Theorem doTripletFsRCorrect :
  forall (Ar : rArray vM) (Lt : list rZ) (S : State),
  FStalCorrect Ar LL S (doTripletsR Lt Ar).
+Proof.
 intros Ar Lt; generalize Ar; clear Ar; elim Lt; simpl in |- *.
 exact FStalCorrect0.
 intros a l H' Ar S; generalize (doTripletFsCorrect Ar (getT a) S).
@@ -426,9 +436,9 @@ intros r b l0 t H'0 H'1.
 apply FStalCorrectComp with (Ar' := Ar'); auto with stalmarck.
 apply FStalCorrectIncl with (L1 := getT a); auto with stalmarck.
 Qed.
-(* we try the propagation n times, if n is big enough this ensure that
-    we will reach a point where no new information is gained *)
 
+(** we try the propagation n times, if n is big enough this ensure that
+    we will reach a point where no new information is gained *)
 Fixpoint doTripletsN (L : list rZ) (n : nat) {struct n} :
  rArray vM -> mbDT :=
   fun Ar =>
@@ -449,6 +459,7 @@ Fixpoint doTripletsN (L : list rZ) (n : nat) {struct n} :
 Theorem doTripletFsNCorrect :
  forall (n : nat) (Ar : rArray vM) (Lt : list rZ) (S : State),
  FStalCorrect Ar LL S (doTripletsN Lt n Ar).
+Proof.
 intros n; elim n; simpl in |- *; auto with stalmarck.
 intros Ar Lt S; generalize (doTripletFsRCorrect Ar Lt S).
 case (doTripletsR Lt Ar).
@@ -463,4 +474,5 @@ case (doTripletsN (r :: l) n0 Ar'); auto with stalmarck.
 intros r0 b l0 t H'1.
 apply FStalCorrectComp with (Ar' := Ar'); auto with stalmarck.
 Qed.
+
 End algos.

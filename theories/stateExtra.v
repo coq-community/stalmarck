@@ -22,8 +22,7 @@ Some extra results concerning mostly realizability of states
 
 From Stalmarck Require Export stateDec.
 
-(* Auxillary function,  if  for the state S, i =+/- n returns ~ (f n)  otherwise (f n) *)
-
+(** Auxiliary function, if for the state S, i =+/- n returns ~ (f n)  otherwise (f n) *)
 Definition fnAux (S : State) (f : rNat -> bool) (i : rZ) 
   (n : rNat) :=
   match eqStateRzDec S (rZPlus n) i with
@@ -34,11 +33,12 @@ Definition fnAux (S : State) (f : rNat -> bool) (i : rZ)
       | right _ => f n
       end
   end.
-(* fnAux returns the opposite valuation for elements in relation with i *)
 
+(** fnAux returns the opposite valuation for elements in relation with i *)
 Lemma RealizableAux1 :
  forall (S : State) (f : rNat -> bool) (i j : rZ),
  eqStateRz S j i -> rZEval (fnAux S f i) j = negb (rZEval f j).
+Proof.
 simple destruct j; intros n Eq; unfold fnAux in |- *; simpl in |- *.
 case (eqStateRzDec S (rZPlus n) i); auto with stalmarck.
 intros Abs; absurd (eqStateRz S (rZPlus n) i); auto with stalmarck.
@@ -46,12 +46,13 @@ case (eqStateRzDec S (rZPlus n) i); auto with stalmarck.
 case (eqStateRzDec S (rZMinus n) i); auto with stalmarck.
 intros Abs; absurd (eqStateRz S (rZMinus n) i); auto with stalmarck.
 Qed.
-(* For the other the valuation remains the same *)
 
+(** For the other the valuation remains the same *)
 Lemma RealizableAux2 :
  forall (S : State) (f : rNat -> bool) (i j : rZ),
  ~ eqStateRz S j i ->
  ~ eqStateRz S (rZComp j) i -> rZEval (fnAux S f i) j = rZEval f j.
+Proof.
 simple destruct j; intros n Eq1 Eq2; unfold fnAux in |- *; simpl in |- *;
  case (eqStateRzDec S (rZPlus n) i); case (eqStateRzDec S (rZMinus n) i);
  auto with stalmarck; intros;
@@ -60,14 +61,17 @@ simple destruct j; intros n Eq1 Eq2; unfold fnAux in |- *; simpl in |- *;
 Qed.
 
 Lemma negbElim : forall b b' : bool, negb b = negb b' -> b = b'.
+Proof.
 simple destruct b; simple destruct b'; simpl in |- *; auto with stalmarck.
 Qed.
-#[export] Hint Immediate negbElim : stalmarck.
-(* Realizability does not change using fnAux *)
 
+#[export] Hint Immediate negbElim : stalmarck.
+
+(** Realizability does not change using fnAux *)
 Lemma RealizableAux3 :
  forall (S : State) (f : rNat -> bool) (i : rZ),
  realizeState f S -> realizeState (fnAux S f i) S.
+Proof.
 unfold realizeState in |- *; intros S f i H j k H1.
 case (eqStateRzDec S k i); intros H2.
 rewrite (RealizableAux1 S f i k); auto with stalmarck; rewrite (RealizableAux1 S f i j);
@@ -92,14 +96,16 @@ red in |- *; intro; absurd (eqStateRz S (rZComp k) i); auto with stalmarck;
 Qed.
 
 Lemma EqboolDec : forall b b' : bool, {b = b'} + {negb b = b'}.
+Proof.
 simple destruct b; simple destruct b'; simpl in |- *; auto with stalmarck.
 Qed.
-(* For every state that is not contradictory , there is a valuation
-   that realizes it *)
 
+(** For every state that is not contradictory , there is a valuation
+    that realizes it *)
 Theorem Realizable :
  forall S : State,
  ~ contradictory S -> exists f : rNat -> bool, realizeState f S.
+Proof.
 simple induction S.
 intros Abs; exists (fun n : rNat => true); auto with stalmarck.
 intros p; case p; intros i j l HR Abs.
@@ -123,33 +129,37 @@ red in |- *; unfold contradictory in |- *; intros Abs1; elim Abs1;
 absurd (contradictory (pair i j :: l)); auto with stalmarck; unfold contradictory in |- *;
  exists a; auto with stalmarck.
 Qed.
-(* The opposite of a valuation that realizes a state still does it *)
 
+(** The opposite of a valuation that realizes a state still does it *)
 Lemma RealizeNegb :
  forall (S : State) (f : rNat -> bool),
  realizeState f S -> realizeState (fun n : rNat => negb (f n)) S.
+Proof.
 unfold realizeState in |- *; intros S f Hf i j Hij; generalize (Hf i j Hij);
  case i; case j; simpl in |- *; intros n m Hnm; rewrite Hnm; 
  auto with stalmarck.
 Qed.
-#[export] Hint Resolve RealizeNegb : stalmarck.
-(* Same as Realizable but with the constrain that (f zero)=true *)
 
+#[export] Hint Resolve RealizeNegb : stalmarck.
+
+(** Same as [Realizable] but with the constraint that (f zero)=true *)
 Theorem Realizable2 :
  forall S : State,
  ~ contradictory S ->
  exists f : rNat -> bool, realizeState f S /\ f zero = true.
+Proof.
 intros S HS; elim (Realizable S HS); intros f Hf.
 case (EqboolDec (f zero) true); intros H.
 exists f; auto with stalmarck.
 exists (fun n : rNat => negb (f n)); split; auto with bool stalmarck.
 Qed.
-(* If an equation is not valid, there is a valuation that refutes it *)
 
+(** If an equation is not valid, there is a valuation that refutes it *)
 Theorem RealizableCstr :
  forall (S : State) (i j : rZ),
  ~ eqStateRz S i j ->
  exists f : rNat -> bool, realizeState f S /\ negb (rZEval f i) = rZEval f j.
+Proof.
 intros S i j Hij; elim (Realizable S); [ intros f Pf | idtac ].
 case (eqStateRzDec S (rZComp j) i); intros Hij'.
 exists f; split; auto with stalmarck; rewrite (realizeStateInvComp f S Pf j i); auto with stalmarck;
@@ -164,13 +174,14 @@ exists f; split; auto with stalmarck.
 red in |- *; intros Contr; elim Contr; intros a Pa; absurd (eqStateRz S i j);
  auto with stalmarck; apply eqStateRzContr with (a := a); auto with stalmarck.
 Qed.
-(* Realizability implies inclusion *)
 
+(** Realizability implies inclusion *)
 Theorem realizeStateInclInv :
  forall S1 S2 : State,
  (forall f : rNat -> bool,
   f zero = true -> realizeState f S2 -> realizeState f S1) -> 
  inclState S1 S2.
+Proof.
 intros S1 S2 H; apply inclStateIn; intros i j Pij1.
 case (eqStateRzDec S2 j i); intros Pij2; auto with stalmarck.
 elim (RealizableCstr S2 i j); auto with stalmarck; intros f Pf; elim Pf; intros Pf1 Pf2.

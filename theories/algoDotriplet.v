@@ -26,9 +26,8 @@ From Stalmarck Require Import interState doTriplet.
 
 Section algo.
 
-(* We simply check the applicability of each rule sequentially,
+(** We simply check the applicability of each rule sequentially,
    the test is made with the miniaml element *)
-
 Definition doTripletF : forall (Ar : rArray vM) (t : triplet), option mbD.
 intros Ar t.
 case t; intros b p q r.
@@ -84,6 +83,7 @@ Defined.
 
 Theorem contradictoryEq :
  forall S1 S2 : State, contradictory S1 -> eqState S1 S2 -> contradictory S2.
+Proof.
 intros S1 S2 H' H'0; inversion H'.
 exists x; auto with stalmarck.
 apply eqStateEq with (S1 := S1); auto with stalmarck.
@@ -92,6 +92,7 @@ Qed.
 Theorem eqStateEvalZ :
  forall (Ar : rArray vM) (S : State) (q : rZ),
  wellFormedArray Ar -> rArrayState Ar S -> eqStateRz S (evalZ Ar q) q.
+Proof.
 intros Ar S q H' H'0.
 apply rArrayStateDef2 with (Ar := Ar); auto with stalmarck.
 apply evalZInv; auto with stalmarck.
@@ -101,6 +102,7 @@ Theorem eqStateEq1 :
  forall (S : State) (q r s t : rZ),
  eqStateRz S q s ->
  eqStateRz S r t -> eqState (addEq (q, r) S) (addEq (s, t) S).
+Proof.
 intros S q r s t Eq1 Eq2; split.
 apply inclStateIn; simpl in |- *; auto with stalmarck.
 intros a b H'0; Elimc H'0; intros H'0; auto with stalmarck.
@@ -120,6 +122,7 @@ Theorem eqStateEqEvalZ :
  wellFormedArray Ar ->
  rArrayState Ar S ->
  eqState (addEq (evalZ Ar q, evalZ Ar r) S) (addEq (q, r) S).
+Proof.
 intros Ar S q r H' H'0.
 apply eqStateEq1; auto with stalmarck.
 apply eqStateEvalZ; auto with stalmarck.
@@ -133,6 +136,7 @@ Theorem eqStateEq2 :
  eqStateRz S u w ->
  eqStateRz S v x ->
  eqState (addEq (q, r) (addEq (u, v) S)) (addEq (s, t) (addEq (w, x) S)).
+Proof.
 intros S q r s t u v w x Eq1 Eq2 Eq3 Eq4; split.
 apply inclStateIn; simpl in |- *; auto with stalmarck.
 intros a b H'0; Elimc H'0; intros H'0; auto with stalmarck.
@@ -162,6 +166,7 @@ Theorem eqStateEq2EvalZ :
  rArrayState Ar S ->
  eqState (addEq (evalZ Ar q, evalZ Ar r) (addEq (evalZ Ar s, evalZ Ar t) S))
    (addEq (q, r) (addEq (s, t) S)).
+Proof.
 intros Ar S q r s t H' H'0.
 apply eqStateEq2; auto with stalmarck.
 apply eqStateEvalZ; auto with stalmarck.
@@ -169,8 +174,8 @@ apply eqStateEvalZ; auto with stalmarck.
 apply eqStateEvalZ; auto with stalmarck.
 apply eqStateEvalZ; auto with stalmarck.
 Qed.
-(* The implementation is correct *)
 
+(** The implementation is correct *)
 Theorem doTripletFCorrect :
  forall (Ar : rArray vM) (t : triplet) (S : State),
  wellFormedArray Ar ->
@@ -186,6 +191,7 @@ Theorem doTripletFCorrect :
  | Some (triple Ar' true L) =>
      exists S' : State, doTripletP S t S' /\ contradictory S'
  end.
+Proof.
 intros Ar t S H' H'0; unfold doTripletF, letP in |- *.
 case t.
 intros b p q r; case b.

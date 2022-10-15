@@ -26,6 +26,7 @@ From Stalmarck Require Export algoTrace.
 From Stalmarck Require Export makeTriplet.
 
 Section orun.
+
 Eval compute in
   (makeTriplets
      (norm (Node Or (V (rnext zero)) (normalize.N (V (rnext zero)))))).
@@ -39,8 +40,10 @@ Definition run (m : nat) (e : Expr) :=
            (fun n =>
             stal (getT Ar) n m (rArrayInit _ (fun r => class nil)) r rZFalse))
   end.
+
 Eval compute in
   (run 0 (Node Or (V (rnext zero)) (normalize.N (V (rnext zero))))).
+
 Opaque addEqMem.
 Opaque stal.
 
@@ -50,6 +53,7 @@ Theorem runCorrect :
  | quatuor Ar' false L T => True
  | quatuor Ar' true L T => Tautology e
  end.
+Proof.
 intros m e; unfold run in |- *.
 CaseEq (makeTriplets (norm e)).
 intros l r r0 H'; unfold letP in |- *.
@@ -71,6 +75,7 @@ intros H'5 H'6; apply H'6; auto with stalmarck.
 red in |- *; rewrite H'.
 apply stalmarckGivesValidEquation with (S := S'); auto with stalmarck.
 Qed.
+
 Transparent addEqMem.
 Transparent stal.
 
@@ -104,6 +109,7 @@ Definition getB (a : mbDT) : bool := match a with
 
 Theorem runC :
  forall (m : nat) (e : Expr), getB (run m e) = true -> Tautology e.
+Proof.
 intros m e; generalize (runCorrect m e).
 case (run m e); auto with stalmarck.
 intros r b l t; case b; simpl in |- *; auto with stalmarck.
@@ -112,6 +118,7 @@ Qed.
 
 Theorem F1 :
  Tautology (Node Or (V (rnext zero)) (normalize.N (V (rnext zero)))).
+Proof.
 apply (runC 0); exact (refl_equal true).
 Qed.
 
@@ -124,6 +131,7 @@ Theorem F2 :
       (Node Impl (Node ANd (V (rnext zero)) (V (rnext (rnext (rnext zero)))))
          (Node ANd (V (rnext (rnext zero)))
             (V (rnext (rnext (rnext (rnext zero)))))))).
+Proof.
 apply (runC 0); exact (refl_equal true).
 Qed.
 
@@ -163,8 +171,10 @@ Theorem F3 :
                                     (Node ANd
                                        (normalize.N (V (P_of_succ_nat 10)))
                                        (V (P_of_succ_nat 11)))))))))))))).
+Proof.
 apply (runC 0); exact (refl_equal true).
 Qed.
+
 Check 0.
 (*
 Theorem F4:
@@ -593,4 +603,5 @@ apply (runC 0); exact (refl_equal bool true).
 Check nat.
 Qed.
 *)
+
 End orun.

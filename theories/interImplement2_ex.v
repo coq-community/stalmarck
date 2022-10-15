@@ -23,45 +23,46 @@ How to use our module on ordered list
 From Stalmarck Require Import interImplement2.
 From Coq Require Import ZArith.
 
-Local Definition A := rArrayInit _ (fun n : rNat => class nil).
+#[local] Definition A := rArrayInit _ (fun n : rNat => class nil).
 
-Local Definition d2 := rZPlus (P_of_succ_nat 2).
+#[local] Definition d2 := rZPlus (P_of_succ_nat 2).
 
-Local Definition d3 := rZPlus (P_of_succ_nat 3).
+#[local] Definition d3 := rZPlus (P_of_succ_nat 3).
 
-Local Definition d4 := rZPlus (P_of_succ_nat 4).
+#[local] Definition d4 := rZPlus (P_of_succ_nat 4).
 
-Local Definition BP := addEqMem A d2 d3.
+#[local] Definition BP := addEqMem A d2 d3.
 
-Local Definition B := match BP with
+#[local] Definition B := match BP with
          | triple B _ _ => B
          end.
 
-Local Definition LB := match BP with
+#[local] Definition LB := match BP with
           | triple _ _ LB => LB
           end.
 
-Local Definition CP := addEqMem B d3 d4.
+#[local] Definition CP := addEqMem B d3 d4.
 
-Local Definition C := match CP with
+#[local] Definition C := match CP with
          | triple B _ _ => B
          end.
 
-Local Definition LC := appendRz match CP with
+#[local] Definition LC := appendRz match CP with
                    | triple _ _ LB => LB
                    end LB.
 
-Local Definition DP := addEqMem A d2 d4.
+#[local] Definition DP := addEqMem A d2 d4.
 
-Local Definition D := match DP with
+#[local] Definition D := match DP with
          | triple B _ _ => B
          end.
 
-Local Definition LD := match DP with
+#[local] Definition LD := match DP with
           | triple _ _ LB => LB
           end.
 
-Local Definition EP := interMem C D A LC LD.
+#[local] Definition EP := interMem C D A LC LD.
 
-Local Definition E := fst EP.
+#[local] Definition E := fst EP.
+
 Eval compute in (evalZ E (rZComp d4)).

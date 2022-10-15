@@ -13,17 +13,14 @@
 (* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA *)
 (* 02110-1301 USA                                                     *)
 
+(** * StalTac
 
-(*****************************************************************************)
-(*                                                                           *)
-(*          Stalmarck  : StalTac                                             *)
-(*                                                                           *)
-(*          Pierre Letouzey & Laurent Thery                                  *)
-(*                                                                           *)
-(*****************************************************************************
-A wrapper for the stalmarck tactic *)
+Pierre Letouzey & Laurent Thery 
 
-Require Export ZArith.
+A wrapper for the stalmarck tactic
+*)
+
+From Coq Require Export ZArith.
 From Stalmarck Require Export normalize.
 From Stalmarck Require Export algoTrace.
 From Stalmarck Require Export refl.

@@ -22,8 +22,7 @@ Addition of an equation to a well-formed array
 
 From Stalmarck Require Export wfArray.
 
-(* We define the simultaneous update of arrays *)
-
+(** We define the simultaneous update of arrays *)
 Fixpoint rArraySetList (Ar : rArray vM) (a : rZ) (L : list rZ) {struct L} :
  rArray vM :=
   match L with
@@ -36,6 +35,7 @@ Theorem rArraySetListInv1 :
  forall (Ar : rArray vM) (a : rZ) (mL : list rZ) (m : rZ),
  ~ InRz m mL ->
  rArrayGet _ (rArraySetList Ar a mL) (valRz m) = rArrayGet _ Ar (valRz m).
+Proof.
 intros Ar a mL; generalize Ar; Elimc mL; clear Ar; simpl in |- *; auto with stalmarck.
 intros a0 l H' Ar m H'0.
 rewrite rArrayDef2; auto with stalmarck.
@@ -51,6 +51,7 @@ Theorem rArraySetListInv2 :
  OlistRz mL ->
  In m mL ->
  rArrayGet _ (rArraySetList Ar a mL) (valRz m) = ref (samePolRz m a).
+Proof.
 intros Ar a mL; generalize Ar; elim mL; simpl in |- *; auto with stalmarck.
 intros Ar0 m H' H'0; elim H'0; auto with stalmarck.
 intros a0 l H' Ar0 m H'0 H'1; Elimc H'1; intros H'1;
@@ -70,6 +71,7 @@ Theorem DisjbLb :
  forall (b : rNat) (Lb : list rZ) (Ar : rArray vM) 
    (War : wellFormedArray Ar) (getb : rArrayGet _ Ar b = class Lb),
  DisjointRz (rZPlus b :: nil) Lb.
+Proof.
 intros b Lb Ar War getb; red in |- *; simpl in |- *.
 apply DisjointDef; simpl in |- *; auto with stalmarck.
 intros a H'; inversion_clear H'.
@@ -79,14 +81,15 @@ inversion H.
 Qed.
 
 Definition appendRz := appendf rZ rZlt eqRz rZltEDec.
-(* This theorem is needed when we will need to generate the new equivalent class
-  after adding an equation, append needs a proof that the two lists that are appended are disjoint *)
 
+(** This theorem is needed when we will need to generate the new equivalent class
+  after adding an equation, append needs a proof that the two lists that are appended are disjoint *)
 Theorem DisjLaLc :
  forall (a b : rNat) (Neqab : a <> b) (La Lb : list rZ) 
    (Ar : rArray vM) (War : wellFormedArray Ar)
    (geta : rArrayGet _ Ar a = class La) (getb : rArrayGet _ Ar b = class Lb),
  DisjointRz La (appendRz (rZPlus b :: nil) Lb).
+Proof.
 intros a b ltab La Lb Ar War geta getb.
 cut (DisjointRz La Lb);
  [ intros DLaLb | apply wfDisjoint with (3 := geta) (4 := getb); auto with stalmarck ].
@@ -100,7 +103,9 @@ apply wellFormedArrayInImpNotEq with (2 := getb) (3 := geta); auto with stalmarc
 inversion_clear H.
 apply DisjointCom; auto with stalmarck.
 Qed.
+
 Section AaddD.
+
 Variable n a b : rNat.
 Variable pol : rZ.
 Variable La Lb : list rZ.
@@ -110,16 +115,17 @@ Hypothesis rltab : rlt a b.
 Hypothesis geta : rArrayGet _ Ar a = class La.
 Hypothesis getb : rArrayGet _ Ar b = class Lb.
 
-(*Append with an auxilary function pol *)
-
+(** Append with an auxilary function pol *)
 Definition fappendRz := fappendf rZ rZlt eqRz rZltEDec (samePolRz pol).
-(* a and b are two minimal elements whose classes are La and Lb
+
+(** a and b are two minimal elements whose classes are La and Lb
    we know also that a < b
    What we need to do to perform the update a=+/- b where pol gives the polarity:
-   1) Take all the element of Lb and make them point to a
-   2) Make b  point to a
-   3) Update the class of a to La @ [b|Lb] *)
 
+   - Take all the element of Lb and make them point to a
+   - Make b point to a
+   - Update the class of a to La @ [b|Lb] 
+*)
 Definition updateArray : rArray vM.
 exact
  (rArraySet vM
@@ -127,18 +133,20 @@ exact
        (appendRz (rZPlus b :: nil) Lb)) a
     (class (fappendRz La (appendRz (rZPlus b :: nil) Lb)))).
 Defined.
-(* a contains the proper equivalence class *)
 
+(** a contains the proper equivalence class *)
 Theorem updateArraya :
  rArrayGet _ updateArray a =
  class (fappendRz La (appendRz (rZPlus b :: nil) Lb)).
+Proof.
 unfold updateArray in |- *; unfold LetP in |- *; simpl in |- *.
 rewrite rArrayDef1; auto with stalmarck.
 Qed.
-(* b is now a pointer *)
 
+(** b is now a pointer *)
 Theorem updateArrayb :
  rArrayGet _ updateArray b = ref (samePolRz pol (rZPlus a)).
+Proof.
 unfold updateArray in |- *.
 cut (a <> b); [ intros Neqab | apply rltDef2; auto with stalmarck ].
 rewrite rArrayDef2; auto with stalmarck.
@@ -152,13 +160,14 @@ generalize appendfIncl1; unfold incl in |- *; auto with datatypes stalmarck.
 intros H'; unfold appendRz in |- *; apply H'; auto with datatypes stalmarck.
 apply DisjbLb with (2 := getb); auto with stalmarck.
 Qed.
-(* The ones that were pointing to b now point to a *)
 
+(** The ones that were pointing to b now point to a *)
 Theorem updateArrayInb :
  forall c : rZ,
  In c Lb ->
  rArrayGet _ updateArray (valRz c) =
  ref (samePolRz c (samePolRz pol (rZPlus a))).
+Proof.
 intros c InLb; unfold updateArray in |- *.
 rewrite rArrayDef2; auto with stalmarck.
 rewrite rArraySetListInv2; auto with stalmarck.
@@ -175,12 +184,13 @@ rewrite H'; auto with stalmarck.
 red in |- *; apply InEqComp with (a := c); auto with stalmarck.
 apply inImpInEq; auto with stalmarck.
 Qed.
-(* otherwise nothing has changed *)
 
+(** otherwise nothing has changed *)
 Theorem updateArrayOtherwise :
  forall c : rNat,
  ~ InRz (rZPlus c) Lb ->
  c <> a -> c <> b -> rArrayGet _ updateArray c = rArrayGet _ Ar c.
+Proof.
 intros c NotPInb NotEqca NotEqcb.
 unfold updateArray in |- *.
 replace c with (valRz (rZPlus c)); auto with stalmarck.
@@ -191,8 +201,8 @@ unfold appendRz in H'.
 case appendfInvEq with (1 := H'); auto with stalmarck; intros H'0; inversion_clear H'0;
  inversion H; auto with stalmarck.
 Qed.
-(* Now we want to show that the resulting array is well formed *)
 
+(** Now we want to show that the resulting array is well formed *)
 Definition updateArrayPointerDecrease : pointerDecrease updateArray.
 apply pointerDecreaseDef; auto with stalmarck.
 intros r s H'.
@@ -226,12 +236,13 @@ rewrite <- H'.
 apply sym_equal.
 apply updateArrayOtherwise; auto with stalmarck.
 Qed.
-(* if we are a minimal element different of a, nothing has changed *)
 
+(** if we are a minimal element different of a, nothing has changed *)
 Theorem updateGetIsClass :
  forall (r : rNat) (Lr : list rZ),
  rArrayGet _ updateArray r = class Lr ->
  r <> a -> rArrayGet _ Ar r = class Lr.
+Proof.
 intros r Lr H' H'0.
 case (rNatDec r b); intros Eqb; auto with stalmarck.
 generalize H'; rewrite Eqb; auto with stalmarck; rewrite updateArrayb; clear H'; intros H';
@@ -247,8 +258,8 @@ generalize H'; replace r with (valRz (rZMinus r)); auto with stalmarck;
 rewrite <- H'; apply sym_equal.
 apply updateArrayOtherwise; auto with stalmarck.
 Qed.
-(* Classes are ordered *)
 
+(** Classes are ordered *)
 Definition updateArrayOlist : OlistArray updateArray.
 apply OlistArrayDef; auto with stalmarck.
 intros r Lr H'.
@@ -256,9 +267,7 @@ case (rNatDec r a); intros Eqt.
 generalize H'; rewrite Eqt; auto with stalmarck; rewrite updateArraya; auto with stalmarck; clear H';
  intros H'.
 replace Lr with (fappendRz La (appendRz (rZPlus b :: nil) Lb)).
-
-
- inversion H'.
+inversion H'.
 red in |- *; unfold fappendRz in |- *; apply fappendfOlist; auto with stalmarck.
 intros; apply samePolRzEqRz; auto with stalmarck.
 try exact rZltEqComp.
@@ -271,9 +280,10 @@ injection H'; trivial.
 apply wfOl with (Ar := Ar) (r := r); auto with stalmarck.
 apply updateGetIsClass with (1 := H'); auto with stalmarck.
 Qed.
-(* The ref and the class are properly related *)
 
+(** The ref and the class are properly related *)
 Theorem updateArrayPointToRef : pointToClassRef updateArray.
+Proof.
 apply pointToClassRefDef; auto with stalmarck.
 intros r s t H'1.
 case (rNatDec (valRz s) a); intros eqsa.
@@ -334,6 +344,7 @@ Theorem updatePointToClassClassRef1 :
  forall (r : rNat) (s : rZ) (Lr : list rZ),
  rArrayGet _ updateArray r = class Lr ->
  In s Lr -> rArrayGet _ updateArray (valRz s) = ref (samePol s r).
+Proof.
 intros r s Lr.
 case (rNatDec r a); intros eqra.
 rewrite eqra; auto with stalmarck; rewrite updateArraya; auto with stalmarck; intros H'; inversion H'.
@@ -423,6 +434,7 @@ Theorem updatePointToClassClassRef2 :
  forall (r : rNat) (s : rZ) (Ls : list rZ),
  rArrayGet _ updateArray r = ref s ->
  rArrayGet _ updateArray (valRz s) = class Ls -> In (samePol s r) Ls.
+Proof.
 intros r s Ls.
 case (rNatDec r a); intros eqra.
 rewrite eqra; auto with stalmarck; rewrite updateArraya; auto with stalmarck; intros H'; inversion H'.
@@ -506,17 +518,20 @@ apply updateGetIsClass with (1 := Eqs); auto with stalmarck.
 Qed.
 
 Theorem updateArrayPointToClassClass : pointToClassClass updateArray.
+Proof.
 apply pointToClassClassRef; auto with stalmarck.
 exact updatePointToClassClassRef1.
 exact updatePointToClassClassRef2.
 Qed.
-(* Finally !!! *)
 
+(** Finally !!! *)
 Theorem updateWellFormed : wellFormedArray updateArray.
+Proof.
 apply wellFormedArrayDef; auto with stalmarck.
 apply updateArrayPointerDecrease; auto with stalmarck.
 apply updateArrayPointToRef; auto with stalmarck.
 apply updateArrayPointToClassClass; auto with stalmarck.
 apply updateArrayOlist; auto with stalmarck.
 Qed.
+
 End AaddD.

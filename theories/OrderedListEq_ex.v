@@ -35,7 +35,7 @@ left; right; auto with arith.
 right; auto.
 Defined.
 
-Local Definition appnat := appendf _ lt (fun x y : nat => x = y) CNat.
+#[local] Definition appnat := appendf _ lt (fun x y : nat => x = y) CNat.
 
 Definition eqTriv :
   forall a b : nat,
@@ -45,14 +45,15 @@ Definition eqTriv :
 intros a b H'; left; auto.
 Defined.
 
-Local Definition getminnat :=
+#[local] Definition getminnat :=
   getMin _ lt (fun x y : nat => x = y) CNat (fun x y : nat => x = y) eqTriv.
 
-Local Definition internat := interf _ lt (fun x y : nat => x = y) CNat.
+#[local] Definition internat := interf _ lt (fun x y : nat => x = y) CNat.
 
-Local Definition l1 := 1 :: 3 :: 5 :: 7 :: nil.
+#[local] Definition l1 := 1 :: 3 :: 5 :: 7 :: nil.
 
-Local Definition l2 := 2 :: 3 :: 5 :: 6 :: nil.
+#[local] Definition l2 := 2 :: 3 :: 5 :: 6 :: nil.
+
 Eval compute in (appnat l1 l2).
 Eval compute in (getminnat l1 l2).
 Eval compute in (internat l1 l2).
@@ -67,7 +68,7 @@ intros p H'; left; left.
 apply Zlt_O_minus_lt; auto with zarith.
 Defined.
 
-Local Definition appZ := appendf _ Z.lt (fun x y : Z => x = y) CZ.
+#[local] Definition appZ := appendf _ Z.lt (fun x y : Z => x = y) CZ.
 
 Definition eqTrivZ :
   forall a b : Z,
@@ -76,16 +77,17 @@ Definition eqTrivZ :
 intros a b H'; left; auto.
 Defined.
 
-Local Definition getminZ :=
+#[local] Definition getminZ :=
   getMin _ Z.lt (fun x y : Z => x = y) CZ (fun x y : Z => x = y) eqTrivZ.
 
-Local Definition interZ := interf _ Z.lt (fun x y : Z => x = y) CZ.
+#[local] Definition interZ := interf _ Z.lt (fun x y : Z => x = y) CZ.
 
-Local Definition Zl1 :=
+#[local] Definition Zl1 :=
   (- Z_of_nat 3)%Z :: (- Z_of_nat 1)%Z :: Z_of_nat 5 :: Z_of_nat 7 :: nil.
 
-Local Definition Zl2 :=
+#[local] Definition Zl2 :=
   (- Z_of_nat 3)%Z :: (- Z_of_nat 2)%Z :: Z_of_nat 5 :: Z_of_nat 6 :: nil.
+
 Eval compute in (appZ Zl1 Zl2).
 Eval compute in (getminZ Zl1 Zl2).
 Eval compute in (interZ Zl1 Zl2).
