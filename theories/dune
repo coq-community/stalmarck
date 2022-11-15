@@ -1,4 +1,0 @@
-(coq.theory
- (name Stalmarck.Algorithm)
- (package coq-stalmarck)
- (synopsis "Proof of Stålmarck's algorithm in Coq"))

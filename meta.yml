@@ -8,7 +8,7 @@ nix: true
 doi: 10.1007/3-540-44659-1_24
 plugin: true
 branch: master
-dune: true
+dune: false
 
 synopsis: Verified implementation of Stålmarck's algorithm for proving tautologies in Coq
 
