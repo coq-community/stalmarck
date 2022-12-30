@@ -3,7 +3,7 @@
 
 opam-version: "2.0"
 maintainer: "palmskog@gmail.com"
-version: "dev"
+version: "8.17.dev"
 
 homepage: "https://github.com/coq-community/stalmarck"
 dev-repo: "git+https://github.com/coq-community/stalmarck.git"
@@ -18,7 +18,7 @@ algorithm in Coq."""
 build: [make "-j%{jobs}%"]
 install: [make "install"]
 depends: [
-  "coq" {= "dev"}
+  "coq" {>= "8.17" & < "8.18"}
 ]
 
 tags: [
