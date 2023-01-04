@@ -4,11 +4,18 @@ Follow the instructions on https://github.com/coq-community/templates to regener
 --->
 # Stalmarck
 
+[![Docker CI][docker-action-shield]][docker-action-link]
+[![Nix CI][nix-action-shield]][nix-action-link]
 [![Contributing][contributing-shield]][contributing-link]
 [![Code of Conduct][conduct-shield]][conduct-link]
 [![Zulip][zulip-shield]][zulip-link]
 [![DOI][doi-shield]][doi-link]
 
+[docker-action-shield]: https://github.com/coq-community/stalmarck/workflows/Docker%20CI/badge.svg?branch=v8.17
+[docker-action-link]: https://github.com/coq-community/stalmarck/actions?query=workflow:"Docker%20CI"
+
+[nix-action-shield]: https://github.com/coq-community/stalmarck/workflows/Nix%20CI/badge.svg?branch=v8.17
+[nix-action-link]: https://github.com/coq-community/stalmarck/actions?query=workflow:"Nix%20CI"
 
 [contributing-shield]: https://img.shields.io/badge/contributions-welcome-%23f7931e.svg
 [contributing-link]: https://github.com/coq-community/manifesto/blob/master/CONTRIBUTING.md
