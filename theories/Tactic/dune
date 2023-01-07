@@ -1,0 +1,7 @@
+(coq.theory
+ (name Stalmarck.Tactic)
+ (package coq-stalmarck-tactic)
+ (synopsis "Coq tactic for proving tautologies based on Stålmarck's algorithm")
+ (libraries coq-stalmarck-tactic.plugin)
+;(theories Stalmarck.Algorithm)
+)
