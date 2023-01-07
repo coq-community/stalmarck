@@ -1,0 +1,4 @@
+(rule
+ (alias runtest)
+ (deps (:input ztwaalf1_be))
+ (action (run %{bin:stalmarck} 1 %{input})))
