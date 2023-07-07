@@ -1,7 +1,7 @@
 (library
  (name staltac_plugin)
  (public_name coq-stalmarck-tactic.plugin)
- (flags :standard -rectypes -w -3-27-32)
+ (flags :standard -w -3-27-32)
  (modules :standard \ stal lexer parser main)
  (libraries coq-core.plugins.ltac stal))
 

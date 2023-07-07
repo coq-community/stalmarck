@@ -11,8 +11,8 @@ synopsis: "Coq tactic and verified tool for proving tautologies using Stålmarck
 
 build: ["dune" "build" "-p" name "-j" jobs]
 depends: [
-  "ocaml" {>= "4.05"}
-  "dune" {>= "2.5"}
+  "ocaml" {>= "4.09.0"}
+  "dune" {>= "2.8"}
   "coq" {= "dev"}
   "coq-stalmarck" {= version}
 ]
