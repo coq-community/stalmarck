@@ -262,7 +262,7 @@ let pop_prop_run =
          | _            -> get_hyps shyp'
     in
     let v = get_hyps (pf_hyps_types gl) in
-    Tacticals.tclTHEN (Generalize.generalize [mkVar v]) (clear [v])
+    Tacticals.tclTHEN (generalize [mkVar v]) (clear [v])
   end
 
 (* Main function *)
