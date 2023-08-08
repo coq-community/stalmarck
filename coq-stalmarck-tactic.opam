@@ -13,7 +13,7 @@ build: ["dune" "build" "-p" name "-j" jobs]
 depends: [
   "ocaml" {>= "4.09.0"}
   "dune" {>= "2.8"}
-  "coq" {= "dev"}
+  "coq" {>= "8.18" & < "8.19"}
   "coq-stalmarck" {= version}
 ]
 

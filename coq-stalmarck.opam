@@ -18,7 +18,7 @@ algorithm in Coq."""
 build: [make "-j%{jobs}%"]
 install: [make "install"]
 depends: [
-  "coq" {= "dev"}
+  "coq" {>= "8.18" & < "8.19"}
 ]
 
 tags: [
