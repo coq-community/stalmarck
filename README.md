@@ -11,10 +11,10 @@ Follow the instructions on https://github.com/coq-community/templates to regener
 [![Zulip][zulip-shield]][zulip-link]
 [![DOI][doi-shield]][doi-link]
 
-[docker-action-shield]: https://github.com/coq-community/stalmarck/actions/workflows/docker-action.yml/badge.svg?branch=master
+[docker-action-shield]: https://github.com/coq-community/stalmarck/actions/workflows/docker-action.yml/badge.svg?branch=v8.19
 [docker-action-link]: https://github.com/coq-community/stalmarck/actions/workflows/docker-action.yml
 
-[nix-action-shield]: https://github.com/coq-community/stalmarck/actions/workflows/nix-action.yml/badge.svg?branch=master
+[nix-action-shield]: https://github.com/coq-community/stalmarck/actions/workflows/nix-action.yml/badge.svg?branch=v8.19
 [nix-action-link]: https://github.com/coq-community/stalmarck/actions/workflows/nix-action.yml
 
 [contributing-shield]: https://img.shields.io/badge/contributions-welcome-%23f7931e.svg
@@ -41,7 +41,7 @@ algorithm in Coq.
 - Coq-community maintainer(s):
   - Karl Palmskog ([**@palmskog**](https://github.com/palmskog))
 - License: [GNU Lesser General Public License v2.1 or later](LICENSE)
-- Compatible Coq versions: Coq master (use the corresponding branch or release for other Coq versions)
+- Compatible Coq versions: 8.19 (use the corresponding branch or release for other Coq versions)
 - Additional dependencies: none
 - Coq namespace: `Stalmarck.Algorithm`
 - Related publication(s):
