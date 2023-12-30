@@ -44,10 +44,10 @@ supported_coq_versions:
   opam: '{>= "8.19" & < "8.20"}'
 
 tested_coq_nix_versions:
-- coq_version: '8.18'
+- coq_version: '8.19'
 
 tested_coq_opam_versions:
-- version: '8.18'
+- version: '8.19'
 
 namespace: Stalmarck.Algorithm
 
